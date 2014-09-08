@@ -18,28 +18,18 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 #
+from openerp.osv import fields, osv, orm
 
-{
-    'name': 'Website Marketplace',
-    'category': 'Website',
-    'summary': 'Website addition to marketplace module',
-    'version': '1.0',
-    'description': """
-Custom Theme
-Website Marketplace
 
-        """,
-    'author': 'Author Name • WebByBrains <author@webbybrains.com>, Igor Krivonos <igor.krivonos@xpansa.com>',
-    'depends': [
-        'web',
-        'website',
-        'marketplace',
-        ],
-    'data': [
-        'views/snippets.xml',
-        'views/templates.xml',
-    ],
-    'installable': True
-}
+
+class marketplace_announcement(osv.osv):
+
+    _inherit = "marketplace.announcement"
+
+    _columns = {
+    	'emergency': fields.boolean('Emergency'),
+    	'date_from': fields.date('From'),
+    	'date_to': fields.date('To'),
+    }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
