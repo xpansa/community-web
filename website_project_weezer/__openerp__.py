@@ -10,7 +10,8 @@ Custom Theme
         """,
     'author': 'Author Name • WebByBrains <author@webbybrains.com>',
     'depends': [
-        'website'
+        'website',
+        'marketplace',
         ],
     'data': [
         'views/snippets.xml',
