@@ -19,26 +19,4 @@
 #
 #
 
-{
-    'name': 'Website Marketplace',
-    'category': 'Website',
-    'summary': 'Website addition to marketplace module',
-    'version': '1.0',
-    'description': """
-Custom Theme
-Website Marketplace
-
-        """,
-    'author': 'Author Name • WebByBrains <author@webbybrains.com>, Igor Krivonos <igor.krivonos@xpansa.com>',
-    'depends': [
-        'website',
-        'marketplace',
-        ],
-    'data': [
-        'views/snippets.xml',
-        'views/templates.xml',
-    ],
-    'installable': True
-}
-
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
