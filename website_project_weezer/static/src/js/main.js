@@ -1,6 +1,31 @@
 $(document).ready(function(){
-     $('.selectpicker').selectpicker();
-     $(".date-picker").datepicker();
+    $('.selectpicker').selectpicker();
+    $('.date-picker').datepicker();
+    $('.scrollable').tinyscrollbar({ thumbSize: 100 });
+    var offset = 4;
+    var limit = 4;
+    $('.btn-simulateload').click( function(e) {
+        e.preventDefault();
+
+        var self = $(this);
+        self.addClass('loading');
+        self.addClass('disabled');
+
+        $.ajax("/marketplace/search/load_more"+window.location.search+'&load_wants=1'+'&offset='+offset, {'method': 'GET'})
+            .then(function (data) {
+                $('.mp_search_wants').append(data);
+            });
+        $.ajax("/marketplace/search/load_more"+window.location.search+'&load_offers=1'+'&offset='+offset, {'method': 'GET'})
+            .then(function (data) {
+                $('.mp_search_offers').append(data);
+                self.removeClass('loading');
+                self.removeClass('disabled');
+                offset += 4;
+                $('div.mp_search').tinyscrollbar().data("plugin_tinyscrollbar").update('bottom');
+            });
+
+            
+    });
 });
 
 

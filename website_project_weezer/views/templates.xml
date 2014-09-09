@@ -242,6 +242,260 @@
     				</select><br/>
 	    	</t>
 		</template>
+
+        <!-- MarketPlace Search page -->
+        <template id="mp_search_form">
+            <form id="searchform" class="form" method="GET" action="/marketplace/search">
+                <section class="jumbotron mb32 pt32 pb16">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-md-2 pt8">
+                                <img src="inc/assets/logo-l-exchange.png" class="img img-responsive"/>
+                            </div>
+                            <div class="col-md-2 pt32">
+                                <h4 class="pull-right">I'm searching</h4>
+                            </div>
+                            <div class="col-md-8 pt32">
+                                <div class="form-group">
+                                    <div class="col-md-3">
+                                        <select class="selectpicker form-control" name="type" style="display: none;">
+                                            <option value="to_get" t-att-selected="'selected' if request.httprequest.args.get('type') == 'to_get' else None">To get</option>
+                                            <option value="to_offer" t-att-selected="'selected' if request.httprequest.args.get('type') == 'to_offer' else None">To offer</option>
+                                            <option value="to_find" t-att-selected="'selected' if request.httprequest.args.get('type') == 'to_find' else None">To find</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <input type="search" name="name" class="form-control" placeholder="Search" t-att-value="request.httprequest.args.get('name','')"/>
+                                    </div>
+                                    <!-- python code to get categories -->
+                                    <t t-set="ann_categories_obj" t-value="request.registry['marketplace.announcement.category']"/>
+                                    <t t-set="ann_categories" t-value="ann_categories_obj.name_search(request.cr, request.uid, '', [], context=request.context)"/>
+                                    <div class="col-md-3">
+                                        <select name="category" class="selectpicker form-control" placeholder="Category" style="display: none;">
+                                            <t t-foreach="ann_categories or []" t-as="c">
+                                                <option t-att-value="c[0]" t-att-selected="'selected' if int(request.httprequest.args.get('category',0)) == c[0] else None"><t t-esc="c[1]"/></option>
+                                            </t>
+                                        </select>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- filters -->
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-md-12 text-center pt8 pb16">
+                                <div class="subtitle-search">
+                                    <div class="border"></div>
+                                    <h2 class="text-center">In</h2>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <div class="col-md-2 col-md-offset-1">
+                                        <label class="control-label"> </label>
+                                        <label class="sr-only">From Who?</label>
+                                        <input name="from_who" id="filter-who" type="text" placeholder="From who?" class="form-control mb16" autocomplete="on" t-att-value="request.httprequest.args.get('from_who','')"/>
+    
+                                        <label class="sr-only">Where?</label>
+                                        <input name="where" id="filter-where" type="text" placeholder="Where?" class="form-control" autocomplete="on" t-att-value="request.httprequest.args.get('where','')"/>
+                                    </div>
+    
+                                    <div class="col-md-2">
+                                            <label class="control-label text-center">When?</label>
+                                            <label class="sr-only">From</label>
+                                            <div class="input-group mb16">
+                                                <input name="date_from" id="filter-from" type="text" placeholder="From" class="date-picker form-control" t-att-value="request.httprequest.args.get('date_from','')"/>
+                                                <label for="filter-from" class="input-group-addon btn btn-default"><span class="fa fa-calendar"></span></label>
+                                            </div>
+                                            <label class="sr-only">To</label>
+                                            <div class="input-group">
+                                                <input name="date_to" id="filter-to" type="text" placeholder="To" class="date-picker form-control" t-att-value="request.httprequest.args.get('date_to','')"/>
+                                                <label for="filter-to" class="input-group-addon btn btn-default"><span class="fa fa-calendar"></span></label>
+                                            </div>
+                                        </div>
+                                            
+                                    <div class="col-md-2">
+                                        <label class="control-label">How much?</label>
+                                        <label class="sr-only">Currency</label>
+                                        <input name="qty_from" id="filter-howmuch-from" type="number" placeholder="From" class="form-control mb16" autocomplete="on" t-att-value="request.httprequest.args.get('qty_from','')"/>
+                                        <input name="qty_to" id="filter-howmuch-to" type="number" placeholder="To" class="form-control mb16" autocomplete="on" t-att-value="request.httprequest.args.get('qty_to','')"/>
+                                    </div>
+    
+                                    <!-- python code to get currencies -->
+                                    <t t-set="currencies_obj" t-value="request.registry['account.centralbank.config.currency']"/>
+                                    <t t-set="currency_info_ids" t-value="currencies_obj.search(request.cr, request.uid, [], context=request.context)"/>
+                                    <t t-set="currencies" t-value="currencies_obj.read(request.cr, request.uid, currency_info_ids, ['currency_id'], context=request.context)"/>
+                                    <div class="col-md-2">
+                                        <label class="control-label"> </label>
+                                        <select name="curr_from" class="selectpicker form-control mb16" style="display: none;">
+                                            <t t-foreach="currencies or []" t-as="c">
+                                                <option t-att-value="c['currency_id'][0]" t-att-selected="'selected' if int(request.httprequest.args.get('curr_from',0)) == c['currency_id'][0] else None"><t t-esc="c['currency_id'][1]"/></option>
+                                            </t>
+                                        </select>
+    
+                                        <select name="curr_to" class="selectpicker form-control" style="display: none;">
+                                            <t t-foreach="currencies or []" t-as="c">
+                                                <option t-att-value="c['currency_id'][0]" t-att-selected="'selected' if int(request.httprequest.args.get('curr_to',0)) == c['currency_id'][0] else None"><t t-esc="c['currency_id'][1]"/></option>
+                                            </t>
+                                        </select>
+                                    </div>
+                        
+                                    <div class="col-md-1">
+                                        <label class="control-label"> </label>
+                                        <div class="clearfix"></div>
+                                        <button class="btn btn-primary" type="submit"><span class="fa fa-search"></span></button>
+                                    </div>
+    
+                                    <div class="col-md-2 banner-box pb16">
+                                        <div class="form-group">
+                                            <div class="text-center">
+                                                <h6>Invite your friends to join our network</h6>
+                                                <div class="input-group">
+                                                    <input type="text" class="form-control"/>
+                                                    <span class="input-group-btn">
+                                                        <button class="btn btn-primary" type="button"><i class="fa fa-check"></i></button>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                                
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </form>
+        </template>
+        <template id="mp_search_wants">
+            <t t-foreach="result['wants'] or []" t-as="item">
+                <!-- START: single item -->
+                <div class="row">
+                    <div class="col-md-12 thumbnail mb32">
+                        <div class="col-md-3 mt16">
+                            <div class="col-md-12">
+                                <div class="row">
+                                    <img t-att-src="item.picture" class="hidden-xs hidden-sm hidden-lg img img-responsive thumbnail" />
+                                    
+                                </div>
+                                <div class="row">
+                                    <p class="text-muted text-center mt8"><t t-esc="item.partner_id.name"/></p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-sm-9 mt16">
+                            <div class="col-md-12">
+                                <div class="row">
+                                    <h3 class="mt0"><t t-esc="item.name"/></h3>
+                                    <h5>Description</h5>
+                                </div>
+                                <div class="row">
+                                    <p><t t-esc="item.description"/></p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-sm-3 mt16">
+                            <t t-foreach="item.currency_ids" t-as="price">
+                                <p class="text-muted text-right"><span class="label label-default"><t t-esc="price.price_unit"/> <t t-esc="price.currency_id.name"/></span></p>
+                            </t>
+                            <p class="text-muted text-right"><span class="label label-default"><t t-esc="item.quantity_available"/> <t t-esc="item.uom_id.name"/></span></p>
+                            <p class="text-muted text-right"><span class="label label-default" t-field="item.expiration_date"/></p>
+                            <p class="text-muted text-right"><span class="label label-default"><t t-esc="item.city"/></span></p>
+                            <p class="text-muted text-right"><span class="badge" t-esc="len(item.proposition_ids)"></span> replies</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- START: single item -->
+            </t>
+        </template>
+        <template id="mp_search_offers">
+            <t t-foreach="result['offers'] or []" t-as="item">
+                                                <!-- START: single item -->
+                                                <div class="row">
+                                                    <div class="col-md-12 thumbnail mb32">
+                                                        <div class="col-md-3 mt16">
+                                                            <div class="col-md-12">
+                                                                <div class="row">
+                                                                    <img t-att-src="item.picture" class="hidden-xs hidden-sm hidden-lg img img-responsive thumbnail" />
+                                                                </div>
+                                                                <div class="row">
+                                                                    <p class="text-muted text-center mt8"><t t-esc="item.partner_id.name"/></p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-6 col-sm-9 mt16">
+                                                            <div class="col-md-12">
+                                                                <div class="row">
+                                                                    <h3 class="mt0"><t t-esc="item.name"/></h3>
+                                                                    <h5>Description</h5>
+                                                                </div>
+                                                                <div class="row">
+                                                                    <p><t t-esc="item.description"/></p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-3 col-sm-3 mt16">
+                                                            <t t-foreach="item.currency_ids" t-as="price">
+                                                                <p class="text-muted text-right"><span class="label label-default"><t t-esc="price.price_unit"/> <t t-esc="price.currency_id.name"/></span></p>
+                                                            </t>
+                                                            <p class="text-muted text-right"><span class="label label-default"><t t-esc="item.quantity_available"/> <t t-esc="item.uom_id.name"/></span></p>
+                                                            <p class="text-muted text-right"><span class="label label-default" t-esc="item.expiration_date"/></p>
+                                                            <p class="text-muted text-right"><span class="label label-default"><t t-esc="item.city"/></span></p>
+                                                            <p class="text-muted text-right"><span class="badge">99</span> replies</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <!-- START: single item -->
+                                            </t>
+        </template>
+        <template id="mp_search">
+            <t t-call="website.layout">
+                <t t-call="website_project_weezer.mp_search_form"/>
+                <!-- marketplace listing -->
+                <section class="container">
+
+                    <h3 class="text-center col-md-6 page-header mb8">Our Wants</h3>
+                    <h3 class="text-center col-md-6 page-header mb8">Our Offers</h3>
+                    
+                    <!-- START: Scrollable -->
+                    <div class="col-md-12 scrollable page-header pb8 mp_search">
+                        <div class="scrollbar"><div class="track"><div class="thumb"></div></div></div>
+
+                            <div class="viewport" style="height: 690px; overflow: hidden;">
+                                <div class="overview">
+
+                                    <!-- START: Our wants -->
+                                    <div class="col-md-6">
+                                        <div class="col-md-12 mp_search_wants">
+                                            <t t-call="website_project_weezer.mp_search_wants"/>
+                                        </div> 
+                                    </div> 
+                                    <!-- END: Our wants -->
+                                     
+                                    <!-- START: Our offers -->
+                                    <div class="col-md-6">
+                                        <div class="col-md-12 mp_search_offers">
+                                            <t t-call="website_project_weezer.mp_search_offers"/>
+                                        </div> 
+                                    </div> 
+                                    <!-- END: Our offers -->   
+                        
+                                </div>
+                            </div>
+                        </div>
+                    <!-- END: Scrollable -->
+                    <footer class="col-md-2 col-md-offset-5 mt8 mb32">
+                        <a href="#" class="btn text-center btn-primary btn-block btn-simulateload">Load more</a>
+                    </footer>
+                </section>
+                <!-- /marketplace listing -->
+            </t>
+        </template>
+
         <template id="head" inherit_id="website.assets_frontend" name="Market Place Search">
             <xpath expr="/t" position="inside">
                 <script type="text/javascript" src="/website_project_weezer/static/src/js/bootstrap-select.min.js"></script>
@@ -250,8 +504,13 @@
                 <script type="text/javascript" src="/website_project_weezer/static/src/js/bootstrap-datepicker.js"></script>
                 <link rel='stylesheet' href='/website_project_weezer/static/src/css/datepicker.css'/>
 
+                <link rel='stylesheet' href='/website_project_weezer/static/src/css/main.css'/>
+
+                <script type="text/javascript" src="/website_project_weezer/static/src/js/jquery.dynamiclist.min.js"></script>
+                <script type="text/javascript" src="/website_project_weezer/static/src/js/jquery.mousewheel.min.js"></script>
+                <script type="text/javascript" src="/website_project_weezer/static/src/js/jquery.tinyscrollbar.min.js"></script>
+
                <script type="text/javascript" src="/website_project_weezer/static/src/js/main.js"></script>
-               <script type="text/javascript" src="/website_project_weezer/static/src/js/mp-search.js"></script>
             </xpath>
         </template>
     </data>

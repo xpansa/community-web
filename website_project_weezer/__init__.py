@@ -20,6 +20,7 @@
 #
 
 from controllers import announcement_detail
+from controllers import search
 from models import marketplace
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
