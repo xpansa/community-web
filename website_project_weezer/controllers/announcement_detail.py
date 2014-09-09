@@ -25,6 +25,7 @@ import base64
 from openerp.addons.web import http
 from openerp.addons.web.http import request
 from openerp.addons.website.controllers.main import Website as controllers
+from openerp.addons.web.controllers.main import content_disposition
 
 class announcement_controller(http.Controller):
     
@@ -77,14 +78,13 @@ class announcement_controller(http.Controller):
 
     def get_attachment_dict(self, cr, uid, registry, announcement, context=None):
         attach_pool = registry.get('ir.attachment')
-        message_pool = registry.get('mail.attachment')
 
         attachment_ids = attach_pool.search(cr, uid, [ ('res_model','=','marketplace.announcement'),
                                                       ('res_id','=', announcement.id ),
                                                                                           ] )
         attachment_dict = dict()
         for attachment in attach_pool.browse(cr, uid, attachment_ids):
-            attachment_dict.update({attachment.website_url: attachment.name})
+            attachment_dict.update({'/marketplace/announcement_detail/%s/attachment/%s' % (announcement.id, attachment.id): attachment.name})
         return attachment_dict
 
     def get_tag_dict_by_category(self, cr, uid, registry, category_id, context=None):
@@ -99,9 +99,23 @@ class announcement_controller(http.Controller):
         cr, uid, context = request.cr, request.uid, request.context
 
         return {
-        	'tag_dict': self.get_tag_dict_by_category(cr, uid, request.registry, category_id, context=context),
+            'tag_dict': self.get_tag_dict_by_category(cr, uid, request.registry, category_id, context=context),
         }
 
+    @http.route('/marketplace/announcement_detail/<model("marketplace.announcement"):announcement>/attachment/<model("ir.attachment"):attachment>', type='http', auth="public", website=True)
+    def download_attachment(self, announcement, attachment):
+    	if attachment.res_id == announcement.id:
+	        filecontent = base64.b64decode(attachment.datas)
+	        if not filecontent:
+	            responce = 'aa'#request.not_found()
+	        else:
+	            filename = attachment.name
+	            responce = request.make_response(filecontent,
+                [('Content-Type', 'application/octet-stream'),
+                 ('Content-Disposition', content_disposition(filename))])
+        else:
+	    	responce = 'bbb'
+    	return responce
 
     @http.route('/marketplace/announcement_detail/<model("marketplace.announcement"):announcement>/edit', type='http', auth="public", website=True)
     def edit_announcement(self, announcement):
@@ -124,15 +138,28 @@ class announcement_controller(http.Controller):
     def save_announcement(self, announcement, **post):
         cr, uid, context = request.cr, request.uid, request.context
 
+        error_message_list = list()
+        error_param_list = list() 
+
+
+
         if post.get('document'):
             picture = post.get('picture')
-            attachment_id = request.registry.get('ir.attachment').create(cr, uid, {
-                'name': picture.filename,
-                'datas': base64.encodestring(picture.read()),
-                'datas_fname': picture.filename,
-                'res_model': 'marketplace.announcement',
-                'res_id': announcement.id,
-            }, request.context)
+            try:
+                attachment_id = request.registry.get('ir.attachment').create(cr, uid, {
+                    'name': picture.filename,
+                    'datas': base64.encodestring(picture.read()),
+                    'datas_fname': picture.filename,
+                    'res_model': 'marketplace.announcement',
+                    'res_id': announcement.id,
+                }, context=context)
+            except Exception, e:
+                error_message_list.append(unicode(e))
+                error_param_list.append('document')
+
+        if len(error_param_list) > 0:
+        	if attachment_id:
+        		request.registry.get('ir.attachment').unlink(cr, uid, attachment_id, context=context)
         return "%s%s%s" % (post,post['picture'].filename,attachment_id)
 
 
