@@ -19,13 +19,18 @@
 #
 #
 
-import os
 import base64
+import logging
+import os
 
 from openerp.addons.web import http
+from openerp.addons.web.controllers.main import content_disposition
 from openerp.addons.web.http import request
 from openerp.addons.website.controllers.main import Website as controllers
-from openerp.addons.web.controllers.main import content_disposition
+
+from openerp.tools.translate import _
+
+logger = logging.getLogger(__name__)
 
 class announcement_controller(http.Controller):
     
@@ -104,18 +109,18 @@ class announcement_controller(http.Controller):
 
     @http.route('/marketplace/announcement_detail/<model("marketplace.announcement"):announcement>/attachment/<model("ir.attachment"):attachment>', type='http', auth="public", website=True)
     def download_attachment(self, announcement, attachment):
-    	if attachment.res_id == announcement.id:
-	        filecontent = base64.b64decode(attachment.datas)
-	        if not filecontent:
-	            responce = 'aa'#request.not_found()
-	        else:
-	            filename = attachment.name
-	            responce = request.make_response(filecontent,
+        if attachment.res_id == announcement.id:
+            filecontent = base64.b64decode(attachment.datas)
+            if not filecontent:
+                responce = request.not_found()
+            else:
+                filename = attachment.name
+                responce = request.make_response(filecontent,
                 [('Content-Type', 'application/octet-stream'),
                  ('Content-Disposition', content_disposition(filename))])
         else:
-	    	responce = 'bbb'
-    	return responce
+            responce = request.not_found()
+        return responce
 
     @http.route('/marketplace/announcement_detail/<model("marketplace.announcement"):announcement>/edit', type='http', auth="public", website=True)
     def edit_announcement(self, announcement):
@@ -141,6 +146,23 @@ class announcement_controller(http.Controller):
         error_message_list = list()
         error_param_list = list() 
 
+        vals = dict()
+        if post.get('category_id'):
+            category_id = post.get('category_id')
+            if category_id != 'None':
+                res_id = request.registry.get('marketplace.announcement.category').search(cr, uid, [('id', '=', category_id)], limit=1, context=context)
+                if res_id == category_id:
+                    vals.update({'category_id': res_id})
+                else:
+                    error_message_list.append(_('There is no such category'))
+                    error_param_list.append('category_id')
+            else:
+                vals.update({'category_id': False})
+
+        if post.get('tag_ids'):
+            logger.error("======================================")
+            logger.error(post.get('tags_ids'))
+            logger.error(type(post.get('tags_ids')))
 
 
         if post.get('document'):
@@ -158,9 +180,9 @@ class announcement_controller(http.Controller):
                 error_param_list.append('document')
 
         if len(error_param_list) > 0:
-        	if attachment_id:
-        		request.registry.get('ir.attachment').unlink(cr, uid, attachment_id, context=context)
-        return "%s%s%s" % (post,post['picture'].filename,attachment_id)
+            if vars().has_key('attachment_id') and attachment_id:
+                request.registry.get('ir.attachment').unlink(cr, uid, attachment_id, context=context)
+        return "%s%s%s" % (post,2, 1)
 
 
 
