@@ -87,7 +87,7 @@ class announcement_controller(http.Controller):
             attachment_dict.update({attachment.website_url: attachment.name})
         return attachment_dict
 
-    def get_dict_by_category(self, cr, uid, registry, category_id, context=None):
+    def get_tag_dict_by_category(self, cr, uid, registry, category_id, context=None):
         tag_pool = registry.get('marketplace.tag')
         tag_list = tag_pool.search(cr, uid, [('category_id', '=', category_id)], context=context)
         tag_list = tag_pool.browse(cr, uid, tag_list, context=context)
@@ -117,6 +117,7 @@ class announcement_controller(http.Controller):
             'currency_dict': self.get_currency_dict(cr, uid, request.registry, context=context),
             'group_dict': self.get_group_dict(cr, uid, request.registry, context=context),
             'attachment_dict': self.get_attachment_dict(cr, uid, request.registry, announcement, context=context),
+            'tag_dict': self.get_tag_dict_by_category(cr, uid, request.registry, announcement.category_id.id, context=context)
         })
 
     @http.route('/marketplace/announcement_detail/new', type='http', auth="public", website=True)
