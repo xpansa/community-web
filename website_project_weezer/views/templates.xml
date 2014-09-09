@@ -3,160 +3,164 @@
     <data>
     	<template id="website_project_weezer.edit_announcement" name="Edit announcement">
     		<t t-call="website.layout">
-    			Category: 
-    			<select name="category_id">
-	   				<t t-if="bool(announcement.category_id) == False">
-    					<option value="None" selected="selected"></option>    					
-    				</t>
-	   				<t t-if="bool(announcement.category_id) != False">
-    					<option value="None"></option>    					
-    				</t>
- 
-    				<t t-foreach="category_dict.keys()" t-as="category_id">
-    					<t t-if="category_id == announcement.category_id.id">
-    						<option selected="selected" t-att-value='category_id'><t t-esc='category_dict[category_id]'/></option>
-    					</t>
-    					<t t-if="category_id != announcement.category_id.id">
-    						<option t-att-value='category_id'><t t-esc='category_dict[category_id]'/></option>
-    					</t>
-    				</t>
-    			</select><br/>
-    			Tags:
-    			<select name="tag_ids" multiple="multiple">
-	   				<t t-if="bool(announcement.tag_ids) == False">
-    					<option value="None" selected="selected"></option>    					
-    				</t>
-	   				<t t-if="bool(announcement.tag_ids) != False">
-    					<option value="None"></option>    					
-    				</t>
- 
-    				<t t-foreach="tag_dict.keys()" t-as="tag_id">
-    					<t t-if="tag_id in announcement.tag_ids">
-    						<option selected="selected" t-att-value='tag_id'><t t-esc='tag_dict[tag_id]'/></option>
-    					</t>
-    					<t t-if="tag_id not in announcement.tag_ids">
-    						<option t-att-value='tag_id'><t t-esc='tag_dict[tag_id]'/></option>
-    					</t>
-    				</t>
-    			</select>
-    			<br/>
-    			Groups: 
-    			<select name="groups" multiple="multiple">
-	   				<t t-if="bool(announcement.context_group_ids) == False">
-    					<option value="None" selected="selected"></option>    					
-    				</t>
-	   				<t t-if="bool(announcement.context_group_ids) != False">
-    					<option value="None"></option>    					
-    				</t>
- 					<t t-foreach="group_dict.keys()" t-as="group_id">
-    					<t t-if="group_id in announcement.context_group_ids">
-    						<option selected="selected" t-att-value='group_id'><t t-esc='group_dict[group_id]'/></option>
-    					</t>
-    					<t t-if="group_id not in announcement.context_group_ids">
-    						<option t-att-value='group_id'><t t-esc='group_dict[group_id]'/></option>
-    					</t>
-    				</t>
-    				
-    			</select><br/>
-    			State: 
-    				<t t-foreach="state_status_dict.keys()" t-as="state">
-    					<t t-if="state == announcement.state">
-   							<span><b><t t-esc='state_status_dict[state]'/></b></span>
-   						</t>
-   						<t t-if="state != announcement.state">
-   							<span><t t-esc='state_status_dict[state]'/></span>
-   						</t>
-    				</t>
-    			<br/>
-    			Documents: 
-    			<t t-if="attachment_dict">
-	    			<t t-foreach="attachment_dict.keys()" t-as="attach">
-	   					<a t-att-href="attach"><t t-esc='attachment_dict[attach]'/></a>
+                <form action="save" method="POST" enctype="multipart/form-data">
+                    <input type="submit" value="save"/><br/>
+        			Category: 
+        			<select name="category_id">
+    	   				<t t-if="bool(announcement.category_id) == False">
+        					<option value="None" selected="selected"></option>    					
+        				</t>
+    	   				<t t-if="bool(announcement.category_id) != False">
+        					<option value="None"></option>    					
+        				</t>
+     
+        				<t t-foreach="category_dict.keys()" t-as="category_id">
+        					<t t-if="category_id == announcement.category_id.id">
+        						<option selected="selected" t-att-value='category_id'><t t-esc='category_dict[category_id]'/></option>
+        					</t>
+        					<t t-if="category_id != announcement.category_id.id">
+        						<option t-att-value='category_id'><t t-esc='category_dict[category_id]'/></option>
+        					</t>
+        				</t>
+        			</select><br/>
+        			Tags:
+        			<select name="tag_ids" multiple="multiple">
+    	   				<t t-if="bool(announcement.tag_ids) == False">
+        					<option value="None" selected="selected"></option>    					
+        				</t>
+    	   				<t t-if="bool(announcement.tag_ids) != False">
+        					<option value="None"></option>    					
+        				</t>
+     
+        				<t t-foreach="tag_dict.keys()" t-as="tag_id">
+        					<t t-if="tag_id in announcement.tag_ids">
+        						<option selected="selected" t-att-value='tag_id'><t t-esc='tag_dict[tag_id]'/></option>
+        					</t>
+        					<t t-if="tag_id not in announcement.tag_ids">
+        						<option t-att-value='tag_id'><t t-esc='tag_dict[tag_id]'/></option>
+        					</t>
+                            <widget name="website_file_upload"/>
+        				</t>
+        			</select>
+        			<br/>
+        			Groups: 
+        			<select name="groups" multiple="multiple">
+    	   				<t t-if="bool(announcement.context_group_ids) == False">
+        					<option value="None" selected="selected"></option>    					
+        				</t>
+    	   				<t t-if="bool(announcement.context_group_ids) != False">
+        					<option value="None"></option>    					
+        				</t>
+     					<t t-foreach="group_dict.keys()" t-as="group_id">
+        					<t t-if="group_id in announcement.context_group_ids">
+        						<option selected="selected" t-att-value='group_id'><t t-esc='group_dict[group_id]'/></option>
+        					</t>
+        					<t t-if="group_id not in announcement.context_group_ids">
+        						<option t-att-value='group_id'><t t-esc='group_dict[group_id]'/></option>
+        					</t>
+        				</t>
+        				
+        			</select><br/>
+        			State: 
+        				<t t-foreach="state_status_dict.keys()" t-as="state">
+        					<t t-if="state == announcement.state">
+       							<span><b><t t-esc='state_status_dict[state]'/></b></span>
+       						</t>
+       						<t t-if="state != announcement.state">
+       							<span><t t-esc='state_status_dict[state]'/></span>
+       						</t>
+        				</t>
+        			<br/>
+        			Documents: 
+        			<t t-if="attachment_dict">
+    	    			<t t-foreach="attachment_dict.keys()" t-as="attach">
+    	   					<a t-att-href="attach"><t t-esc='attachment_dict[attach]'/></a>
 
-	    			</t>
-	    		</t>
-	    		<!-- upload button -->
-	    		<br/>
-    			Link:  <input name="link" t-att-value="announcement.link"/><br/>
-    			Emergency: <t t-if="announcement.emergency == False">
-    				<input name="emergency" type="checkbox"/> 
-    			</t>
-    			<t t-if="announcement.emergency">
-    				<input name="emergency" checked="checked"/>
-    			</t> <br/>
-    			Author: <input disabled="disabled" t-att-value="author.name"/><br/>
-    			<span t-field="author.image" t-field-options='{"widget": "image"}'/> <br/>
+    	    			</t>
+    	    		</t>
+    	    		<input type="file" name="document"/><br/>
+    	    		<br/>
+        			Link:  <input name="link" t-att-value="announcement.link"/><br/>
+        			Emergency: <t t-if="announcement.emergency == False">
+        				<input name="emergency" type="checkbox"/> 
+        			</t>
+        			<t t-if="announcement.emergency">
+        				<input name="emergency" checked="checked"/>
+        			</t> <br/>
+        			Author: <input disabled="disabled" t-att-value="author.name"/><br/>
+        			<span t-field="author.image" t-field-options='{"widget": "image"}'/> <br/>
 
-    			<span t-field="announcement.picture" t-field-options='{"widget": "image"}'/> <br/>
-    			<input type="file" name="picture"/><br/>
-    			Title: <input name="title" t-att-value="announcement.name"/> <br/>
-    			Description: <input name="description" t-att-value="announcement.description"/> <br/>
-    			Where: <br/>
-    			Street: <input name="street" t-att-value="announcement.street"/> <br/>
-    			Street2: <input name="street2" t-att-value="announcement.street2"/> <br/>
-    			zip: <input name="zip" t-att-value="announcement.zip"/> <br/>
-    			city: <input name="city" t-att-value="announcement.city"/> <br/>
-    			us state:
-    			<select name="state_id"> 
-    				<t t-if="bool(announcement.state_id) == False">
-    					<option value="None" selected="selected"></option>    					
-    				</t>
-    				<t t-if="bool(announcement.state_id) != False">
-    					<option value="None"></option>    					
-    				</t>
+        			<span t-field="announcement.picture" t-field-options='{"widget": "image"}'/> <br/>
+        			<input type="file" name="picture"/><br/>
+        			Title: <input name="title" t-att-value="announcement.name"/> <br/>
+        			Description: <input name="description" t-att-value="announcement.description"/> <br/>
+        			Where: <br/>
+        			Street: <input name="street" t-att-value="announcement.street"/> <br/>
+        			Street2: <input name="street2" t-att-value="announcement.street2"/> <br/>
+        			zip: <input name="zip" t-att-value="announcement.zip"/> <br/>
+        			city: <input name="city" t-att-value="announcement.city"/> <br/>
+        			us state:
+        			<select name="state_id"> 
+        				<t t-if="bool(announcement.state_id) == False">
+        					<option value="None" selected="selected"></option>    					
+        				</t>
+        				<t t-if="bool(announcement.state_id) != False">
+        					<option value="None"></option>    					
+        				</t>
 
-    				<t t-foreach="us_state_dict.keys()" t-as="state_id">
-    					<t t-if="state_id == announcement.state_id.id">
-    						<option selected="selected" t-att-value='state_id'><t t-esc='us_state_dict[state_id]'/></option>
-    					</t>
-    					<t t-if="state_id != announcement.state_id.id">
-    						<option t-att-value='state_id'><t t-esc='us_state_dict[state_id]'/></option>
-    					</t>
+        				<t t-foreach="us_state_dict.keys()" t-as="state_id">
+        					<t t-if="state_id == announcement.state_id.id">
+        						<option selected="selected" t-att-value='state_id'><t t-esc='us_state_dict[state_id]'/></option>
+        					</t>
+        					<t t-if="state_id != announcement.state_id.id">
+        						<option t-att-value='state_id'><t t-esc='us_state_dict[state_id]'/></option>
+        					</t>
+        				</t>
+        			</select><br/>
+        			<select name="country_id">
+        				<t t-if="bool(announcement.country_id) == False">
+        					<option value="None" selected="selected"></option>    					
+        				</t> 
+        				<t t-if="bool(announcement.country_id) != False">
+        					<option value="None"></option>    					
+        				</t>
+    					<t t-foreach="country_dict.keys()" t-as="country_id">
+        					<t t-if="country_id == announcement.country_id.id">
+        						<option selected="selected" t-att-value='country_id'><t t-esc='country_dict[country_id]'/></option>
+        					</t>
+        					<t t-if="country_id != announcement.country_id.id">
+        						<option t-att-value='country_id'><t t-esc='country_dict[country_id]'/></option>    						
+        					</t>
+        				</t>
+        			</select><br/>
+        			From: <input name="date_from" t-att-value="announcement.date_from"/> <br/>
+        			To: <input name="date_to" t-att-value="announcement.date_to"/>  <br/>
+        			<t t-if="announcement.infinite_qty == False">
+        				<input name="unlimited" type="checkbox"/> Infinity
+        			</t>
+        			<t t-if="announcement.infinite_qty">
+        				<input name="unlimited" checked="checked"/> Infinity
+        			</t>
+        			<br/>
+        			qty: <input name="qty" t-att-value="announcement.quantity"/> <br/>
+        			available: <span t-field="announcement.quantity_available"/> <br/>
+        			How much:
+        			<t t-set="index" t-value="1"/>
+        			<t t-foreach="announcement.currency_ids" t-as="currency_line">
+        				<input t-att-name="'%s%s' % ('currency_amount', index)" t-att-value="currency_line.price_unit"/>
+        				<select t-att-name="'%s%s' % ('currency_id', index)"> 
+    						<t t-foreach="currency_dict.keys()" t-as="currency_id">
+    	    					<t t-if="currency_id == currency_line.currency_id.id">
+    	    						<option selected="selected" t-att-value='currency_id'><t t-esc='currency_dict[currency_id]'/></option>
+    	    					</t>
+    	    					<t t-if="currency_id != currency_line.currency_id.id">
+    	    						<option t-att-value='currency_id'><t t-esc='currency_dict[currency_id]'/></option>
+    	    					</t>
+    	    				</t>
+        				</select><br/>
+        				<t t-set="index" t-value="index + 1"/>
     				</t>
-    			</select><br/>
-    			<select name="country_id">
-    				<t t-if="bool(announcement.country_id) == False">
-    					<option value="None" selected="selected"></option>    					
-    				</t> 
-    				<t t-if="bool(announcement.country_id) != False">
-    					<option value="None"></option>    					
-    				</t>
-					<t t-foreach="country_dict.keys()" t-as="country_id">
-    					<t t-if="country_id == announcement.country_id.id">
-    						<option selected="selected" t-att-value='country_id'><t t-esc='country_dict[country_id]'/></option>
-    					</t>
-    					<t t-if="country_id != announcement.country_id.id">
-    						<option t-att-value='country_id'><t t-esc='country_dict[country_id]'/></option>    						
-    					</t>
-    				</t>
-    			</select><br/>
-    			From: <input name="date_from" t-att-value="announcement.date_from"/> <br/>
-    			To: <input name="date_to" t-att-value="announcement.date_to"/>  <br/>
-    			<t t-if="announcement.infinite_qty == False">
-    				<input name="unlimited" type="checkbox"/> Infinity
-    			</t>
-    			<t t-if="announcement.infinite_qty">
-    				<input name="unlimited" checked="checked"/> Infinity
-    			</t>
-    			<br/>
-    			qty: <input name="qty" t-att-value="announcement.quantity"/> <br/>
-    			available: <span t-field="announcement.quantity_available"/> <br/>
-    			How much:
-    			<t t-set="index" t-value="1"/>
-    			<t t-foreach="announcement.currency_ids" t-as="currency_line">
-    				<input t-att-name="'%s%s' % ('currency_amount', index)" t-att-value="currency_line.price_unit"/>
-    				<select t-att-name="'%s%s' % ('currency_id', index)"> 
-						<t t-foreach="currency_dict.keys()" t-as="currency_id">
-	    					<t t-if="currency_id == currency_line.currency_id.id">
-	    						<option selected="selected" t-att-value='currency_id'><t t-esc='currency_dict[currency_id]'/></option>
-	    					</t>
-	    					<t t-if="currency_id != currency_line.currency_id.id">
-	    						<option t-att-value='currency_id'><t t-esc='currency_dict[currency_id]'/></option>
-	    					</t>
-	    				</t>
-    				</select><br/>
-    				<t t-set="index" t-value="index + 1"/>
-				</t>
+                </form>
 	    	</t>
 		</template>
 
@@ -195,7 +199,7 @@
     				</t>
     			<br/>
     			Documents: 
-    			<!-- upload button -->
+                <input type="file" name="document"/><br/>
 	    		<br/>
     			Link:  <input name="link" /><br/>
     			Emergency: <input name="emergency" type="checkbox"/> <br/>

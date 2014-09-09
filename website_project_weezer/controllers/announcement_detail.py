@@ -120,6 +120,25 @@ class announcement_controller(http.Controller):
             'tag_dict': self.get_tag_dict_by_category(cr, uid, request.registry, announcement.category_id.id, context=context)
         })
 
+    @http.route('/marketplace/announcement_detail/<model("marketplace.announcement"):announcement>/save', type='http', auth="user")
+    def save_announcement(self, announcement, **post):
+        cr, uid, context = request.cr, request.uid, request.context
+
+        if post.get('document'):
+            picture = post.get('picture')
+            attachment_id = request.registry.get('ir.attachment').create(cr, uid, {
+                'name': picture.filename,
+                'datas': base64.encodestring(picture.read()),
+                'datas_fname': picture.filename,
+                'res_model': 'marketplace.announcement',
+                'res_id': announcement.id,
+            }, request.context)
+        return "%s%s%s" % (post,post['picture'].filename,attachment_id)
+
+
+
+
+
     @http.route('/marketplace/announcement_detail/new', type='http', auth="public", website=True)
     def new_announcement(self):
         cr, uid, context = request.cr, request.uid, request.context
