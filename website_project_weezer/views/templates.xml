@@ -30,7 +30,14 @@
     					<option value="None"></option>    					
     				</t>
  
-    				<!-- Must be added with tags from get tag request -->
+    				<t t-foreach="tag_dict.keys()" t-as="tag_id">
+    					<t t-if="tag_id in announcement.tag_ids">
+    						<option selected="selected" t-att-value='tag_id'><t t-esc='tag_dict[tag_id]'/></option>
+    					</t>
+    					<t t-if="tag_id not in announcement.tag_ids">
+    						<option t-att-value='tag_id'><t t-esc='tag_dict[tag_id]'/></option>
+    					</t>
+    				</t>
     			</select>
     			<br/>
     			Groups: 
@@ -70,7 +77,7 @@
 	    		</t>
 	    		<!-- upload button -->
 	    		<br/>
-    			Link: ...<br/>
+    			Link:  <input name="link" t-att-value="announcement.link"/><br/>
     			Emergency: <t t-if="announcement.emergency == False">
     				<input name="emergency" type="checkbox"/> 
     			</t>
@@ -190,7 +197,7 @@
     			Documents: 
     			<!-- upload button -->
 	    		<br/>
-    			Link: ...<br/>
+    			Link:  <input name="link" /><br/>
     			Emergency: <input name="emergency" type="checkbox"/> <br/>
     			Author: <input disabled="disabled" t-att-value="author.name"/><br/>
     			<span t-field="author.image" t-field-options='{"widget": "image"}'/> <br/>
