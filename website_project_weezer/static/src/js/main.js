@@ -11,18 +11,26 @@ $(document).ready(function(){
         self.addClass('loading');
         self.addClass('disabled');
 
-        $.ajax("/marketplace/search/load_more"+window.location.search+'&load_wants=1'+'&offset='+offset, {'method': 'GET'})
+        var URL = "/marketplace/search/load_more";
+        if(window.location.search)
+            URL += window.location.search + '&'
+        else
+            URL += '?'
+
+        $.ajax(URL+'load_wants=1'+'&offset='+offset, {'method': 'GET'})
             .then(function (data) {
+                console.log(data);
                 $('.mp_search_wants').append(data);
+                $.ajax(URL+'load_offers=1'+'&offset='+offset, {'method': 'GET'})
+                .then(function (data) {
+                    $('.mp_search_offers').append(data);
+                    self.removeClass('loading');
+                    self.removeClass('disabled');
+                    offset += 4;
+                    $('div.mp_search').tinyscrollbar().data("plugin_tinyscrollbar").update('bottom');
+                });
             });
-        $.ajax("/marketplace/search/load_more"+window.location.search+'&load_offers=1'+'&offset='+offset, {'method': 'GET'})
-            .then(function (data) {
-                $('.mp_search_offers').append(data);
-                self.removeClass('loading');
-                self.removeClass('disabled');
-                offset += 4;
-                $('div.mp_search').tinyscrollbar().data("plugin_tinyscrollbar").update('bottom');
-            });
+        
 
             
     });

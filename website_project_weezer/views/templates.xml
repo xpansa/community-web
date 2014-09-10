@@ -378,10 +378,7 @@
                     <div class="col-md-12 thumbnail mb32">
                         <div class="col-md-3 mt16">
                             <div class="col-md-12">
-                                <div class="row">
-                                    <img t-att-src="item.picture" class="hidden-xs hidden-sm hidden-lg img img-responsive thumbnail" />
-                                    
-                                </div>
+                                <div class="row" t-field="item.picture" t-field-options='{"widget": "image", "class": "hidden-xs hidden-sm hidden-lg img img-responsive thumbnail" }'/>
                                 <div class="row">
                                     <p class="text-muted text-center mt8"><t t-esc="item.partner_id.name"/></p>
                                 </div>
@@ -419,9 +416,7 @@
                                                     <div class="col-md-12 thumbnail mb32">
                                                         <div class="col-md-3 mt16">
                                                             <div class="col-md-12">
-                                                                <div class="row">
-                                                                    <img t-att-src="item.picture" class="hidden-xs hidden-sm hidden-lg img img-responsive thumbnail" />
-                                                                </div>
+                                                                <div class="row" t-field="item.picture" t-field-options='{"widget": "image", "class": "hidden-xs hidden-sm hidden-lg img img-responsive thumbnail" }'/>
                                                                 <div class="row">
                                                                     <p class="text-muted text-center mt8"><t t-esc="item.partner_id.name"/></p>
                                                                 </div>
