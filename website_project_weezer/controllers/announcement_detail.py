@@ -88,11 +88,12 @@ class announcement_controller(http.Controller):
         attach_pool = registry.get('ir.attachment')
 
         attachment_ids = attach_pool.search(cr, uid, [ ('res_model','=','marketplace.announcement'),
-                                                      ('res_id','=', announcement.id ),
+                                                      ('res_id','=', announcement.id),
                                                                                           ] )
         attachment_dict = dict()
         for attachment in attach_pool.browse(cr, uid, attachment_ids):
-            attachment_dict.update({'/marketplace/announcement_detail/%s/attachment/%s' % (announcement.id, attachment.id): attachment.name})
+            if attachment.name != 'Marketplace picture':
+                attachment_dict.update({'/marketplace/announcement_detail/%s/attachment/%s' % (announcement.id, attachment.id): attachment.name})
         return attachment_dict
 
     def get_tag_dict_by_category(self, cr, uid, registry, category_id, context=None):
