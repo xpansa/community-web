@@ -20,8 +20,10 @@
 #
 
 import base64
+import datetime
 import logging
 import os
+import werkzeug.utils
 
 from openerp.addons.web import http
 from openerp.addons.web.controllers.main import content_disposition
@@ -30,7 +32,7 @@ from openerp.addons.website.controllers.main import Website as controllers
 
 from openerp.tools.translate import _
 
-logger = logging.getLogger(__name__)
+_logger = logging.getLogger(__name__)
 
 class announcement_controller(http.Controller):
     
@@ -141,7 +143,7 @@ class announcement_controller(http.Controller):
 
     @http.route('/marketplace/announcement_detail/<model("marketplace.announcement"):announcement>/save', type='http', auth="user")
     def save_announcement(self, announcement, **post):
-        cr, uid, context = request.cr, request.uid, request.context
+        cr, uid, context, registry = request.cr, request.uid, request.context, request.registry
 
         error_message_list = list()
         error_param_list = list() 
@@ -150,8 +152,9 @@ class announcement_controller(http.Controller):
         if post.get('category_id'):
             category_id = post.get('category_id')
             if category_id != 'None':
-                res_id = request.registry.get('marketplace.announcement.category').search(cr, uid, [('id', '=', category_id)], limit=1, context=context)
-                if res_id == category_id:
+                res_id = registry.get('marketplace.announcement.category').search(cr, uid, [('id', '=', category_id)], limit=1, context=context)
+                res_id = (res_id[0] if len(res_id) else False) if type(res_id) is list else res_id
+                if res_id:
                     vals.update({'category_id': res_id})
                 else:
                     error_message_list.append(_('There is no such category'))
@@ -159,19 +162,230 @@ class announcement_controller(http.Controller):
             else:
                 vals.update({'category_id': False})
 
-        if post.get('tag_ids'):
-            logger.error("======================================")
-            logger.error(post.get('tags_ids'))
-            logger.error(type(post.get('tags_ids')))
+        # TODO: tag save
+
+        # TODO: groups save
+
+        if post.get('link'):
+            vals.update({'link': post.get('link')})
+
+        if post.get('emergency') and post.get('emergency') == 'on':
+            vals.update({'emergency': True})
+        else:
+            vals.update({'emergency': False})
+
+        if post.get('title'):
+            vals.update({'name': post.get('title')})
+
+        if post.get('description'):
+            vals.update({'description': post.get('description')})
+
+        if post.get('street'):
+            vals.update({'street': post.get('street')})
+
+        if post.get('street2'):
+            vals.update({'street2': post.get('street2')})
+        
+        if post.get('zip'):
+            vals.update({'zip': post.get('zip')})
+
+        if post.get('city'):
+            vals.update({'city': post.get('city')})
+
+        if post.get('country_id'):
+            country_id = post.get('country_id')
+            if country_id != 'None':
+                country_pool = registry.get('res.country')
+                country_id = country_pool.search(cr, uid, [('id','=', country_id)], limit=1, context=context)
+                country_id = (country_id[0] if len(country_id) else False) if type(country_id) is list else country_id
+                if country_id:
+                    vals.update({'country_id': country_id, 'state_id': False})
+                else:
+                    error_message_list.append(_('There is no such country'))
+                    error_param_list.append('country_id')
+            else:
+                vals.update({'country_id': False, 'state_id': False})
 
 
-        if post.get('document'):
+        if post.get('state_id'):
+            state_id = post.get('state_id')
+            country_id = post.get('country_id')
+            country_pool = registry.get('res.country')
+            if country_id != 'None' and state_id != 'None':
+                if country_id:
+                    country_id = country_pool.search(cr, uid, [('id','=', country_id), ('code', '=', 'US')], limit=1, context=context)
+                    country_id = (country_id[0] if len(country_id) else False) if type(country_id) is list else country_id
+                else:
+                    country_id = announcement.country_id and announcement.country_id.code == 'US' and announcement.country_id.id or False
+
+                if country_id:
+                    state_pool = registry.get('res.country.state')
+                    state_id = state_pool.search(cr, uid, [('id','=',state_id)], limit=1, context=context)
+                    state_id = (state_id[0] if len(state_id) else False) if type(state_id) is list else state_id
+                    if state_id:
+                          vals.update({'state_id': state_id})
+                else:
+                    error_message_list.append(_('Only announcement from USA can have state'))
+                    error_param_list.append('country_id')
+                    error_param_list.append('state_id')
+            else:
+                vals.update({'state_id': False})
+
+
+        if post.get('date_from'):
+            try:
+                date_from = datetime.datetime.strptime(post.get('date_from'), '%Y-%m-%d')
+            except ValueError:
+                error_message_list.append(_('Wrong date fromat for date from'))
+                error_param_list.append('date_from')
+            else:
+                vals.update({'date_from': date_from})
+
+
+        if post.get('date_to'):
+            try:
+                date_to = datetime.datetime.strptime(post.get('date_to'), '%Y-%m-%d')
+            except ValueError:
+                error_message_list.append(_('Wrong date fromat for date to'))
+                error_param_list.append('date_to')
+            else:
+                vals.update({'date_to': date_to})
+
+
+        if vars().has_key('date_to') and vars().has_key('date_from'):
+            if date_to < date_from:
+                error_message_list.append(_('Date to must be greater or equal to date from'))
+                error_param_list.append('date_to')
+                error_param_list.append('date_from')
+
+        if post.get('unlimited') and post.get('unlimited') == 'on':
+            vals.update({'infinite_qty': True})
+        else:
+            vals.update({'infinite_qty': False})
+
+        if post.get('qty'):
+            try:
+                qty = float(post.get('qty'))
+            except ValueError:
+                error_message_list.append(_('Quantity must be in float fromat'))
+                error_param_list.append('qty')
+            else:
+                vals.update({'quantity': qty})
+
+        currency = {
+            'currency_amount1': 'currency_id1',
+            'currency_amount2': 'currency_id2',
+            'currency_amount3': 'currency_id3',
+        }
+        currency_value = dict()
+
+        null_amount = False
+        currency_pool = registry.get('res.currency')
+        amount_fromat_error = False
+        currency_exist_error = False
+        null_amount_error = False
+        same_currency_error = False
+        for currency_amount in currency.keys(): 
+            if post.get(currency_amount) and post.get(currency[currency_amount]):
+                amount = False
+                try:
+                    amount = float(post.get(currency_amount))
+                except ValueError:
+                    amount_fromat_error = True
+                    error_param_list.append(currency_amount)
+                currency_id = currency_pool.search(cr, uid, [('id', '=', post.get(currency[currency_amount]))], limit=1, context=context)
+                currency_id = (currency_id[0] if len(currency_id) else False) if type(currency_id) is list else currency_id
+                if currency_id == False:
+                    currency_exist_error = True
+                    error_param_list.append(currency[currency_amount])
+
+                if null_amount:
+                    null_amount_error = True
+                    error_param_list.append(currency_amount)
+
+                if amount and currency_id:
+                    currency_value.update({currency_id: amount})
+            else:
+                null_amount = True
+
+
+        
+        if post.get('currency_id1') == post.get('currency_id2') and post.get('currency_amount1') != None:
+            error_param_list.append('currency_id1')
+            error_param_list.append('currency_id2')
+            same_currency_error = True
+
+        if post.get('currency_id1') == post.get('currency_id3') and post.get('currency_amount1') != None:
+            error_param_list.append('currency_id1')
+            error_param_list.append('currency_id3')
+            same_currency_error = True
+
+        if post.get('currency_id3') == post.get('currency_id2') and post.get('currency_amount2') != None:
+            error_param_list.append('currency_id3')
+            error_param_list.append('currency_id2')
+            same_currency_error = True
+
+        if amount_fromat_error:
+            error_message_list.append(_('Amount must be in a float fromat'))
+
+        if currency_exist_error:
+            error_message_list.append(_('There is no such currency'))
+
+        if null_amount_error:
+            error_message_list.append(_('First fill in previous amount'))
+
+        if same_currency_error:
+            error_message_list.append(_('Announcement can\'t have 2 amount with the same currency'))
+
+
+        currency_line_value = dict()
+        new_currency_line_value = list()
+        currency_line_to_delete = list()
+
+        if currency_exist_error or null_amount_error or same_currency_error or amount_fromat_error == False:
+            currency_ids = announcement.currency_ids
+            currency_count_delta = len(currency_ids) - len(currency_value.keys())
+            for i in range(min(len(currency_ids), len(currency_value.keys()))):
+                currency_id = currency_value.keys()[i]
+                currency_amount = currency_value[currency_id]
+                currency_line_value.update({currency_ids[i].id: {'currency_id': currency_id, 'price_unit': currency_amount}})
+
+            if currency_count_delta > 0:
+                for i in range(1, currency_count_delta + 1):
+                    currency_line_to_delete.append(currency_ids[len(currency_ids) - i].id)
+
+            elif currency_count_delta < 0:
+                for i in range(1, abs(currency_count_delta) + 1):
+                    currency_id = currency_value.keys()[len(currency_value.keys()) - i]
+                    currency_amount = currency_value[currency_id]
+                    new_currency_line_value.append({'announcement_id': announcement.id, 'currency_id': currency_id, 'price_unit': currency_amount})
+
+        currency_line_pool = registry.get('account.centralbank.currency.line')
+
+        for currency_line_id in currency_line_value.keys():
+            currency_line_pool.write(cr, uid, currency_line_id, currency_line_value[currency_line_id], context=context)
+
+        for currency_line in new_currency_line_value:
+            currency_line_pool.create(cr, uid, currency_line, context=context)
+
+        for currency_line_id in currency_line_to_delete:
+            currency_line_pool.unlink(cr, uid, currency_line_id, context=context)
+
+        if post.get('picture'):
             picture = post.get('picture')
             try:
-                attachment_id = request.registry.get('ir.attachment').create(cr, uid, {
-                    'name': picture.filename,
-                    'datas': base64.encodestring(picture.read()),
-                    'datas_fname': picture.filename,
+                vals.update({'picture': base64.encodestring(picture.read())})
+            except Exception, e:
+                error_message_list.append(unicode(e))
+                error_param_list.append('picture')
+
+        if post.get('document'):
+            document = post.get('document')
+            try:
+                attachment_id = registry.get('ir.attachment').create(cr, uid, {
+                    'name': document.filename,
+                    'datas': base64.encodestring(document.read()),
+                    'datas_fname': document.filename,
                     'res_model': 'marketplace.announcement',
                     'res_id': announcement.id,
                 }, context=context)
@@ -180,9 +394,15 @@ class announcement_controller(http.Controller):
                 error_param_list.append('document')
 
         if len(error_param_list) > 0:
-            if vars().has_key('attachment_id') and attachment_id:
-                request.registry.get('ir.attachment').unlink(cr, uid, attachment_id, context=context)
-        return "%s%s%s" % (post,2, 1)
+            cr.rollback()
+            redirect = werkzeug.utils.redirect('marketplace/announcement_detail/%d/edit' % announcement.id, 303)
+        else:
+            registry.get('marketplace.announcement').write(cr, uid, announcement.id, vals, context=context)
+            redirect = werkzeug.utils.redirect('marketplace/announcement_detail/%d' % announcement.id, 303)
+        return redirect
+
+
+        
 
 
 
