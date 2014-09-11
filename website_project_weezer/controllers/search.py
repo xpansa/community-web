@@ -115,7 +115,6 @@ class search_controller(http.Controller):
             kw.get('date_from'), kw.get('date_to'), date_format, kw.get('from_who'), kw.get('qty_from'),
             kw.get('cur_from'), kw.get('qty_to'), kw.get('cur_to'), kw.get('limit',self.QUERY_LIMIT), 
             kw.get('offset'))
-        print sql
         cr.execute(sql[0], sql[1] or ())
         res_ids = [row[0] for row in cr.fetchall()]
         res_data = mp_announcement_pool.browse(cr, uid, res_ids, context=context)
