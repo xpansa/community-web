@@ -141,23 +141,22 @@ class announcement_controller(http.Controller):
             responce = {'status': 'error', 'error': 'This attachment is not belong to this announcement'}
         return responce
 
-    @http.route('/marketplace/announcement_detail/<model("marketplace.announcement"):announcement>', type='http', auth="public", website=True)
-    def view_announcement(self, announcement):
-        cr, uid, context, registry = request.cr, request.uid, request.context, request.registry
-        return http.request.website.render('website_project_weezer.view_announcement', {
+    def _get_view_announcement_dict(self, cr, uid, registry, announcement, context=None):
+        return {
             'announcement':announcement,
             'author': announcement.partner_id,
             'state_status_dict': self.get_state_status_dict(cr, uid, request.registry, context=context),
             'attachment_dict': self.get_attachment_dict(cr, uid, request.registry, announcement, context=context),
-        })
+        }
 
-    @http.route('/marketplace/announcement_detail/<model("marketplace.announcement"):announcement>/edit', type='http', auth="public", website=True)
-    def edit_announcement(self, announcement):
+    @http.route('/marketplace/announcement_detail/<model("marketplace.announcement"):announcement>', type='http', auth="public", website=True)
+    def view_announcement(self, announcement):
         cr, uid, context, registry = request.cr, request.uid, request.context, request.registry
-        user = registry.get('res.users').browse(cr, uid, uid, context=context)
+        return http.request.website.render('website_project_weezer.view_announcement', 
+            self._get_edit_announcement_dict(cr, uid, registry, announcement, context=context))
 
-        if user and announcement.partner_id == user.partner_id or uid == SUPERUSER_ID: 
-            responce = http.request.website.render('website_project_weezer.edit_announcement', {
+    def _get_edit_announcement_dict(self, cr, uid, registry, announcement, context=None):
+        return {
                 'announcement':announcement,
                 'author': announcement.partner_id,
                 'us_state_dict': self.get_us_state_dict(cr, uid, request.registry, context=context),
@@ -168,12 +167,21 @@ class announcement_controller(http.Controller):
                 'group_dict': self.get_group_dict(cr, uid, request.registry, context=context),
                 'attachment_dict': self.get_attachment_dict(cr, uid, request.registry, announcement, context=context),
                 'tag_dict': self.get_tag_dict_by_category(cr, uid, request.registry, announcement.category_id.id, context=context)
-            })
+            }
+
+    @http.route('/marketplace/announcement_detail/<model("marketplace.announcement"):announcement>/edit', type='http', auth="public", website=True)
+    def edit_announcement(self, announcement):
+        cr, uid, context, registry = request.cr, request.uid, request.context, request.registry
+        user = registry.get('res.users').browse(cr, uid, uid, context=context)
+
+        if user and announcement.partner_id == user.partner_id or uid == SUPERUSER_ID: 
+            responce = http.request.website.render('website_project_weezer.edit_announcement', 
+                self._get_edit_announcement_dict(cr, uid, registry, announcement, context=context))
         else:
             responce = request.not_found()
         return responce
 
-    def _parse_and_save_announcement(self, cr, uid, registry, announcement, post, error_url=False, context=None):
+    def _parse_and_save_announcement(self, cr, uid, registry, announcement, post, context=None):
         error_message_list = list()
         error_param_list = list() 
 
@@ -223,7 +231,7 @@ class announcement_controller(http.Controller):
                 error_param_list.append('new_tags')
 
         if len(tag_list):
-        	vals.update({'tag_ids': [(6, 0, tag_list)]})
+            vals.update({'tag_ids': [(6, 0, tag_list)]})
 
 
         if post.get('groups'):
@@ -466,14 +474,22 @@ class announcement_controller(http.Controller):
 
         if len(error_param_list) > 0:
             cr.rollback()
-            if error_url:
-                redirect = werkzeug.utils.redirect(error_url, 303)
+            if context.get('from_new_announcement') == True:
+                responce = self._get_new_announcement_dict(cr, uid, registry, announcement.partner_id, context=context)
+                template_id = 'website_project_weezer.new_announcement'
             else:
-                redirect = werkzeug.utils.redirect('marketplace/announcement_detail/%d/edit' % announcement.id, 303)
+                responce = self._get_edit_announcement_dict(cr, uid, registry, announcement, context=context)
+                template_id = 'website_project_weezer.edit_announcement'
+
+            responce.update({'error_param_list': error_param_list, 'error_message_list': error_message_list})
         else:
-            registry.get('marketplace.announcement').write(cr, uid, announcement.id, vals, context=context)
-            redirect = werkzeug.utils.redirect('marketplace/announcement_detail/%d' % announcement.id, 303)
-        return redirect
+            res_id = registry.get('marketplace.announcement').write(cr, uid, announcement.id, vals, context=context)
+            announcement = registry.get('marketplace.announcement').browse(cr, uid, announcement.id, context=context)
+            responce = self._get_view_announcement_dict(cr, uid, registry, announcement, context=context)
+            responce.update({'success_message_list': ['Announcement successfully saved']})
+            template_id = 'website_project_weezer.view_announcement'
+        
+        return {'template_id': template_id, 'response': responce}
 
     def _prepare_save_announcemet_param(self, cr, uid, request, post):
         if post.get('tag_ids'):
@@ -483,43 +499,53 @@ class announcement_controller(http.Controller):
         if post.get('groups'):
             post['groups'] = request.httprequest.form.getlist('groups')
 
-    @http.route('/marketplace/announcement_detail/<model("marketplace.announcement"):announcement>/save', type='http', auth="user")
+    @http.route('/marketplace/announcement_detail/<model("marketplace.announcement"):announcement>/save', type='http', auth="user", website=True)
     def save_announcement(self, announcement, **post):
         cr, uid, context, registry = request.cr, request.uid, request.context, request.registry
         user = registry.get('res.users').browse(cr, uid, uid, context=context)
         if user and announcement.partner_id == user.partner_id or uid == SUPERUSER_ID:  
             self._prepare_save_announcemet_param(cr, uid, request, post)
-            responce = self._parse_and_save_announcement(cr, uid, registry, announcement, post, context=context)
+            res = self._parse_and_save_announcement(cr, uid, registry, announcement, post, context=context)
+            responce = http.request.website.render(res['template_id'], res['response'])
         else:
             responce = request.not_found()
         return responce
+
+    def _get_new_announcement_dict(self, cr, uid, registry, partner, context=None):
+        return {
+            'author': partner,
+            'us_state_dict': self.get_us_state_dict(cr, uid, request.registry, context=context),
+            'country_dict': self.get_country_dict(cr, uid, request.registry, context=context),
+            'state_status_dict': self.get_state_status_dict(cr, uid, request.registry, context=context),
+            'category_dict': self.get_category_dict(cr, uid, request.registry, context=context),
+            'currency_dict': self.get_currency_dict(cr, uid, request.registry, context=context),
+            'group_dict': self.get_group_dict(cr, uid, request.registry, context=context),
+        }
 
     @http.route('/marketplace/announcement_detail/new', type='http', auth="public", website=True)
     def new_announcement(self):
         cr, uid, context, registry = request.cr, request.uid, request.context, request.registry
         user = registry.get('res.users').browse(cr, uid, uid, context=context)
         if user and user.partner_id:  
-            responce = http.request.website.render('website_project_weezer.new_announcement', {
-                'author': user.partner_id,
-                'us_state_dict': self.get_us_state_dict(cr, uid, request.registry, context=context),
-                'country_dict': self.get_country_dict(cr, uid, request.registry, context=context),
-                'state_status_dict': self.get_state_status_dict(cr, uid, request.registry, context=context),
-                'category_dict': self.get_category_dict(cr, uid, request.registry, context=context),
-                'currency_dict': self.get_currency_dict(cr, uid, request.registry, context=context),
-                'group_dict': self.get_group_dict(cr, uid, request.registry, context=context),
-            })
+            responce = http.request.website.render('website_project_weezer.new_announcement', 
+                self._get_new_announcement_dict(cr, uid, registry, user.partner_id, context=context))
         else:
             responce = request.not_found()
 
         return responce
 
-    @http.route('/marketplace/announcement_detail/new/save', type='http', auth="user")
+    @http.route('/marketplace/announcement_detail/new/save', type='http', auth="user", website=True)
     def save_new_announcement(self, **post):
         cr, uid, context, registry = request.cr, request.uid, request.context, request.registry
         self._prepare_save_announcemet_param(cr, uid, request, post)
         announcement = registry.get('marketplace.announcement').create(cr, uid, {'name': '', 'partner_id': uid}, context=context)
         announcement = registry.get('marketplace.announcement').browse(cr, uid, announcement, context=context)
-        return self._parse_and_save_announcement(cr, uid, registry, announcement, post, error_url="marketplace/announcement_detail/new", context=context)
+        if not context:
+            context = dict()
+        context.update({'from_new_announcement': True})
+        res = self._parse_and_save_announcement(cr, uid, registry, announcement, post, context=context)
+        responce = http.request.website.render(res['template_id'], res['response'])
+        return responce
 
 announcement_controller()
 

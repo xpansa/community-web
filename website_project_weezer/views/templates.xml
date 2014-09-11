@@ -3,6 +3,12 @@
     <data>
         <template id="website_project_weezer.view_announcement" name="View announcement">
             <t t-call="website.layout">
+                <t t-if='success_message_list'>
+                    <t t-foreach="success_message_list" t-as="message">
+                        <b><t t-esc="message"/></b><br/>
+                    </t>
+                </t>
+                
                 <a href="new">New</a> <a t-att-href="'%s/edit' % announcement.id">Edit</a><br/>
                 Category: 
                 <select name="category_id" disabled="disabled">
@@ -112,6 +118,16 @@
     	<template id="website_project_weezer.edit_announcement" name="Edit announcement">
     		<t t-call="website.layout">
                 <form action="save" method="POST" enctype="multipart/form-data">
+                    <t t-if='error_param_list'>
+                        <t t-foreach="error_param_list" t-as="message">
+                            <b><t t-esc="message"/></b>
+                        </t><br/>
+                    </t>
+                    <t t-if='error_message_list'>
+                        <t t-foreach="error_message_list" t-as="message">
+                            <b><t t-esc="message"/></b><br/>
+                        </t>
+                    </t>
                     <input type="submit" value="save"/><br/>
         			Category: 
         			<select name="category_id">
@@ -290,6 +306,16 @@
 		<template id="website_project_weezer.new_announcement" name="New announcement">
     		<t t-call="website.layout">
                 <form action="new/save" method="POST" enctype="multipart/form-data">
+                    <t t-if='error_param_list'>
+                        <t t-foreach="error_param_list" t-as="message">
+                            <b><t t-esc="message"/></b>
+                        </t><br/>
+                    </t>
+                    <t t-if='error_message_list'>
+                        <t t-foreach="error_message_list" t-as="message">
+                            <b><t t-esc="message"/></b><br/>
+                        </t>
+                    </t>
                     <input type="submit" value="save"/><br/>
   
         			Category: 
