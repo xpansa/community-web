@@ -27,9 +27,10 @@ class marketplace_announcement(osv.osv):
     _inherit = "marketplace.announcement"
 
     _columns = {
-    	'emergency': fields.boolean('Emergency'),
-    	'date_from': fields.date('From'),
-    	'date_to': fields.date('To'),
+        'emergency': fields.boolean('Emergency'),
+        'link': fields.char('Link', size=140),
+        'date_from': fields.date('From'),
+        'date_to': fields.date('To'),
     }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
