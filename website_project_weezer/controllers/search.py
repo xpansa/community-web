@@ -21,24 +21,41 @@
 
 import os
 import base64
+from datetime import datetime
 
 from openerp.addons.web import http
 from openerp.addons.web.http import request
 from openerp.addons.website.controllers.main import Website as controllers
-from pprint import pprint
+from openerp.tools import DEFAULT_SERVER_DATE_FORMAT
 
 
 class search_controller(http.Controller):
 
     QUERY_LIMIT = 4
 
-    def _build_query(self, type, name, category, city, limit=QUERY_LIMIT, offset=0):
-        params = {}
+    def _get_date_format(self, cr, uid, context):
+        lang = context.get('lang')
+        lang_params = {}
+        if lang:
+            res_lang = request.registry.get('res.lang')
+            ids = res_lang.search(cr, uid, [('code', '=', lang)])
+            if ids:
+                lang_params = res_lang.read(cr, uid, ids[0], ['date_format'])
+                return lang_params['date_format']
+        return DEFAULT_SERVER_DATE_FORMAT
 
+    def _build_query(self, type, name, category, city, date_from, date_to, date_format, 
+        from_who, price_from, cur_from, price_to, cur_to, limit=QUERY_LIMIT, offset=0, return_count=False):
+        params = {}
         def _build_sql(ttype, pick_params=False):
-            sql = 'SELECT id '\
-            'FROM marketplace_announcement a '\
+            if return_count:
+                sql = 'SELECT COUNT(a.id) '
+            else:
+                sql = 'SELECT a.id '
+            sql += 'FROM marketplace_announcement a '\
+            'LEFT JOIN res_partner p on p.id = a.partner_id '\
             'WHERE 1=1 '
+            
             if ttype:
                 sql += 'AND a.type = \'%s\' ' % ('want' if ttype == 'to_offer' else 'offer')
             if name: 
@@ -46,14 +63,37 @@ class search_controller(http.Controller):
                 params.update({'name': '%'+name+'%'})
             if category:
                 sql += 'AND a.category_id = %(category)s '
-                params.update({'category': category_id})
+                params.update({'category': category})
             if city:
                 sql += 'AND a.city like %(city)s '
                 params.update({'city': '%'+city+'%'})
-            if limit:
+            if date_from: 
+                _date_from = datetime.strptime(date_from, date_format)
+                sql += 'AND a.expiration_date >= %(date_from)s '
+                params.update({'date_from': _date_from.strftime(DEFAULT_SERVER_DATE_FORMAT)})
+            if date_to:
+                _date_to = datetime.strptime(date_to, date_format)
+                sql += 'AND a.expiration_date <= %(date_to)s '
+                params.update({'date_to': _date_to.strftime(DEFAULT_SERVER_DATE_FORMAT)})
+            if from_who:
+                sql += 'AND p.name like %(partner_name)s '
+                params.update({'partner_name': '%'+from_who+'%'})
+            if price_from and cur_from:
+                sql += 'AND EXISTS('\
+                    'SELECT 1 FROM account_centralbank_currency_line cl '\
+                    'WHERE cl.announcement_id = a.id AND cl.currency_id = %(cur_from)s '\
+                    'AND cl.price_unit >= %(price_from)s) '
+                params.update({'cur_from': cur_from, 'price_from': price_from})
+            if price_to and cur_to:
+                sql += 'AND EXISTS('\
+                    'SELECT 1 FROM account_centralbank_currency_line cl '\
+                    'WHERE cl.announcement_id = a.id AND cl.currency_id = %(cur_to)s '\
+                    'AND cl.price_unit <= %(price_to)s) '
+                params.update({'cur_to': cur_to, 'price_to': price_to})
+            if limit and not return_count:
                 sql += 'LIMIT %(limit)s '
                 params.update({'limit': limit})
-            if offset:
+            if offset and not return_count:
                 sql += 'OFFSET %(offset)s '
                 params.update({'offset': offset})
             return sql
@@ -70,20 +110,35 @@ class search_controller(http.Controller):
         cr, uid, context = request.cr, request.uid, request.context
         mp_announcement_pool = request.registry.get('marketplace.announcement')
         result = {'wants': [], 'offers': []}
-        sql = self._build_query(kw.get('type'), kw.get('name'), kw.get('category_id'), 
-            kw.get('city'), kw.get('limit',self.QUERY_LIMIT), kw.get('offset'))
+        date_format = self._get_date_format(cr, uid, context)
+        sql = self._build_query(kw.get('type'), kw.get('name'), kw.get('category'),  kw.get('city'), 
+            kw.get('date_from'), kw.get('date_to'), date_format, kw.get('from_who'), kw.get('qty_from'),
+            kw.get('cur_from'), kw.get('qty_to'), kw.get('cur_to'), kw.get('limit',self.QUERY_LIMIT), 
+            kw.get('offset'))
+        print sql
         cr.execute(sql[0], sql[1] or ())
         res_ids = [row[0] for row in cr.fetchall()]
         res_data = mp_announcement_pool.browse(cr, uid, res_ids, context=context)
-        
+
+        #select count both of wants and offers
+        count_sql = self._build_query(kw.get('type'), kw.get('name'), kw.get('category'),  kw.get('city'), 
+            kw.get('date_from'), kw.get('date_to'), date_format, kw.get('from_who'), kw.get('qty_from'),
+            kw.get('cur_from'), kw.get('qty_to'), kw.get('cur_to'), False, False, True)
+        cr.execute(count_sql[0], count_sql[1] or ())
+        counts = cr.fetchall()
+        if len(counts) > 1:
+            count = max(counts[0][0], counts[1][0])
+        else:
+            count = counts[0][0]
+
         for item in res_data:
             if item.type == 'want':
                 result['wants'].append(item)
             else:
                 result['offers'].append(item)
-
         return http.request.website.render('website_project_weezer.mp_search', {
             'result': result,
+            'load_more': True if count > max(len(result['wants']), len(result['offers'])) else False,
         })
 
     @http.route(['/marketplace/search/load_more'], type='http', auth="public", methods=['GET'], website=True)
@@ -92,8 +147,11 @@ class search_controller(http.Controller):
         cr, uid, context = request.cr, request.uid, request.context
         mp_announcement_pool = request.registry.get('marketplace.announcement')
         result = {'wants': [], 'offers': []}
-        sql = self._build_query(kw.get('type'), kw.get('name'), kw.get('category_id'), 
-            kw.get('city'), kw.get('limit',self.QUERY_LIMIT), kw.get('offset'))
+        date_format = self._get_date_format(cr, uid, context)
+        sql = self._build_query(kw.get('type'), kw.get('name'), kw.get('category'), 
+            kw.get('city'), kw.get('date_from'), kw.get('date_to'), date_format, kw.get('from_who'),
+            kw.get('qty_from'), kw.get('cur_from'), kw.get('qty_to'), kw.get('cur_to'), 
+            kw.get('limit',self.QUERY_LIMIT), kw.get('offset'))
         cr.execute(sql[0], sql[1] or ())
         res_ids = [row[0] for row in cr.fetchall()]
         res_data = mp_announcement_pool.browse(cr, uid, res_ids, context=context)

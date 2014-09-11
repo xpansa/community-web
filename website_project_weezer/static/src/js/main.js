@@ -1,6 +1,8 @@
 $(document).ready(function(){
     $('.selectpicker').selectpicker();
-    $('.date-picker').datepicker();
+    var dFormat = openerp._t.database.parameters.date_format;
+    JQueryDateFormat = dFormat.replace('%m','mm').replace('%d','dd').replace('%Y','yy')
+    $('.date-picker').datepicker({dateFormat: JQueryDateFormat});
     $('.scrollable').tinyscrollbar({ thumbSize: 100 });
     var offset = 4;
     var limit = 4;
