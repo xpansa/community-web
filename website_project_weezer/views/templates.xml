@@ -149,6 +149,12 @@
         					</t>
         				</t>
         			</select>
+                    <select name="new_tags" multiple="multiple">
+                        <option value="newtag1">newtag1</option>                      
+                        <option value="newtag2">newtag2</option>                      
+                        <option value="newtag3">newtag3</option>                      
+                        <option value="newtag4">newtag4</option>                      
+                    </select>
         			<br/>
         			Groups: 
         			<select name="groups" multiple="multiple">
@@ -182,6 +188,7 @@
         			<t t-if="attachment_dict">
     	    			<t t-foreach="attachment_dict.keys()" t-as="attach">
     	   					<a t-att-href="attach"><t t-esc='attachment_dict[attach]'/></a>
+                            <!-- to delete send json request to url '%s/delete' % attach -->
     	    			</t>
     	    		</t>
     	    		<input type="file" name="document"/><br/>
