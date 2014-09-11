@@ -25,6 +25,7 @@ import logging
 import os
 import werkzeug.utils
 
+from openerp import SUPERUSER_ID
 from openerp.addons.web import http
 from openerp.addons.web.controllers.main import content_disposition
 from openerp.addons.web.http import request
@@ -124,27 +125,39 @@ class announcement_controller(http.Controller):
             responce = request.not_found()
         return responce
 
-    @http.route('/marketplace/announcement_detail/<model("marketplace.announcement"):announcement>/edit', type='http', auth="public", website=True)
-    def edit_announcement(self, announcement):
-        cr, uid, context = request.cr, request.uid, request.context
-        
-        return http.request.website.render('website_project_weezer.edit_announcement', {
+    @http.route('/marketplace/announcement_detail/<model("marketplace.announcement"):announcement>', type='http', auth="public", website=True)
+    def view_announcement(self, announcement):
+        cr, uid, context, registry = request.cr, request.uid, request.context, request.registry
+        return http.request.website.render('website_project_weezer.view_announcement', {
             'announcement':announcement,
             'author': announcement.partner_id,
-            'us_state_dict': self.get_us_state_dict(cr, uid, request.registry, context=context),
-            'country_dict': self.get_country_dict(cr, uid, request.registry, context=context),
             'state_status_dict': self.get_state_status_dict(cr, uid, request.registry, context=context),
-            'category_dict': self.get_category_dict(cr, uid, request.registry, context=context),
-            'currency_dict': self.get_currency_dict(cr, uid, request.registry, context=context),
-            'group_dict': self.get_group_dict(cr, uid, request.registry, context=context),
             'attachment_dict': self.get_attachment_dict(cr, uid, request.registry, announcement, context=context),
-            'tag_dict': self.get_tag_dict_by_category(cr, uid, request.registry, announcement.category_id.id, context=context)
         })
 
-    @http.route('/marketplace/announcement_detail/<model("marketplace.announcement"):announcement>/save', type='http', auth="user")
-    def save_announcement(self, announcement, **post):
+    @http.route('/marketplace/announcement_detail/<model("marketplace.announcement"):announcement>/edit', type='http', auth="public", website=True)
+    def edit_announcement(self, announcement):
         cr, uid, context, registry = request.cr, request.uid, request.context, request.registry
+        user = registry.get('res.users').browse(cr, uid, uid, context=context)
 
+        if user and announcement.partner_id == user.partner_id or uid == SUPERUSER_ID: 
+            responce = http.request.website.render('website_project_weezer.edit_announcement', {
+                'announcement':announcement,
+                'author': announcement.partner_id,
+                'us_state_dict': self.get_us_state_dict(cr, uid, request.registry, context=context),
+                'country_dict': self.get_country_dict(cr, uid, request.registry, context=context),
+                'state_status_dict': self.get_state_status_dict(cr, uid, request.registry, context=context),
+                'category_dict': self.get_category_dict(cr, uid, request.registry, context=context),
+                'currency_dict': self.get_currency_dict(cr, uid, request.registry, context=context),
+                'group_dict': self.get_group_dict(cr, uid, request.registry, context=context),
+                'attachment_dict': self.get_attachment_dict(cr, uid, request.registry, announcement, context=context),
+                'tag_dict': self.get_tag_dict_by_category(cr, uid, request.registry, announcement.category_id.id, context=context)
+            })
+        else:
+            responce = request.not_found()
+        return responce
+
+    def _parse_and_save_announcement(self, cr, uid, registry, announcement, post, error_url=False, context=None):
         error_message_list = list()
         error_param_list = list() 
 
@@ -236,7 +249,7 @@ class announcement_controller(http.Controller):
             try:
                 date_from = datetime.datetime.strptime(post.get('date_from'), '%Y-%m-%d')
             except ValueError:
-                error_message_list.append(_('Wrong date fromat for date from'))
+                error_message_list.append(_('Wrong date format for date from'))
                 error_param_list.append('date_from')
             else:
                 vals.update({'date_from': date_from})
@@ -246,7 +259,7 @@ class announcement_controller(http.Controller):
             try:
                 date_to = datetime.datetime.strptime(post.get('date_to'), '%Y-%m-%d')
             except ValueError:
-                error_message_list.append(_('Wrong date fromat for date to'))
+                error_message_list.append(_('Wrong date format for date to'))
                 error_param_list.append('date_to')
             else:
                 vals.update({'date_to': date_to})
@@ -267,7 +280,7 @@ class announcement_controller(http.Controller):
             try:
                 qty = float(post.get('qty'))
             except ValueError:
-                error_message_list.append(_('Quantity must be in float fromat'))
+                error_message_list.append(_('Quantity must be in float format'))
                 error_param_list.append('qty')
             else:
                 vals.update({'quantity': qty})
@@ -310,23 +323,23 @@ class announcement_controller(http.Controller):
 
 
         
-        if post.get('currency_id1') == post.get('currency_id2') and post.get('currency_amount1') != None:
+        if post.get('currency_id1') == post.get('currency_id2') and post.get('currency_amount1') == post.get('currency_amount2') != '':
             error_param_list.append('currency_id1')
             error_param_list.append('currency_id2')
             same_currency_error = True
 
-        if post.get('currency_id1') == post.get('currency_id3') and post.get('currency_amount1') != None:
+        if post.get('currency_id1') == post.get('currency_id3') and post.get('currency_amount1') == post.get('currency_amount3') != '':
             error_param_list.append('currency_id1')
             error_param_list.append('currency_id3')
             same_currency_error = True
 
-        if post.get('currency_id3') == post.get('currency_id2') and post.get('currency_amount2') != None:
+        if post.get('currency_id3') == post.get('currency_id2') and post.get('currency_amount2') == post.get('currency_amount3') != '':
             error_param_list.append('currency_id3')
             error_param_list.append('currency_id2')
             same_currency_error = True
 
         if amount_fromat_error:
-            error_message_list.append(_('Amount must be in a float fromat'))
+            error_message_list.append(_('Amount must be in a float format'))
 
         if currency_exist_error:
             error_message_list.append(_('There is no such currency'))
@@ -395,36 +408,50 @@ class announcement_controller(http.Controller):
 
         if len(error_param_list) > 0:
             cr.rollback()
-            redirect = werkzeug.utils.redirect('marketplace/announcement_detail/%d/edit' % announcement.id, 303)
+            if error_url:
+                redirect = werkzeug.utils.redirect(error_url, 303)
+            else:
+                redirect = werkzeug.utils.redirect('marketplace/announcement_detail/%d/edit' % announcement.id, 303)
         else:
             registry.get('marketplace.announcement').write(cr, uid, announcement.id, vals, context=context)
             redirect = werkzeug.utils.redirect('marketplace/announcement_detail/%d' % announcement.id, 303)
         return redirect
 
-
-        
-
-
-
-
+    @http.route('/marketplace/announcement_detail/<model("marketplace.announcement"):announcement>/save', type='http', auth="user")
+    def save_announcement(self, announcement, **post):
+        cr, uid, context, registry = request.cr, request.uid, request.context, request.registry
+        user = registry.get('res.users').browse(cr, uid, uid, context=context)
+        if user and announcement.partner_id == user.partner_id or uid == SUPERUSER_ID:  
+            responce = self._parse_and_save_announcement(cr, uid, registry, announcement, post, context=context)
+        else:
+            responce = request.not_found()
+        return responce
 
     @http.route('/marketplace/announcement_detail/new', type='http', auth="public", website=True)
     def new_announcement(self):
-        cr, uid, context = request.cr, request.uid, request.context
-        user = request.registry.get('res.users').search(cr, uid, [('id', '=', uid)], context=context)
-        if user and type(user) is list:
-            user = user[0]
-            user = request.registry.get('res.users').browse(cr, uid, user, context=context)[0]
+        cr, uid, context, registry = request.cr, request.uid, request.context, request.registry
+        user = registry.get('res.users').browse(cr, uid, uid, context=context)
+        if user and user.partner_id:  
+            responce = http.request.website.render('website_project_weezer.new_announcement', {
+                'author': user.partner_id,
+                'us_state_dict': self.get_us_state_dict(cr, uid, request.registry, context=context),
+                'country_dict': self.get_country_dict(cr, uid, request.registry, context=context),
+                'state_status_dict': self.get_state_status_dict(cr, uid, request.registry, context=context),
+                'category_dict': self.get_category_dict(cr, uid, request.registry, context=context),
+                'currency_dict': self.get_currency_dict(cr, uid, request.registry, context=context),
+                'group_dict': self.get_group_dict(cr, uid, request.registry, context=context),
+            })
+        else:
+            responce = request.not_found()
 
-        return http.request.website.render('website_project_weezer.new_announcement', {
-            'author': user,
-            'us_state_dict': self.get_us_state_dict(cr, uid, request.registry, context=context),
-            'country_dict': self.get_country_dict(cr, uid, request.registry, context=context),
-            'state_status_dict': self.get_state_status_dict(cr, uid, request.registry, context=context),
-            'category_dict': self.get_category_dict(cr, uid, request.registry, context=context),
-            'currency_dict': self.get_currency_dict(cr, uid, request.registry, context=context),
-            'group_dict': self.get_group_dict(cr, uid, request.registry, context=context),
-        })
+        return responce
+
+    @http.route('/marketplace/announcement_detail/new/save', type='http', auth="user")
+    def save_new_announcement(self, **post):
+        cr, uid, context, registry = request.cr, request.uid, request.context, request.registry
+        announcement = registry.get('marketplace.announcement').create(cr, uid, {'name': '', 'partner_id': uid}, context=context)
+        announcement = registry.get('marketplace.announcement').browse(cr, uid, announcement, context=context)
+        return self._parse_and_save_announcement(cr, uid, registry, announcement, post, error_url="marketplace/announcement_detail/new", context=context)
 
 announcement_controller()
 
