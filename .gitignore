@@ -4,3 +4,6 @@
 */*.scssc
 *.pyc
 */*.pyc
+/website_project_weezer/sftp-config.json
+
+/HTML/

@@ -35,8 +35,11 @@ Website Marketplace
         'marketplace',
         ],
     'data': [
+        'data/menu.xml',
+        'views/assets.xml',
         'views/snippets.xml',
         'views/templates.xml',
+        'views/templates_integrated.xml',
     ],
     'installable': True
 }
