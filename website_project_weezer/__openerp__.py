@@ -40,6 +40,7 @@ Website Marketplace
         'views/snippets.xml',
         'views/templates.xml',
         'views/templates_integrated.xml',
+        'security/ir.model.access.csv'
     ],
     'installable': True
 }

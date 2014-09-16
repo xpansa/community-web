@@ -1,0 +1,6 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_marketplace_announcement_public,marketplace.announcement.public,marketplace.model_marketplace_announcement,,1,0,0,0
+access_marketplace_announcement_category_public,marketplace.announcement.category.public,marketplace.model_marketplace_announcement_category,,1,0,0,0
+access_account_centralbank_config_currency_public,account.centralbank.config.currency.public,account_centralbank.model_account_centralbank_config_currency,,1,0,0,0
+access_account_centralbank_currency_line_public,account.centralbank.currency.line.public,account_centralbank.model_account_centralbank_currency_line,,1,0,0,0
+access_marketplace_proposition_public,marketplace.proposition.public,marketplace.model_marketplace_proposition,,1,0,0,0
