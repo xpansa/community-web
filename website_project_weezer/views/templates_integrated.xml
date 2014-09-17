@@ -124,7 +124,7 @@
                                 <h5>Description</h5>
                             </div>
                             <div class="row">
-                                <p><span t-field="item.description"/></p>
+                                <p><span t-esc="format_text(item.description)"/></p>
                             </div>
                         </div>
                     </div>
