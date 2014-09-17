@@ -46,7 +46,7 @@ class search_controller(http.Controller):
                 return lang_params['date_format']
         return DEFAULT_SERVER_DATE_FORMAT
 
-    def _build_query(self, data, limit=QUERY_LIMIT, page=0, return_count=False):
+    def _build_query(self, data, date_format, limit=QUERY_LIMIT, page=0, return_count=False):
         offset = page*limit
         params = {}
         def _build_sql(ttype, pick_params=False):
@@ -63,9 +63,9 @@ class search_controller(http.Controller):
             if data.get('name'): 
                 sql += 'AND a.name like %(name)s '
                 params.update({'name': '%'+data.get('name')+'%'})
-            if data.get('category'):
+            if int(data.get('category', '0')):
                 sql += 'AND a.category_id = %(category)s '
-                params.update({'category': data.get('category')})
+                params.update({'category': int(data.get('category'))})
             if data.get('city'):
                 sql += 'AND a.city like %(city)s '
                 params.update({'city': '%'+data.get('city')+'%'})
@@ -112,6 +112,8 @@ class search_controller(http.Controller):
         return url
 
     def format_text(self, text):
+        if not text:
+            return ''
         text = text[0:300]
         dot_pos = text.rfind('.')
         if dot_pos:
@@ -128,13 +130,13 @@ class search_controller(http.Controller):
         result = {'wants': [], 'offers': []}
         date_format = self._get_date_format(cr, uid, context)
         params = dict([(k,v) for k,v in kw.iteritems() if k in self.SEARCH_PARAMS])
-        sql = self._build_query(params, kw.get('limit',self.QUERY_LIMIT), int(kw.get('page','1'))-1)
+        sql = self._build_query(params, date_format, kw.get('limit',self.QUERY_LIMIT), int(kw.get('page','1'))-1)
         cr.execute(sql[0], sql[1] or ())
         res_ids = [row[0] for row in cr.fetchall()]
         res_data = mp_announcement_pool.browse(cr, uid, res_ids, context=context)
 
         #select count both of wants and offers
-        count_sql = self._build_query(params, False, False, True)
+        count_sql = self._build_query(params, date_format, False, False, True)
         cr.execute(count_sql[0], count_sql[1] or ())
         counts = cr.fetchall()
         if len(counts) > 1:
@@ -164,7 +166,7 @@ class search_controller(http.Controller):
         result = {'wants': [], 'offers': []}
         date_format = self._get_date_format(cr, uid, context)
         sql = self._build_query(dict([(k,v) for k,v in kw.iteritems() if k in self.SEARCH_PARAMS]), 
-            kw.get('limit',self.QUERY_LIMIT), kw.get('offset'))
+            date_format, kw.get('limit',self.QUERY_LIMIT), kw.get('offset'))
         cr.execute(sql[0], sql[1] or ())
         res_ids = [row[0] for row in cr.fetchall()]
         res_data = mp_announcement_pool.browse(cr, uid, res_ids, context=context)
