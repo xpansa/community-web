@@ -4,3 +4,5 @@ access_marketplace_announcement_category_public,marketplace.announcement.categor
 access_account_centralbank_config_currency_public,account.centralbank.config.currency.public,account_centralbank.model_account_centralbank_config_currency,,1,0,0,0
 access_account_centralbank_currency_line_public,account.centralbank.currency.line.public,account_centralbank.model_account_centralbank_currency_line,,1,0,0,0
 access_marketplace_proposition_public,marketplace.proposition.public,marketplace.model_marketplace_proposition,,1,0,0,0
+access_product_uom_public,product.uom.public,product.model_product_uom,,1,0,0,0
+access_account_centralbank_transaction_public,account.centralbank.transaction.public,account_centralbank.model_account_centralbank_transaction,,1,0,0,0
