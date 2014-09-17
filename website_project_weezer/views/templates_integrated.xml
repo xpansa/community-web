@@ -183,8 +183,12 @@
         	                    </div>
                             <!-- END: Scrollable -->
         					<div class="col-md-12 mt16 mb32">
-                                <a href="#" class="btn text-center btn-primary pull-left">Previous page</a>
-                            	<a href="#" class="btn text-center btn-primary pull-right">Next page</a>
+                                <t t-if="page &gt; 1">
+                                    <a t-att-href="prev_url" class="btn text-center btn-primary pull-left">Previous page</a>
+                                </t>
+                                <t t-if="page &lt; page_count">
+                            	   <a t-att-href="next_url" class="btn text-center btn-primary pull-right">Next page</a>
+                                </t>
         					</div>
                         </section>
                     </div>
