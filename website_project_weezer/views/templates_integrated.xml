@@ -226,6 +226,7 @@
                                         <t t-set="ann_categories" t-value="ann_categories_obj.name_search(request.cr, request.uid, '', [], context=request.context)"/>
                                         <div class="col-md-3">
                                             <select name="category" class="selectpicker form-control" placeholder="Category" style="display: none;">
+                                                <option value="0" t-att-selected="'selected' if not int(request.httprequest.args.get('category',0)) else None">All</option>
                                                 <t t-foreach="ann_categories or []" t-as="c">
                                                     <option t-att-value="c[0]" t-att-selected="'selected' if int(request.httprequest.args.get('category',0)) == c[0] else None"><t t-esc="c[1]"/></option>
                                                 </t>
@@ -254,7 +255,7 @@
                                             <input name="from_who" id="filter-who" type="text" placeholder="From who?" class="form-control mb16" autocomplete="on" t-att-value="request.httprequest.args.get('from_who','')"/>
         
                                             <label class="sr-only">Where?</label>
-                                            <input name="where" id="filter-where" type="text" placeholder="Where?" class="form-control" autocomplete="on" t-att-value="request.httprequest.args.get('where','')"/>
+                                            <input name="city" id="filter-where" type="text" placeholder="Where?" class="form-control" autocomplete="on" t-att-value="request.httprequest.args.get('city','')"/>
                                         </div>
         
                                         <div class="col-md-2">
