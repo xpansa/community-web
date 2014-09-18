@@ -106,6 +106,47 @@
                         <option><t t-esc='currency_line.currency_id.name'/></option>
                     </select><br/>
                 </t>
+                <br/>
+                Who has replied?
+                <t t-foreach="replied_list" t-as="reply">
+                    <span t-field="reply.create_uid.image" t-field-options='{"widget": "image"}'/> <br/>
+                    <t t-esc="reply.create_uid.name"/> <br/>
+                    Description: <t t-esc="reply.description"/> <br/>
+                    Quantity: <t t-esc="reply.quantity"/> <br/>
+                    When: <t t-esc="reply.write_date"/> <br/>
+                    Where: ??? <br/>
+                    Rat: ??? <br/>
+                    Indicate: ??? <br/>
+                    Feedback: ??? <br/>
+                    <table>
+                        <tr>
+                            <td>
+                                Unit price 
+                            </td>
+                            <td>
+                                Currency
+                            </td>
+                            <td>
+                                Subtotal
+                            </td>
+                        </tr>
+                        <t t-foreach="reply.currency_ids" t-as="line">
+                            <tr>
+                                <td>
+                                    <t t-esc="line.price_unit"/>
+                                </td>
+                                <td>
+                                    <t t-esc="line.currency_id.name"/>
+                                </td>
+                                <td>
+                                    <t t-esc="line.subtotal"/>
+                                </td>
+                            </tr>
+                        </t>
+                    </table>
+
+                    =====================
+                </t>
             </t>
         </template>
 
