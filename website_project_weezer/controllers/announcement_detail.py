@@ -145,6 +145,7 @@ class announcement_controller(http.Controller):
         return {
             'announcement':announcement,
             'author': announcement.partner_id,
+            'replied_list': announcement.proposition_ids,
             'state_status_dict': self.get_state_status_dict(cr, uid, request.registry, context=context),
             'attachment_dict': self.get_attachment_dict(cr, uid, request.registry, announcement, context=context),
         }
@@ -153,7 +154,7 @@ class announcement_controller(http.Controller):
     def view_announcement(self, announcement):
         cr, uid, context, registry = request.cr, request.uid, request.context, request.registry
         return http.request.website.render('website_project_weezer.view_announcement', 
-            self._get_edit_announcement_dict(cr, uid, registry, announcement, context=context))
+            self._get_view_announcement_dict(cr, uid, registry, announcement, context=context))
 
     def _get_edit_announcement_dict(self, cr, uid, registry, announcement, context=None):
         return {
