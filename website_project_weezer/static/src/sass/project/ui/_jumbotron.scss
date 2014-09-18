@@ -1,0 +1,18 @@
+@mixin project-ui-jumbotron
+{
+	.jumbotron {
+		&.bg-primary {
+			background-color:#428bca !important;
+			color:white !important;
+			
+			h1, h2, h3, h4, h5, h6 {
+				color:white;
+				
+				small {
+					color:lighten(#428bca, 30%);
+				}
+			} 
+		}
+	}	
+	
+}

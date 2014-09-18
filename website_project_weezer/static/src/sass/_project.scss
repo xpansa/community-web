@@ -1,0 +1,16 @@
+// Your Project Name
+@import "project/variables";
+@import "project/pie";
+@import "project/fonts";
+@import "project/core";
+@import "project/header";
+@import "project/footer";
+@import "project/login";
+
+
+@mixin project {
+	@include project-core;
+	@include project-header;
+	@include project-footer;
+	@include project-login;
+}

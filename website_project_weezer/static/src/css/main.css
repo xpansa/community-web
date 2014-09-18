@@ -3063,32 +3063,49 @@ html .banner-box h6 {
   position: relative !important;
 }
 
-/* line 8, ../sass/project/_header.scss */
+/* line 119, ../sass/project/_core.scss */
+.table-cell {
+  display: table-cell !important;
+}
+
+/* line 9, ../sass/project/_header.scss */
+.oe_website_login_container {
+  display: table-cell;
+  margin: 0 auto !important;
+  padding: 10px 0 !important;
+  width: 100% !important;
+}
+/* line 15, ../sass/project/_header.scss */
+.oe_website_login_container header {
+  display: block;
+}
+
+/* line 20, ../sass/project/_header.scss */
 #input-search {
   width: 480px;
 }
 
-/* line 11, ../sass/project/_header.scss */
+/* line 23, ../sass/project/_header.scss */
 .search-dropdown .caret {
   margin-top: 8px;
 }
 
-/* line 14, ../sass/project/_header.scss */
+/* line 26, ../sass/project/_header.scss */
 #filter-search {
   width: 100px;
 }
 
-/* line 15, ../sass/project/_header.scss */
+/* line 27, ../sass/project/_header.scss */
 #category-search {
   width: 200px;
 }
 
-/* line 17, ../sass/project/_header.scss */
+/* line 29, ../sass/project/_header.scss */
 #search-dropdown-menu {
   right: auto;
 }
 
-/* line 19, ../sass/project/_header.scss */
+/* line 31, ../sass/project/_header.scss */
 .subtitle-search {
   padding: 0;
   display: block;
@@ -3097,7 +3114,7 @@ html .banner-box h6 {
   height: 30px;
   margin: 0;
 }
-/* line 26, ../sass/project/_header.scss */
+/* line 38, ../sass/project/_header.scss */
 .subtitle-search h2 {
   display: block;
   position: absolute;
@@ -3110,7 +3127,7 @@ html .banner-box h6 {
   line-height: 30px;
   font-size: 18px;
 }
-/* line 38, ../sass/project/_header.scss */
+/* line 50, ../sass/project/_header.scss */
 .subtitle-search .border {
   display: block;
   position: absolute;

@@ -1,0 +1,103 @@
+@mixin project-login {
+	
+	.bg-login {
+		background:#EEE;
+	}
+	.img-login {
+		margin:30px auto;
+		@include block;
+		@include size(100px, auto);
+	}
+	
+		
+	.thumbnail-signin {
+		width:320px;
+		margin:0 auto 30px;
+		padding-bottom: 11px;
+		
+		.inner {
+			margin:15px;
+		}
+		h2 {
+			margin:0;
+			padding:0;
+		}
+		.subtitle-box {
+			padding:0;
+			@include block;
+			@include size(288px, 40px);
+			margin:0 0 5px;
+			
+			h5 {
+				@include block(absolute);
+				background: white;
+				@include square(40px);
+				padding: 0;
+				margin: 0 124px;
+				line-height: 40px;
+				color:#777;
+			}
+			
+			h2 {
+				background-color:#EEE;
+				margin:0;
+				width:100%;
+				font-size:24px;
+			}
+			
+			.border {
+				@include block(absolute);
+				@include size(188px, 1px);
+				background:#CCC;
+				margin:20px 50px;
+			}
+		}
+		
+		p {
+			line-height:20px;
+			margin:0 0 5px;
+			small {
+				color:#777;
+				font-size:11px;
+			}
+		}
+		
+		.social-login {
+			padding:15px 0;
+		}
+		
+		form {
+			padding:0;	
+			
+			.form-control {
+				position: relative;
+			  height: auto;
+			  @include box-sizing(border-box);
+			  padding: 10px;
+				margin-bottom: -1px;
+				@include border-radius(0 0 0 0);
+			  
+				&:focus {z-index: 2;}
+				
+				&.first {
+  				@include border-radius(4px 4px 0 0);
+				}
+				
+				&.last {
+					margin-bottom: 10px;
+					@include border-radius(0 0 4px 4px);
+				}
+			}
+			
+			label {
+				height:34px;
+				line-height:34px;
+				
+				input[type="checkbox"] {
+					margin-top:11px;
+				}
+			}
+		}
+	}
+}
+
