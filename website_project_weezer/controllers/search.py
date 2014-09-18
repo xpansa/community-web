@@ -33,7 +33,7 @@ class search_controller(http.Controller):
 
     QUERY_LIMIT = 4
     SEARCH_PARAMS = ['type', 'name', 'category', 'city', 'date_from', 'date_to', 'from_who',
-        'qty_from', 'qty_to', 'cur_from', 'cur_to']
+        'qty_from', 'qty_to', 'currency']
 
     def _get_date_format(self, cr, uid, context):
         lang = context.get('lang')
@@ -53,7 +53,7 @@ class search_controller(http.Controller):
             if return_count:
                 sql = 'SELECT COUNT(a.id) '
             else:
-                sql = 'SELECT a.id '
+                sql = 'SELECT a.id, a.delivery_date '
             sql += 'FROM marketplace_announcement a '\
             'LEFT JOIN res_partner p on p.id = a.partner_id '\
             'WHERE 1=1 '
@@ -61,47 +61,58 @@ class search_controller(http.Controller):
             if ttype:
                 sql += 'AND a.type = \'%s\' ' % ('want' if ttype == 'to_offer' else 'offer')
             if data.get('name'): 
-                sql += 'AND a.name like %(name)s '
+                sql += 'AND a.name ILIKE %(name)s '
                 params.update({'name': '%'+data.get('name')+'%'})
             if int(data.get('category', '0')):
                 sql += 'AND a.category_id = %(category)s '
                 params.update({'category': int(data.get('category'))})
             if data.get('city'):
-                sql += 'AND a.city like %(city)s '
+                sql += 'AND (a.city ILIKE %(city)s OR a.street2 ILIKE %(city)s) '
                 params.update({'city': '%'+data.get('city')+'%'})
             if data.get('date_from'): 
                 date_from = datetime.strptime(data.get('date_from'), date_format)
-                sql += 'AND a.expiration_date >= %(date_from)s '
+                sql += 'AND (a.delivery_date >= %(date_from)s OR delivery_date IS NULL)  '
                 params.update({'date_from': date_from.strftime(DEFAULT_SERVER_DATE_FORMAT)})
             if data.get('date_to'):
                 date_to = datetime.strptime(data.get('date_to'), date_format)
-                sql += 'AND a.expiration_date <= %(date_to)s '
+                sql += 'AND (a.delivery_date <= %(date_to)s OR delivery_date IS NULL) '
                 params.update({'date_to': date_to.strftime(DEFAULT_SERVER_DATE_FORMAT)})
             if data.get('from_who'):
-                sql += 'AND p.name like %(partner_name)s '
+                sql += 'AND p.name ILIKE %(partner_name)s '
                 params.update({'partner_name': '%'+data.get('from_who')+'%'})
-            if data.get('price_from') and data.get('cur_from'):
+            if int(data.get('currency','0')):
+                params.update({'currency': int(data.get('currency','0'))})
+                if not data.get('price_from') and not data.get('price_to'):
+                    sql += 'AND EXISTS(SELECT 1 FROM account_centralbank_currency_line cl '\
+                        'WHERE cl.announcement_id = a.id AND cl.currency_id = %(currency)s) '
+            if data.get('price_from') and data.get('currency'):
                 sql += 'AND EXISTS('\
                     'SELECT 1 FROM account_centralbank_currency_line cl '\
-                    'WHERE cl.announcement_id = a.id AND cl.currency_id = %(cur_from)s '\
+                    'WHERE cl.announcement_id = a.id AND cl.currency_id = %(currency)s '\
                     'AND cl.price_unit >= %(price_from)s) '
-                params.update({'cur_from': data.get('cur_from'), 'price_from': data.get('price_from')})
-            if data.get('price_to') and data.get('cur_to'):
+                params.update({'price_from': data.get('price_from')})
+            if data.get('price_to') and data.get('currency'):
                 sql += 'AND EXISTS('\
                     'SELECT 1 FROM account_centralbank_currency_line cl '\
-                    'WHERE cl.announcement_id = a.id AND cl.currency_id = %(cur_to)s '\
+                    'WHERE cl.announcement_id = a.id AND cl.currency_id = %(currency)s '\
                     'AND cl.price_unit <= %(price_to)s) '
-                params.update({'cur_to': data.get('cur_to'), 'price_to': data.get('price_to')})
+                params.update({'price_to': data.get('price_to')})
+            if not return_count:
+                sql += 'GROUP BY a.id '
+            if not return_count:
+                sql += 'ORDER BY a.delivery_date ASC '
             if limit and not return_count:
                 sql += 'LIMIT %(limit)s '
                 params.update({'limit': limit})
             if offset and not return_count:
                 sql += 'OFFSET %(offset)s '
                 params.update({'offset': offset})
+
             return sql
 
-        if not data.get('type') or data.get('type') == 'to_find':
-            return '(%s)' % _build_sql('to_offer', True) + 'UNION ' + '(%s)' % _build_sql('to_get'), params
+        if not data.get('type') or data.get('type') == 'to_get':
+            return '(%s) UNION (%s)' % (_build_sql('to_offer', True), _build_sql('to_get')) \
+                + (' ORDER BY delivery_date ASC' if not return_count else ''), params
         else:
             return _build_sql(data.get('type')), params
 
@@ -134,7 +145,7 @@ class search_controller(http.Controller):
         cr.execute(sql[0], sql[1] or ())
         res_ids = [row[0] for row in cr.fetchall()]
         res_data = mp_announcement_pool.browse(cr, uid, res_ids, context=context)
-
+        
         #select count both of wants and offers
         count_sql = self._build_query(params, date_format, False, False, True)
         cr.execute(count_sql[0], count_sql[1] or ())
