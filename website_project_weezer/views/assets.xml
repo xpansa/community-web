@@ -12,23 +12,16 @@
     		</xpath>
     	</template>
 
-
         <!-- JS includes -->
-        <template id="javascripts_head" inherit_id="website.layout">
-            <xpath expr="//head" position="inside">
+    	<template id="javascripts_compiled" inherit_id="website.assets_frontend">
+    		<xpath expr="//script[@src='/web/static/lib/bootstrap/js/bootstrap.js']" position="replace">
+                <script src="/website_project_weezer/static/src/js/bootstrap.min.js"></script>
                 <script src="/website_project_weezer/static/src/js/bootstrap-select.min.js"></script>
                 <script src="/website_project_weezer/static/src/js/bootstrap-datepicker.js"></script>
                 <script src="/website_project_weezer/static/src/js/jquery.dynamiclist.min.js"></script>
                 <script src="/website_project_weezer/static/src/js/jquery.mousewheel.min.js"></script>
                 <script src="/website_project_weezer/static/src/js/jquery.tinyscrollbar.min.js"></script>
                 <script src="/website_project_weezer/static/src/js/main.js"></script>
-            </xpath>
-        </template>
-
-        <!-- Replace bootstrap JS -->
-    	<template id="javascripts_compiled" inherit_id="website.assets_frontend">
-    		<xpath expr="//script[@src='/web/static/lib/bootstrap/js/bootstrap.js']" position="replace">
-                <script src="/website_project_weezer/static/src/js/bootstrap.min.js"></script>
     		</xpath>
     	</template>
 

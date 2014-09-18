@@ -152,35 +152,31 @@
         					<h3 class="text-center col-md-6 page-header mb8">Our Offers</h3>
         					
         					<!-- START: Scrollable -->
-        					<div class="col-md-12 scrollable page-header pb8">
-        						<div class="scrollbar"><div class="track"><div class="thumb"></div></div></div>
+        					<div class="col-md-12 page-header pb8">
 
-                                    <div class="viewport" style="height: 690px; overflow: hidden;">
-                                        <div class="overview">
-
-        									<!-- START: Our wants -->
-                                            <div class="col-md-6">
-                                            	<div class="col-md-12">
-                                            		<t t-foreach="result['wants'] or []" t-as="item">
-                                            			<t t-call="website_project_weezer.mp_single_item"/>
-                                            		</t>
-        	                                	</div> 
-                                        	</div> 
-                                        	<!-- END: Our wants -->
-                                        	 
-        									<!-- START: Our offers -->
-                                            <div class="col-md-6">
-                                            	<div class="col-md-12">
-                                            		<t t-foreach="result['offers'] or []" t-as="item">
-        												<t t-call="website_project_weezer.mp_single_item"/>
-                                            		</t>
-        	                                	</div> 
-                                        	</div> 
-                                        	<!-- END: Our offers -->   
+                                <div class="row">
+    								<!-- START: Our wants -->
+                                    <div class="col-md-6">
+                                    	<div class="col-md-12">
+                                    		<t t-foreach="result['wants'] or []" t-as="item">
+                                    			<t t-call="website_project_weezer.mp_single_item"/>
+                                    		</t>
+                                    	</div> 
+                                	</div> 
+                                	<!-- END: Our wants -->
+                                	 
+    								<!-- START: Our offers -->
+                                    <div class="col-md-6">
+                                    	<div class="col-md-12">
+                                    		<t t-foreach="result['offers'] or []" t-as="item">
+    											<t t-call="website_project_weezer.mp_single_item"/>
+                                    		</t>
+                                    	</div> 
+                                	</div> 
+                                	<!-- END: Our offers -->   
+                                </div>
                                 
-                                    	</div>
-                                	</div>
-        	                    </div>
+    	                    </div>
                             <!-- END: Scrollable -->
         					<div class="col-md-12 mt16 mb32">
                                 <t t-if="page &gt; 1">
