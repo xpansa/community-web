@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-#
+##############################################################################
 #
 #    Website Marketplace
 #    Copyright (C) 2014 Xpansa Group (<http://xpansa.com>).
@@ -17,11 +17,18 @@
 #    You should have received a copy of the GNU Affero General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-#
+##############################################################################
 
-from controllers import announcement_detail
-from controllers import profile
-from controllers import search
-from models import marketplace
+from openerp.addons.web import http
+from openerp.addons.web.http import request
+from openerp.addons.website.controllers.main import Website as controllers
+from openerp.tools import DEFAULT_SERVER_DATE_FORMAT
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+
+class search_controller(http.Controller):
+
+    @http.route('/marketplace/profile/edit', type='http', auth="user", website=True)
+    def profile_edit(self, **kw):
+        values = {}
+        response = request.website.render("website_project_weezer.profile_edit", values)
+        return response
