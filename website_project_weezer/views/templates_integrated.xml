@@ -124,6 +124,7 @@
                 </t>
     		</xpath>
     	</template>
+        <!-- Template of single offer/want to call in search result block or somewhere else -->
     	<template id="mp_single_item">
     		<div class="row">
                 <div class="col-md-12 thumbnail mb32">
@@ -158,6 +159,8 @@
                 </div>
             </div>
     	</template>
+
+        <!-- MarketPlace(Search) Page -->
     	<template id="mp_search">
             <t t-call="website.layout">
                 <t t-call="website_project_weezer.mp_search_form"/>
@@ -210,6 +213,8 @@
                 </div>
             </t>
         </template>
+        
+        <!-- Search Block (Form) can be called on any page -->
         <template id="mp_search_form" name="Marketplace Search">
             <section>
                 <form id="searchform" class="form" method="GET" action="/marketplace/search">
