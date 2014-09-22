@@ -8,7 +8,6 @@
                 <link href="/website_project_weezer/static/src/css/bootstrap.min.css" rel="stylesheet"/>
                 <link href="/website_project_weezer/static/src/css/bootstrap-select.min.css" rel="stylesheet"/>
                 <link href="/website_project_weezer/static/src/css/bootstrap-datepicker.css" rel="stylesheet"/>
-                <link href="/website_project_weezer/static/src/css/bootstrap-social.css" rel="stylesheet"/>
                 <link href="/website_project_weezer/static/src/css/main.css" rel="stylesheet"/>
     		</xpath>
     	</template>
