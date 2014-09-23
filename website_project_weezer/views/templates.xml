@@ -330,7 +330,7 @@
         				</select><br/>
         				<t t-set="index" t-value="index + 1"/>
     				</t>
-                    <t t-foreach="range(index, 4)" t-as="i">
+                    <t t-foreach="range(len(announcement.currency_ids) + 1, 4)" t-as="i">
                         <input t-att-name="'%s%s' % ('currency_amount', i)"/>
                         <select t-att-name="'%s%s' % ('currency_id', i)"> 
                             <t t-foreach="currency_dict.keys()" t-as="currency_id">
