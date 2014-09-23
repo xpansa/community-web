@@ -1,0 +1,15 @@
+/* 
+ * Project Name : <Name of project>
+ */
+
+@mixin project-pie-element($approach: relative, $z-index: 0) {
+
+	behavior: $project-pie-behavior;
+
+	@if $approach == relative {
+    	position: relative;
+    }
+    @else if $approach == z-index {
+    	z-index: $z-index;
+    }
+}

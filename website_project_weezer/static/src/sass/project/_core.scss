@@ -1,0 +1,122 @@
+@import "ui/wizard";
+@import "ui/bg";
+@import "ui/jumbotron";
+@import "ui/buttons";
+@import "ui/badges";
+@import "ui/scrollable";
+@import "helpers/padding";
+@import "helpers/margin";
+
+@mixin project-core {
+	@include project-ui-wizard;
+	@include project-ui-bg;
+	@include project-ui-buttons;
+	@include project-ui-badges;
+	@include project-ui-jumbotron;
+	@include project-ui-scrollable;
+	@include project-helpers-padding;
+	@include project-helpers-margin;
+
+	html
+	{
+		main
+		{
+			.searchfilter
+			{
+				padding-top:0;
+				padding-bottom:0;
+
+				.btn-group
+				{
+					margin-bottom: 0 !important;
+				}
+			}
+		}
+		
+		.inline-label {
+			line-height:32px;
+		}
+		.banner-box {
+			border-left:1px solid #CCC;
+			// @include border-radius(4px);
+			h6 {
+				line-height:1.4;
+			} 
+		}
+	}
+	
+	.navbar-brand {
+		padding:0 30px 0 15px;
+		
+		img {
+			@include size(auto, 50px); 
+		}
+	}
+	
+	.selectpicker li {
+		border:1px solid white;
+		border-top:none;
+		margin-top:0;
+		margin-bottom:0;
+		padding-top:0;
+		padding-bottom:0;
+		a {
+			background:none !important;
+			outline:0;
+			height:36px;
+			line-height:36px;
+			margin-top:0;
+			margin-bottom:0;
+			padding-top:0;
+			padding-bottom:0;
+
+		}
+		
+		&:hover {
+			background-color:lighten(#428bca, 30%);
+			border-color:lighten(#357ebd, 30%);
+			border-top:none;
+			
+		}
+		&.selected {
+			background-color:#428bca;
+			border-color: #357ebd;
+			border-top:none;
+			color:white !important;
+			
+			a {
+				color:white !important;
+				
+				i.fa {
+					color:white;
+					margin-top:11px !important;
+				}
+			}
+		}
+	}
+	
+	#chart_div {
+		height:250px;
+		overflow:hidden;
+		>div[dir="ltr"] {
+			margin-top:-32px;
+		}
+	}
+
+	[data-appear-element]
+	{
+		position: fixed;
+		left:0;
+		bottom:0;
+		right:0;
+		&.appeared
+		{
+			position: relative !important;
+		}
+	}
+
+	.table-cell
+	{
+		display: table-cell !important;
+	}
+}

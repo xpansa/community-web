@@ -1,0 +1,84 @@
+@mixin project-ui-scrollable
+{
+	.scrollable
+	{
+	    padding:0 8px 0 0;
+	    margin:0;
+	    position:relative;
+		
+		.viewport
+		{
+		    height:200px;
+		    overflow:hidden;
+		    position:relative;
+
+			.overview
+			{
+			    list-style:none;
+			    position:absolute;
+			    left:0;
+			    top:0;
+			    padding:0;
+			    margin:0;
+			}
+		}
+
+		.scrollbar
+		{
+		    // background:transparent url(img/bg-scrollbar-track-y.png) repeat-y 0 0;
+		    position:absolute;
+		    top:0;
+		    right:0;
+		    width:12px;
+		    
+		    &.disable {
+		    	visibility:hidden !important;
+		    }
+		    
+		    .track {
+			    background:rgba(0,0,0,.1);
+			    height:100%;
+			    width:12px;
+			    position:relative;
+					@include border-radius(6px);
+			   
+
+			    .thumb {
+				    background:#777;
+				    // background:transparent url(img/bg-scrollbar-thumb-y.png) no-repeat 50% 100%;
+				    height:20px;
+				    width:12px;
+				    cursor:pointer;
+				    overflow:hidden;
+				    position:absolute;
+				    top:0;
+				    left:0;
+				    @include border-radius(6px);
+
+				    .end
+					{
+					    // background:transparent url(img/bg-scrollbar-thumb-y.png) no-repeat 50% 0;
+					    overflow:hidden;
+					    height:5px;
+					    width:12px;
+					}
+				}
+			}
+
+			.disable
+			{
+			    display:none;
+			}
+		}
+	}
+	
+	.bg-info {
+		.scrollable .scrollbar .track {
+			background-color:darken(#d9edf7, 8%);
+			
+			.thumb {
+				background-color:darken(#d9edf7, 30%);
+			}
+		}
+	}
+}

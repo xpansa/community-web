@@ -1,0 +1,280 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+<!-- Profile Edit Page -->
+        <template id="profile_edit">
+            <t t-call="website.layout">
+                <div class="container">
+                    <div class="col-md-12 mt32">
+                        <h2 class="mb32">I am</h2>
+                    </div>
+                </div>
+
+                <form class="form-horizontal" method="post">
+
+                    <div class="container">
+                        <div class="col-md-4">
+                            <img src="http://lorempixel.com/1000/500/?1" class="img img-responsive thumbnail"/>
+                            <div class="pull-right">
+                                <img src="http://lorempixel.com/40/40/" class="img img-circle" width="40" height="40"/>
+                                <div class="clearfix"></div>
+                                <span class="badge badge-success mt4"><t t-esc="partner.name"/></span>
+                            </div>
+                        </div>
+                        <div class="col-md-8">
+                        
+                            <div class="col-md-5">
+                                <div class="form-group">
+                                    <div class="row">
+                                        <label class="col-md-4 control-label" for="firstname">Name</label>
+                                        <div class="col-md-8">
+                                            <input name="name" id="firstname" t-att-value="partner.name" type="text" class="form-control" placeholder="Name"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="row">
+                                        <label class="col-md-4 control-label" for="gender">Prefix</label>
+                                        <div class="col-md-8">
+                                            <select name="title" id="gender" class="selectpicker form-control">
+                                                <t t-foreach="partner_titles" t-as="title">
+                                                    <option t-att-value="title[0]" t-att-selected="'selected' if partner.title.id == title[0] else ''"><t t-esc="title[1]"/></option>
+                                                </t>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="row">
+                                        <label class="col-md-4 control-label" for="birthdate">Birthdate</label>
+                                        <div class="col-md-8">
+                                            <div class="input-group">
+                                                <input name="birthdate" id="birthdate" t-att-value="birthdate" t-att-placeholder="date_placeholder" type="text" class="date-picker form-control" />
+                                                <label for="birthdate" class="input-group-addon btn btn-default"><span class="fa fa-calendar"></span></label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-5">
+                                <div class="form-group">
+                                    <div class="row">
+                                        <label class="col-md-4 control-label" for="street1">Street #1</label>
+                                        <div class="col-md-8">
+                                            <input name="street" id="street1" t-att-value="partner.street" type="text" class="form-control" placeholder="Street"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="row">
+                                        <label class="col-md-4 control-label" for="street2">Street #2</label>
+                                        <div class="col-md-8">
+                                            <input name="street2" id="street2" t-att-value="partner.street2" type="text" class="form-control" placeholder="Street"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="row">
+                                        <label class="col-md-4 control-label" for="zip">Postalcode</label>
+                                        <div class="col-md-8">
+                                            <input name="zip" id="zip" t-att-value="partner.zip" type="text" class="form-control" placeholder="Postalcode"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="row">
+                                        <label class="col-md-4 control-label" for="city">City</label>
+                                        <div class="col-md-8">
+                                            <input name="city" id="city" t-att-value="partner.city" type="text" class="form-control" placeholder="City"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="row">
+                                        <label class="col-md-4 control-label" for="state">State</label>
+                                        <div class="col-md-8">
+                                            <select name="state_id" id="state" class="selectpicker form-control">
+                                                <option value="0">Nothing Selected</option>
+                                                <t t-foreach="states" t-as="state">
+                                                    <option t-att-value="state[0]" t-att-selected="'selected' if partner.state_id.id == state[0] else ''"><t t-esc="state[1]"/></option>
+                                                </t>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="row">
+                                        <label class="col-md-4 control-label" for="country">Country</label>
+                                        <div class="col-md-8">
+                                            <select name="country_id" id="country" class="selectpicker form-control">
+                                                <option value="0">Nothing Selected</option>
+                                                <t t-foreach="countries" t-as="country">
+                                                    <option t-att-value="country[0]" t-att-selected="'selected' if partner.country_id.id == country[0] else ''"><t t-esc="country[1]"/></option>
+                                                </t>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12 mt32 mb16"><h4>Contact info</h4></div>
+                            <div class="col-md-5 mb32">
+                                <div class="form-group">
+                                    <div class="row">
+                                        <label class="col-md-4 control-label" for="email">Email</label>
+                                        <div class="col-md-8">
+                                            <input name="email" id="email" t-att-value="partner.email" type="email" class="form-control" placeholder="your@email.com"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-5">
+                                <div class="form-group">
+                                    <div class="row">
+                                        <label class="col-md-4 control-label" for="gsm">GSM</label>
+                                        <div class="col-md-8">
+                                            <input name="mobile" id="gsm" t-att-value="partner.mobile" type="text" class="form-control" placeholder="+33 123 45 67 890"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="row">
+                                        <label class="col-md-4 control-label" for="home">Home</label>
+                                        <div class="col-md-8">
+                                            <input name="phone" id="home" t-att-value="partner.phone" type="text" class="form-control" placeholder="+33 123 45 67 890"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <section class="bg-gray pt32 pb32">
+                        <div class="container">
+                            <div class="col-md-12">
+                                <h3 class="mb32">My Resources</h3>
+                            </div>
+                        </div>
+                        
+                        <div class="container">
+                            <div class="col-md-12">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label class="col-md-4 control-label">Skills</label>
+                                                <div class="col-md-8 dynamic-list">
+                                                    <t t-foreach="partner.skill_category_ids or [False]" t-as="category">
+                                                        <div class="row">
+                                                            <div class="list-item col-md-12 skill_category_block">
+                                                                <div class="row">
+                                                                    <div class="col-xs-10 no-padding-right">
+                                                                        <input class="form-control mb16 skill_category" type="text" t-att-value="category and category.name"/>
+                                                                    </div>
+                                                                    <div class="col-xs-2 no-padding-right">
+                                                                        <button class="list-remove btn btn-danger"><i class="fa fa-minus"></i></button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </t>
+                                                    <a href="#" class="list-add btn btn-small btn-primary mb16"><i class="fa fa-plus"></i></a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label class="col-md-4 control-label">Interests</label>
+                                                <div class="col-md-8 dynamic-list">
+                                                    <t t-foreach="partner.skill_tag_ids or [False]" t-as="tag">
+                                                        <div class="row">
+                                                            <div class="list-item col-md-12 skill_tag_block">
+                                                                <div class="row">
+                                                                    <div class="col-xs-10 no-padding-right">
+                                                                        <input class="form-control mb16 skill_tag" t-att-value="tag and tag.name" type="text" />
+                                                                    </div>
+                                                                    <div class="col-xs-2 no-padding-right">
+                                                                        <button class="list-remove btn btn-danger"><i class="fa fa-minus"></i></button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </t>
+                                                    <a href="#" class="list-add btn btn-small btn-primary mb16"><i class="fa fa-plus"></i></a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <t t-if="is_administrator">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label class="col-md-4 control-label">Credit limits</label>
+                                                    <div class="col-md-8 dynamic-list">
+                                                        <t t-foreach="partner.centralbank_currency_ids or [False]" t-as="limit">
+                                                            <div class="row">
+                                                                <div class="list-item col-md-12">
+                                                                    <div class="row">
+                                                                        <div class="col-xs-4 no-padding-right">
+                                                                            <select t-att-name="'limits[currency][%s]' % ((limit and limit.id) or '')" class="selectpicker form-control">
+                                                                                <t t-foreach="currencies" t-as="currency">
+                                                                                    <option t-att-value="currency[0]"><t t-esc="currency[1]" t-att-selected="'selected' if limit and limit.currency_id == currency[0] else ''"/></option>
+                                                                                </t>
+                                                                            </select>
+                                                                        </div>
+                                                                        <div class="col-xs-3 no-padding-right">
+                                                                            <input t-att-name="'limits[min][%s]' % (limit and limit.id) or ''" class="form-control mb16" type="text" placeholder="min" t-att-value="limit and limit.limit_negative_value"/>
+                                                                        </div>
+                                                                        <div class="col-xs-3 no-padding-right">
+                                                                            <input t-att-name="'limits[max][%s]' % ((limit and limit.id) or '')" class="form-control mb16" type="text" placeholder="max" t-att-value="limit and limit.limit_positive_value"/>
+                                                                        </div>
+                                                                        <div class="col-xs-1 no-padding-right">
+                                                                            <button class="list-remove btn btn-danger"><i class="fa fa-minus"></i></button>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </t>
+                                                        <a href="#" class="list-add btn btn-small btn-primary mb16"><i class="fa fa-plus"></i></a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label class="col-md-4 control-label">Balance</label>
+                                                    <div class="col-md-8 dynamic-list">
+                                                        <div class="row">
+                                                            <div class="list-item col-md-12">
+                                                                <div class="row">
+                                                                    <div class="col-xs-7 no-padding-right">
+                                                                        <input class="form-control mb16" type="text" placeholder="amount"  />
+                                                                    </div>
+                                                                    <div class="col-xs-4 no-padding-right">
+                                                                        <select class="selectpicker form-control">
+                                                                            <t t-foreach="currencies" t-as="currency">
+                                                                                <option t-att-value="currency[0]"><t t-esc="currency[1]"/></option>
+                                                                            </t>
+                                                                        </select>
+                                                                    </div>
+                                                                    <div class="col-xs-1 no-padding-right">
+                                                                        <button class="list-remove btn btn-danger"><i class="fa fa-minus"></i></button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <a href="#" class="list-add btn btn-small btn-primary mb16"><i class="fa fa-plus"></i></a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </t>
+                            </div>
+                        </div>
+                    </section>
+                    <button type="submit" class="btn btn-success pull-right mt16 btn-nolink" name="save_form">Save</button>
+                </form>
+            </t>
+        </template>
+    </data>
+</openerp>

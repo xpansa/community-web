@@ -3,109 +3,128 @@
     <data>
     	<template id="layout" name="Weezer Layout" inherit_id="website.layout">
     		<xpath expr="//header" position="replace">
-    			<header>
-				    <nav class="navbar navbar-default mb0" role="navigation">
-				        <div class="container">
-				            <div class="col-md-12">
-				                <div class="row">
-				                    <!-- Brand and toggle get grouped for better mobile display -->
-				                    <div class="navbar-header">
-				                        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-				                        <span class="sr-only">Toggle navigation</span>
-				                        <span class="icon-bar"></span>
-				                        <span class="icon-bar"></span>
-				                        <span class="icon-bar"></span>
-				                        </button>
-				                        <!-- essential element for logo - .navbar-brand -->
-				                        <!-- class cannot be changed -->
-				                        <a href="/" class="navbar-brand">
-				                        	<img src="/website_project_weezer/static/src/assets/navbar-logo-exchange.png"/>
-				                        </a>
-				                    </div>
-				                    <!-- Collect the nav links, forms, and other content for toggling -->
-				                    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-				                        <ul class="nav navbar-nav" id="top_menu">
-				                            <t t-foreach="website.menu_id.child_id" t-as="submenu">
-			                                    <t t-call="website.submenu"/>
-			                                </t>
-				                            <li><a href="/marketplace/announcement_detail/new"><span class="fa fa-pencil"></span></a></li>
-				                            <li><a href="#" class="btn-nolink"><span class="fa fa-usd"></span></a></li>
-				                        </ul>
-				                        <ul class="nav navbar-nav pull-right">
-				                            <li><a href="members-list.html"><span class="fa fa-users"></span></a></li>
-				                            <li><a href="/page/website.contactus" class="btn-nolink"><span class="fa fa-envelope"></span></a></li>
-				                            <li><a href="profile.html"><span class="fa fa-user"></span></a></li>
-				                        </ul>
-				                    </div>
-				                    <!-- /.navbar-collapse -->
-				                </div>
-				            </div>
-				        </div>
-				        <!-- /.container-fluid -->
-				    </nav>
-				</header>
+                <t t-if="not hide_header">
+        			<header>
+    				    <nav class="navbar navbar-default mb0" role="navigation">
+    				        <div class="container">
+    				            <div class="col-md-12">
+    				                <div class="row">
+    				                    <!-- Brand and toggle get grouped for better mobile display -->
+    				                    <div class="navbar-header">
+    				                        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+    				                        <span class="sr-only">Toggle navigation</span>
+    				                        <span class="icon-bar"></span>
+    				                        <span class="icon-bar"></span>
+    				                        <span class="icon-bar"></span>
+    				                        </button>
+    				                        <!-- essential element for logo - .navbar-brand -->
+    				                        <!-- class cannot be changed -->
+    				                        <a href="/" class="navbar-brand">
+    				                        	<img src="/website_project_weezer/static/src/assets/navbar-logo-exchange.png"/>
+    				                        </a>
+    				                    </div>
+    				                    <!-- Collect the nav links, forms, and other content for toggling -->
+    				                    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+    				                        <ul class="nav navbar-nav" id="top_menu">
+    				                            <t t-foreach="website.menu_id.child_id" t-as="submenu">
+    			                                    <t t-call="website.submenu"/>
+    			                                </t>
+    				                            <li><a href="/marketplace/announcement_detail/new"><span class="fa fa-pencil"></span></a></li>
+    				                            <li><a href="#" class="btn-nolink"><span class="fa fa-usd"></span></a></li>
+    				                        </ul>
+    				                        <ul class="nav navbar-nav pull-right">
+    				                            <li><a href="members-list.html"><span class="fa fa-users"></span></a></li>
+    				                            <li><a href="/page/website.contactus" class="btn-nolink"><span class="fa fa-envelope"></span></a></li>
+                                                <li t-ignore="true" t-if="website.user_id == user_id">
+                                                    <a href="/web/login">
+                                                        <span class="fa fa-user"></span>
+                                                    </a>
+                                                </li>
+    				                            <li class="dropdown" t-ignore="true" t-if="website.user_id != user_id">
+                                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                                        <span class="fa fa-user"></span>
+                                                    </a>
+                                                    <ul class="dropdown-menu js_usermenu" role="menu">
+                                                        <li><a href="/web" role="menuitem">My Account</a></li>
+                                                        <li class="divider"/>
+                                                        <li><a t-attf-href="/web/session/logout?redirect=/" role="menuitem">Logout</a></li>
+                                                    </ul>
+                                                </li>
+    				                        </ul>
+    				                    </div>
+    				                    <!-- /.navbar-collapse -->
+    				                </div>
+    				            </div>
+    				        </div>
+    				        <!-- /.container-fluid -->
+    				    </nav>
+    				</header>
+                </t>
     		</xpath>
     		<xpath expr="//footer" position="replace">
-    			<footer>
+                <t t-if="not hide_footer">
+        			<footer>
 
-	                <div id="footer_container" class="container">
-	                    
-	                    <div class="col-md-12 mb16 mt16">
-	                        <ul class="nav nav-pills pull-right">
-	                            <li><a href="/">Home</a></li>
-	                            <li class="active"><a href="/marketplace/search">Market Place</a></li>
-	                            <li><a href="#" class="btn-nolink">Our Activity</a></li>
-	                        </ul>
-	                        <a href="/page/website.contactus" class="btn btn-primary btn-contact-us pull-left btn-nolink" type="button">Contact Us</a>  
-	                        <h4 class="text-center">See the <a href="#" class="btn-nolink">FAQ</a> or <a href="register.html">Sign up now, it's FREE</a></h4>
-	                    </div>                    
-	                    
-	                    <div class="clearfix"></div>
-	                    
-	                    <div class="col-md-3">
-	                        <h4 class="page-header">Learn more</h4>
-	                        <ul class="nav">
-	                            <li><a href="#" class="btn-nolink">How It Works</a></li>
-	                            <li><a href="#" class="btn-nolink">Feature Tour</a></li>
-	                            <li><a href="#" class="btn-nolink">Sign Up</a></li>
-	                            <li><a href="#" class="btn-nolink">Set It Up</a></li>
-	                            <li><a href="#" class="btn-nolink">About Us</a></li>
-	                        </ul>
-	                    </div>
+    	                <div id="footer_container" class="container">
+    	                    
+    	                    <div class="col-md-12 mb16 mt16">
+    	                        <ul class="nav nav-pills pull-right">
+    	                            <li><a href="/">Home</a></li>
+    	                            <li class="active"><a href="/marketplace/search">Market Place</a></li>
+    	                            <li><a href="#" class="btn-nolink">Our Activity</a></li>
+    	                        </ul>
+    	                        <a href="/page/website.contactus" class="btn btn-primary btn-contact-us pull-left btn-nolink" type="button">Contact Us</a>  
+    	                        <h4 class="text-center">See the <a href="#" class="btn-nolink">FAQ</a> or <a href="register.html">Sign up now, it's FREE</a></h4>
+    	                    </div>                    
+    	                    
+    	                    <div class="clearfix"></div>
+    	                    
+    	                    <div class="col-md-3">
+    	                        <h4 class="page-header">Learn more</h4>
+    	                        <ul class="nav">
+    	                            <li><a href="#" class="btn-nolink">How It Works</a></li>
+    	                            <li><a href="#" class="btn-nolink">Feature Tour</a></li>
+    	                            <li><a href="#" class="btn-nolink">Sign Up</a></li>
+    	                            <li><a href="#" class="btn-nolink">Set It Up</a></li>
+    	                            <li><a href="#" class="btn-nolink">About Us</a></li>
+    	                        </ul>
+    	                    </div>
 
-	                    <div class="col-md-3">
-	                        <h4 class="page-header">Support</h4>
-	                        <ul class="nav">
-	                            <li><a href="#" class="btn-nolink">FAQ</a></li>
-	                            <li><a href="#" class="btn-nolink">Contact Us</a></li>
-	                        </ul>
-	                    </div>
+    	                    <div class="col-md-3">
+    	                        <h4 class="page-header">Support</h4>
+    	                        <ul class="nav">
+    	                            <li><a href="#" class="btn-nolink">FAQ</a></li>
+    	                            <li><a href="#" class="btn-nolink">Contact Us</a></li>
+    	                        </ul>
+    	                    </div>
 
 
-	                    <div class="col-md-3">
-	                        <h4 class="page-header">Legal</h4>
-	                        <ul class="nav">
-	                            <li><a href="#" class="btn-nolink">Terms of Service</a></li>
-	                            <li><a href="#" class="btn-nolink">Privacy Policy</a></li>
-	                        </ul>
-	                    </div>
-	                    
-	                    <div class="col-md-3">
-	                        <h4 class="page-header">Follow Us</h4>
-	                        <ul class="nav">
-	                            <li><a href="#" class="btn-nolink">Twitter</a></li>
-	                            <li><a href="#" class="btn-nolink">Facebook</a></li>
-	                            <li><a href="#" class="btn-nolink">Blog</a></li>
-	                        </ul>
-	                    </div>
-	                    
-	                    <div class="clearfix"></div>
-	                    <h5 class="footer-title">Wezer, designed by <a href="http://www.valeureux.org" class="footer-logo logo-valeureux">Valeureux</a>, common good tools fabrics, based on <a href="http://www.odoo.org" class="footer-logo logo-odoo">Odoo</a></h5>
-	                    
-	                </div>
-	            </footer>
+    	                    <div class="col-md-3">
+    	                        <h4 class="page-header">Legal</h4>
+    	                        <ul class="nav">
+    	                            <li><a href="#" class="btn-nolink">Terms of Service</a></li>
+    	                            <li><a href="#" class="btn-nolink">Privacy Policy</a></li>
+    	                        </ul>
+    	                    </div>
+    	                    
+    	                    <div class="col-md-3">
+    	                        <h4 class="page-header">Follow Us</h4>
+    	                        <ul class="nav">
+    	                            <li><a href="#" class="btn-nolink">Twitter</a></li>
+    	                            <li><a href="#" class="btn-nolink">Facebook</a></li>
+    	                            <li><a href="#" class="btn-nolink">Blog</a></li>
+    	                        </ul>
+    	                    </div>
+    	                    
+    	                    <div class="clearfix"></div>
+    	                    <h5 class="footer-title">Wezer, designed by <a href="http://www.valeureux.org" class="footer-logo logo-valeureux">Valeureux</a>, common good tools fabrics, based on <a href="http://www.odoo.org" class="footer-logo logo-odoo">Odoo</a></h5>
+    	                    
+    	                </div>
+    	            </footer>
+                </t>
     		</xpath>
     	</template>
+        <!-- Template of single offer/want to call in search result block or somewhere else -->
     	<template id="mp_single_item">
     		<div class="row">
                 <div class="col-md-12 thumbnail mb32">
@@ -140,6 +159,8 @@
                 </div>
             </div>
     	</template>
+
+        <!-- MarketPlace(Search) Page -->
     	<template id="mp_search">
             <t t-call="website.layout">
                 <t t-call="website_project_weezer.mp_search_form"/>
@@ -147,16 +168,17 @@
                     <div class="oe_structure"/>
                     <div class="oe_structure">
                         <section class="clearfix">
-
-        					<h3 class="text-center col-md-6 page-header mb8">Our Wants</h3>
-        					<h3 class="text-center col-md-6 page-header mb8">Our Offers</h3>
         					
         					<!-- START: Scrollable -->
         					<div class="col-md-12 page-header pb8">
 
                                 <div class="row">
+
     								<!-- START: Our wants -->
                                     <div class="col-md-6">
+                                        <div class="row">
+                                            <h3 class="text-center page-header mb8">Our Wants</h3>
+                                        </div>
                                     	<div class="col-md-12">
                                     		<t t-foreach="result['wants'] or []" t-as="item">
                                     			<t t-call="website_project_weezer.mp_single_item"/>
@@ -167,6 +189,9 @@
                                 	 
     								<!-- START: Our offers -->
                                     <div class="col-md-6">
+                                        <div class="row">
+                                            <h3 class="text-center page-header mb8">Our Offers</h3>
+                                        </div>
                                     	<div class="col-md-12">
                                     		<t t-foreach="result['offers'] or []" t-as="item">
     											<t t-call="website_project_weezer.mp_single_item"/>
@@ -174,6 +199,7 @@
                                     	</div> 
                                 	</div> 
                                 	<!-- END: Our offers -->   
+
                                 </div>
                                 
     	                    </div>
@@ -192,6 +218,8 @@
                 </div>
             </t>
         </template>
+        
+        <!-- Search Block (Form) can be called on any page -->
         <template id="mp_search_form" name="Marketplace Search">
             <section>
                 <form id="searchform" class="form" method="GET" action="/marketplace/search">
@@ -303,6 +331,180 @@
                     </section>
                 </form>
             </section>
+        </template>
+
+        <template id="login_layout" inherit_id="website.login_layout" name="Login Layout">
+            <xpath expr="t" position="replace">
+                <t t-call="website.layout">
+                    <t t-set="hide_header" t-value="True"/>
+                    <t t-set="hide_footer" t-value="True"/>
+                    <div class="oe_website_login_container bg-gray" t-raw="0"/>
+                </t>
+            </xpath>
+        </template>
+
+        <template id="login" inherit_id="web.login">
+            <xpath expr="//form[@class='oe_login_form']" position="replace">
+               
+                <header class="text-center">
+                    <a href="/">
+                        <img src="/website_project_weezer/static/src/assets/logo.png" class="img-rounded img-login"/>
+                    </a>
+                </header>
+
+                <div>
+                    <div class="thumbnail thumbnail-signin">
+                        <div class="inner">
+                            <h2>Log in</h2>
+                            
+                            <form class="form-signin mt16" role="form" method="post" action="/web/login">
+                                
+                                <input name="login" type="text" class="form-control first" placeholder="Email address" required="required" autofocus="autofocus"/>
+                                <input name="password" type="password" class="form-control last" placeholder="Password" required="required"/>
+                                
+                                <div class="checkbox">
+                                    <button class="btn btn-success" type="submit">Log in</button>
+                                </div>
+                                <input type="hidden" name="redirect" value="/"/>
+                            </form>
+                            <p class="alert alert-danger mt32" t-if="error">
+                                <t t-esc="error"/>
+                            </p>
+                            <p class="alert alert-success mt32" t-if="message">
+                                <t t-esc="message"/>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                            
+            </xpath>
+            
+        </template>
+
+        <template id="reset_password" inherit_id="auth_signup.reset_password">
+
+            <xpath expr="//form[@class='oe_reset_password_form']" position="replace">
+                <header class="text-center">
+                    <a href="/">
+                        <img src="/website_project_weezer/static/src/assets/logo.png" class="img-rounded img-login"/>
+                    </a>
+                </header>
+
+                <div>
+                    <div class="thumbnail thumbnail-signin">
+                        <div class="inner">
+                            <h2>Reset password</h2>
+
+                            <t t-if="token">
+                                <t t-call="auth_signup.fields">
+                                    <t t-set="only_passwords" t-value="1"/>
+                                </t>
+                            </t>
+
+                            <form t-if="not message" class="oe_reset_password_form mt16" role="form" method="post">
+
+                                <t t-if="not token">
+                                    <input type="text" name="login" id="login" class="form-control" autofocus="autofocus" required="required" placeholder="Email address or username"/>
+                                    
+                                    <div class="checkbox">
+                                        <button class="btn btn-success" type="submit">Reset password</button>
+                                    </div>
+                                </t>
+
+                                <input type="hidden" name="redirect" value="/"/>
+                                <input type="hidden" name="token" t-att-value="token"/>
+                            </form>
+
+                            <p class="alert alert-success" t-if="message">
+                                <t t-esc="message"/>
+                            </p>
+
+                            <p class="alert alert-danger" t-if="error">
+                                <t t-esc="error"/>
+                            </p>
+
+                            <div class="checkbox">
+                                <a href="/web/login" class="btn btn-link pull-left">Back to Login</a>
+                                <a href="/web/signup" class="btn btn-link pull-right">Signup</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </template>
+
+        <template id="404" inherit_id="website.404">
+            <xpath expr="//div[@id='wrap']" position="replace">
+                <t t-set="hide_header" t-value="True"/>
+                <t t-set="hide_footer" t-value="True"/>
+
+                <div id="wrap" class="table-cell jumbotron bg-primary">
+                    <div class="container text-center pt128 pb128 mt0">
+                        
+                        <h1>Oops! <small>404 Not Found</small></h1>
+                        <h3>Sorry, we weren't able to find the page you requested</h3>
+                        
+                        <div class="col-md">
+                            <a href="/web/login" class="btn btn-success btn-lg">Sign in</a> 
+                            <a href="/web/signup" class="btn btn-default btn-lg">Sign up</a> 
+                            <a href="#" class="btn btn-primary btn-lg btn-nolink">Learn more</a> 
+                        </div>
+
+                    </div>
+                </div>
+            </xpath>
+        </template>
+
+        <template id="signup_fields">
+            <t t-call="web.database_select"/>
+
+            <input type="text" name="name" t-att-value="name" id="name" class="form-control first" placeholder="Your name"
+                    required="required" t-att-readonly="'readonly' if only_passwords else None"
+                    t-att-autofocus="'autofocus' if login and not only_passwords else None" />
+
+            <input type="text" name="login" t-att-value="login" id="login" class="form-control last mb8" autofocus="autofocus"
+                required="required" t-att-readonly="'readonly' if only_passwords else None" placeholder="Your email"/>
+
+            <input type="password" name="password" id="password" class="form-control first"
+                    required="required" t-att-autofocus="'autofocus' if only_passwords else None" placeholder="Password"/>
+
+            <input type="password" name="confirm_password" id="confirm_password" class="form-control last"
+                    required="required" placeholder="Repeat Password"/>
+
+        </template>
+
+        <template id="signup" inherit_id="auth_signup.signup">
+            <xpath expr="//form[@class='oe_signup_form']" position="replace">
+                <header class="text-center">
+                    <a href="/">
+                        <img src="/website_project_weezer/static/src/assets/logo.png" class="img-rounded img-login"/>
+                    </a>
+                </header>
+
+                <div>
+                    <div class="thumbnail thumbnail-signin">
+                        <div class="inner">
+                            <h2>Sign up</h2>
+
+                            <form class="oe_signup_form mt16" role="form" method="post" t-if="not message">
+
+                                <t t-call="website_project_weezer.signup_fields"/>
+
+                                <p class="alert alert-danger" t-if="error">
+                                    <t t-esc="error"/>
+                                </p>
+                                <input type="hidden" name="redirect" value="/"/>
+                                <input type="hidden" name="token" t-att-value="token"/>
+                                <div class="clearfix oe_login_buttons">
+                                    <a t-attf-href="/web/login?{{ keep_query() }}" class="btn btn-link pull-right">Back to Login</a>
+                                    <button type="submit" class="btn btn-success pull-left">Sign up</button>
+                                </div>
+
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
         </template>
     </data>
 </openerp>

@@ -1,0 +1,33 @@
+@mixin project-ui-bg
+{
+	.bg-info
+	{
+		.table > thead > tr > th, .table > tbody > tr > td {
+			border-color: darken(#d9edf7, 5%);
+		}
+	}
+	.bg-info-darker
+	{
+		background-color: $light_blue !important;
+		
+		.table > thead > tr > th, .table > tbody > tr > td {
+			border-color: darken($light_blue, 5%);
+		}
+	}
+	.bg-success
+	{
+		.table > thead > tr > th, .table > tbody > tr > td {
+			border-color: darken(#dff0d8, 8%);
+		}
+	}
+	
+	.bg-gray {
+		background-color: lighten($light, 5%) !important;
+	}
+	.bg-gray-darker {
+		background-color: $light !important;
+	}
+	
+	
+	
+}

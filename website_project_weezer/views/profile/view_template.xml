@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+<!-- Profile Edit Page -->
+        <template id="profile_view">
+            <t t-call="website.layout">
+                <div class="container">
+                    <div class="col-md-12 mt32">
+                        <h2 class="mb32">I am</h2>
+                    </div>
+                </div>
+
+                <div class="container">
+                    <div class="col-md-4">
+                        <img src="http://lorempixel.com/1000/500/?1" class="img img-responsive thumbnail"/>
+                        <div class="pull-right">
+                            <img src="http://lorempixel.com/40/40/" class="img img-circle" width="40" height="40"/>
+                            <div class="clearfix"></div>
+                            <span class="badge badge-success mt4"><t t-esc="partner.name"/></span>
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                    
+                        <div class="col-md-5">
+                            <div class="form-group">
+                                <div class="row">
+                                    <label class="col-md-4 control-label" for="firstname">Name</label>
+                                    <div class="col-md-8">
+                                        <t t-esc="partner.name"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="row">
+                                    <label class="col-md-4 control-label" for="gender">Prefix</label>
+                                    <div class="col-md-8">
+                                        <t t-esc="partner.title.name"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="row">
+                                    <label class="col-md-4 control-label" for="birthdate">Birthdate</label>
+                                    <div class="col-md-8">
+                                        <div class="input-group">
+                                            <t t-esc="partner.birthdate"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-5">
+                            <div class="form-group">
+                                <div class="row">
+                                    <label class="col-md-4 control-label" for="street1">Street #1</label>
+                                    <div class="col-md-8">
+                                        <t t-esc="partner.street"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="row">
+                                    <label class="col-md-4 control-label" for="street2">Street #2</label>
+                                    <div class="col-md-8">
+                                        <t t-esc="partner.street2"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="row">
+                                    <label class="col-md-4 control-label" for="zip">Postalcode</label>
+                                    <div class="col-md-8">
+                                        <t t-esc="partner.zip"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="row">
+                                    <label class="col-md-4 control-label" for="city">City</label>
+                                    <div class="col-md-8">
+                                        <t t-esc="partner.city"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="row">
+                                    <label class="col-md-4 control-label" for="state">State</label>
+                                    <div class="col-md-8">
+                                        <t t-esc="partner.state_id.name"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="row">
+                                    <label class="col-md-4 control-label" for="country">Country</label>
+                                    <div class="col-md-8">
+                                        <t t-esc="partner.country_id.name"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12 mt32 mb16"><h4>Contact info</h4></div>
+                        <div class="col-md-5 mb32">
+                            <div class="form-group">
+                                <div class="row">
+                                    <label class="col-md-4 control-label" for="email">Email</label>
+                                    <div class="col-md-8">
+                                        <t t-esc="partner.email"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-5">
+                            <div class="form-group">
+                                <div class="row">
+                                    <label class="col-md-4 control-label" for="gsm">GSM</label>
+                                    <div class="col-md-8">
+                                        <t t-esc="partner.mobile"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="row">
+                                    <label class="col-md-4 control-label" for="home">Home</label>
+                                    <div class="col-md-8">
+                                        <t t-esc="partner.phone"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <section class="bg-gray pt32 pb32">
+                    <div class="container">
+                        <div class="col-md-12">
+                            <h3 class="mb32">My Resources</h3>
+                        </div>
+                    </div>
+                    
+                    <div class="container">
+                        <div class="col-md-12">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label class="col-md-4 control-label">Skills</label>
+                                            <div class="col-md-8 dynamic-list">
+                                                <t t-foreach="partner.skill_category_ids" t-as="category">
+                                                    <div class="row">
+                                                        <div class="list-item col-md-12 skill_category_block">
+                                                            <div class="row">
+                                                                <div class="col-xs-10 no-padding-right">
+                                                                    <t t-esc="category.name"/>
+                                                                </div>
+                                                                
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </t>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label class="col-md-4 control-label">Interests</label>
+                                            <div class="col-md-8 dynamic-list">
+                                                <t t-foreach="partner.skill_tag_ids" t-as="tag">
+                                                    <div class="row">
+                                                        <div class="list-item col-md-12 skill_tag_block">
+                                                            <div class="row">
+                                                                <div class="col-xs-10 no-padding-right">
+                                                                    <t t-esc="tag.name"/>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </t>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </t>
+        </template>
+    </data>
+</openerp>

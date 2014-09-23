@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-#
+##############################################################################
 #
 #    Website Marketplace
 #    Copyright (C) 2014 Xpansa Group (<http://xpansa.com>).
@@ -17,55 +17,75 @@
 #    You should have received a copy of the GNU Affero General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-#
-
-import os
-import base64
-from datetime import datetime
+##############################################################################
 
 from openerp.addons.web import http
 from openerp.addons.web.http import request
 from openerp.addons.website.controllers.main import Website as controllers
 from openerp.tools import DEFAULT_SERVER_DATE_FORMAT
 
+from datetime import datetime
+
+def get_date_format(cr, uid, context):
+    """ Returns date_from from locale of current user 
+    to parse dates from forms. 
+    """
+    if context is None:
+        context = {}
+    lang = context.get('lang')
+    if lang:
+        res_lang = request.registry.get('res.lang')
+        ids = res_lang.search(cr, uid, [('code', '=', lang)])
+        if ids:
+            lang_params = res_lang.read(cr, uid, ids[0], ['date_format'])
+            return lang_params['date_format']
+    return DEFAULT_SERVER_DATE_FORMAT
 
 class search_controller(http.Controller):
 
     QUERY_LIMIT = 4
-    SEARCH_PARAMS = ['type', 'name', 'category', 'city', 'date_from', 'date_to', 'from_who',
-        'qty_from', 'qty_to', 'currency']
-
-    def _get_date_format(self, cr, uid, context):
-        lang = context.get('lang')
-        lang_params = {}
-        if lang:
-            res_lang = request.registry.get('res.lang')
-            ids = res_lang.search(cr, uid, [('code', '=', lang)])
-            if ids:
-                lang_params = res_lang.read(cr, uid, ids[0], ['date_format'])
-                return lang_params['date_format']
-        return DEFAULT_SERVER_DATE_FORMAT
+    SEARCH_PARAMS = [
+        'type', 'name', 'category', 'city', 'date_from', 
+        'date_to', 'from_who', 'qty_from', 'qty_to', 'currency'
+    ]
 
     def _build_query(self, data, date_format, limit=QUERY_LIMIT, page=0, return_count=False):
+        """ Returns SQL query and params that should be applied 
+
+        :param dict data: POST data from forms
+        :param str date_format: pattern for parsing dates
+        :param int limit: LIMIT in SQL query
+        :param int page: used to calc OFFSET
+        :param bool return_count: do not select list of IDs 
+            and do not apply limit and offset if it's True
+        """
         offset = page*limit
         params = {}
+
         def _build_sql(ttype, pick_params=False):
+            """ Returns full SQL query or part for UNION query
+
+            :param str ttype: determines either find offers or wants
+            :param bool pick_params: should be False 
+                if used second time in UNION query
+            :return tuple: sql and params
+            """
             if return_count:
                 sql = 'SELECT COUNT(a.id) '
             else:
                 sql = 'SELECT a.id, a.delivery_date '
             sql += 'FROM marketplace_announcement a '\
             'LEFT JOIN res_partner p on p.id = a.partner_id '\
-            'WHERE 1=1 '
+            'WHERE state=\'open\' '
             
             if ttype:
                 sql += 'AND a.type = \'%s\' ' % ('want' if ttype == 'to_offer' else 'offer')
             if data.get('name'): 
                 sql += 'AND a.name ILIKE %(name)s '
                 params.update({'name': '%'+data.get('name')+'%'})
-            if int(data.get('category', '0')):
-                sql += 'AND a.category_id = %(category)s '
-                params.update({'category': int(data.get('category'))})
+            if data.get('categories', []):
+                sql += 'AND a.category_id IN %(category)s '
+                params.update({'category': tuple(data.get('categories', []))})
             if data.get('city'):
                 sql += 'AND (a.city ILIKE %(city)s OR a.street2 ILIKE %(city)s) '
                 params.update({'city': '%'+data.get('city')+'%'})
@@ -99,30 +119,34 @@ class search_controller(http.Controller):
                 params.update({'price_to': data.get('price_to')})
             if not return_count:
                 sql += 'GROUP BY a.id '
-            if not return_count:
                 sql += 'ORDER BY a.delivery_date ASC '
-            if limit and not return_count:
-                sql += 'LIMIT %(limit)s '
-                params.update({'limit': limit})
-            if offset and not return_count:
-                sql += 'OFFSET %(offset)s '
-                params.update({'offset': offset})
+                if limit:
+                    sql += 'LIMIT %(limit)s '
+                    params.update({'limit': limit})
+                if offset:
+                    sql += 'OFFSET %(offset)s '
+                    params.update({'offset': offset})
 
             return sql
 
         if not data.get('type') or data.get('type') == 'to_get':
+            # Find both wants and offers using UNION query
             return '(%s) UNION (%s)' % (_build_sql('to_offer', True), _build_sql('to_get')) \
                 + (' ORDER BY delivery_date ASC' if not return_count else ''), params
         else:
             return _build_sql(data.get('type')), params
 
     def _get_url(self, type, offset, params):
+        """ Returns url for Prev and Next buttons in the pager 
+        """
         url_pairs = [(k, v) for k,v in params.iteritems() if k in self.SEARCH_PARAMS]
         url_pairs.append(('page', str(offset) if type == 'prev' else str(offset+1)))
         url = '/marketplace/search?' + '&'.join(['='.join(x) for x in url_pairs])
         return url
 
     def format_text(self, text):
+        """ Cut long descriptions 
+        """
         if not text:
             return ''
         text = text[0:300]
@@ -135,19 +159,29 @@ class search_controller(http.Controller):
 
     @http.route('/marketplace/search', type='http', auth="public", website=True)
     def search(self, **kw):
-        """ display search page and first results """
+        """ Display search page and first results 
+        :param dict kw: POST data
+        """
         cr, uid, context = request.cr, request.uid, request.context
         mp_announcement_pool = request.registry.get('marketplace.announcement')
+        category_pool = request.registry.get('marketplace.announcement.category')
         result = {'wants': [], 'offers': []}
-        date_format = self._get_date_format(cr, uid, context)
-        params = dict([(k,v) for k,v in kw.iteritems() if k in self.SEARCH_PARAMS])
-        sql = self._build_query(params, date_format, kw.get('limit',self.QUERY_LIMIT), int(kw.get('page','1'))-1)
+        date_format = get_date_format(cr, uid, context)
+        post_params = dict([(k,v) for k,v in kw.iteritems() if k in self.SEARCH_PARAMS])
+        # Search in child categories
+        category_id = int(kw.get('category','0'))
+        if category_id:
+            post_params.update({
+                'categories': category_pool.search(cr, uid, 
+                    [('id','child_of',category_id)],context=context)
+            })
+        sql = self._build_query(post_params, date_format, kw.get('limit',self.QUERY_LIMIT), int(kw.get('page','1'))-1)
         cr.execute(sql[0], sql[1] or ())
         res_ids = [row[0] for row in cr.fetchall()]
         res_data = mp_announcement_pool.browse(cr, uid, res_ids, context=context)
         
-        #select count both of wants and offers
-        count_sql = self._build_query(params, date_format, False, False, True)
+        #select number both of wants and offers
+        count_sql = self._build_query(post_params, date_format, False, False, True)
         cr.execute(count_sql[0], count_sql[1] or ())
         counts = cr.fetchall()
         if len(counts) > 1:
@@ -164,18 +198,19 @@ class search_controller(http.Controller):
             'result': result,
             'page': int(kw.get('page', '1')),
             'page_count': count/self.QUERY_LIMIT + (1 if count%self.QUERY_LIMIT else 0),
-            'next_url': self._get_url('next', int(kw.get('page', '1')), params),
-            'prev_url': self._get_url('prev', int(kw.get('page', '1'))-1, params),
+            'next_url': self._get_url('next', int(kw.get('page', '1')), post_params),
+            'prev_url': self._get_url('prev', int(kw.get('page', '1'))-1, post_params),
             'format_text': self.format_text
         })
 
     @http.route(['/marketplace/search/load_more'], type='http', auth="public", methods=['GET'], website=True)
     def load_more(self, **kw):
-        """ display results after load more signal """
+        """ Display results after load more signal(only for ajax) 
+        """
         cr, uid, context = request.cr, request.uid, request.context
         mp_announcement_pool = request.registry.get('marketplace.announcement')
         result = {'wants': [], 'offers': []}
-        date_format = self._get_date_format(cr, uid, context)
+        date_format = get_date_format(cr, uid, context)
         sql = self._build_query(dict([(k,v) for k,v in kw.iteritems() if k in self.SEARCH_PARAMS]), 
             date_format, kw.get('limit',self.QUERY_LIMIT), kw.get('offset'))
         cr.execute(sql[0], sql[1] or ())

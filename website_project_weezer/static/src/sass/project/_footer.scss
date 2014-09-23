@@ -1,0 +1,63 @@
+@mixin project-footer {
+	@include project-footer-nav;
+}
+
+
+@mixin project-footer-nav {
+	
+	.footer-nav {
+		float:left;
+		width:18%;
+		margin:0 1%;
+		padding:0;
+	
+		&:first-child {
+			margin-left:0;
+			width:19%;
+		}
+		&:last-child {
+			margin-right:0;
+			width:19%;
+		}
+	}
+	#footer_container {
+		.btn-contact-us {
+			padding:9px 15px;			
+		}
+	}
+	
+	.footer-title {
+		text-align: center;
+		margin-top: 9px;
+	}
+	
+	h5.footer-title {
+		margin-top:30px;
+		color:$gray_medium;
+		height:70px;
+		line-height:70px;
+		
+		.footer-logo {
+			display:inline-block;
+			vertical-align:middle;
+			margin:-5px 5px 0;
+			background-position:center left;
+			background-repeat:no-repeat;
+			border:none;
+			text-indent:-9999px;
+			
+			&.logo-odoo {
+				@include size(79px, 35px);
+				background-image:url('img/logo_odoo.png');
+				@include background-size(50%);
+			}
+			
+			&.logo-valeureux {
+				@include size(100px, 70px);
+				background-image:url('img/logo_valeureux.png');
+				@include background-size(100px, 70px);
+			}
+		}
+	}
+	
+}

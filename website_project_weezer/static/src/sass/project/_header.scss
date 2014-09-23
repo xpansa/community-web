@@ -1,0 +1,58 @@
+@mixin project-header {
+	@include project-header-search;
+}
+
+
+@mixin project-header-search {
+	
+	.oe_website_login_container
+	{
+		display : table-cell;
+		margin: 0 auto !important;
+		padding: 10px 0 !important;
+		width: 100% !important;
+		header
+		{
+			display: block;
+		}
+	}
+
+	#input-search {width:480px;}
+	
+	.search-dropdown {
+		.caret {margin-top:8px;}
+	}
+	
+	#filter-search {width:100px;}
+	#category-search {width:200px;}
+	
+	#search-dropdown-menu{right:auto;}
+	
+	.subtitle-search{
+			padding:0;
+			@include block;
+			@include size(100%, 30px);
+			margin:0;
+			
+			
+			h2 {
+				@include block(absolute);
+				background-color:#EEE;
+				@include size(40px,30px);
+				padding: 0;
+				margin: 0 -20px;
+				left:50%;
+				line-height: 30px;
+				font-size:18px;
+			}
+			
+			
+			.border {
+				@include block(absolute);
+				@include size(188px, 1px);
+				background:#CCC;
+				margin:15px -94px;
+				left:50%;
+			}
+		}
+}
