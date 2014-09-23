@@ -1,8 +1,36 @@
+
+function bind_autocomplete(selector, url, cache) {
+    $(selector).autocomplete({
+        minLength: 2,
+        source: function( request, response ) {
+            var term = request.term;
+            if ( term in cache ) {
+                response( cache[ term ] );
+                return;
+            }
+            openerp.jsonRpc(url, 'call', {
+                'term': term,
+                }).then(function (data) {
+                    cache[ term ] = data;
+                    response( data );
+                });
+        }
+    });
+}
+
 $(document).ready(function(){
     $('.selectpicker').selectpicker();
     var dFormat = openerp._t.database.parameters.date_format;
     JQueryDateFormat = dFormat.replace('%m','mm').replace('%d','dd').replace('%Y','yy')
     $('.date-picker').datepicker({dateFormat: JQueryDateFormat});
+    $('.dynamic-list').dynamiclist({'addCallbackFn': function(el) {
+            el = el[0]
+            if($(el).hasClass('skill_category_block'))
+                bind_autocomplete($(el).find('input'), '/marketplace/profile/get_skills', skill_category_cache)
+            else if($(el).hasClass('skill_tag_block'))
+                bind_autocomplete($(el).find('input'), '/marketplace/profile/get_interests', skill_tag_cache)
+        }
+    });
     $('.scrollable').tinyscrollbar({ thumbSize: 100 });
     var offset = 4;
     var limit = 4;
@@ -32,10 +60,12 @@ $(document).ready(function(){
                     $('div.mp_search').tinyscrollbar().data("plugin_tinyscrollbar").update('bottom');
                 });
             });
-        
-
-            
     });
+
+    var skill_category_cache = {};
+    var skill_tag_cache = {};
+    bind_autocomplete('.skill_category', '/marketplace/profile/get_skills', skill_category_cache);
+    bind_autocomplete('.skill_tag', '/marketplace/profile/get_interests', skill_tag_cache);
 });
 
 

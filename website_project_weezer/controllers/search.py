@@ -26,6 +26,20 @@ from openerp.tools import DEFAULT_SERVER_DATE_FORMAT
 
 from datetime import datetime
 
+def get_date_format(cr, uid, context):
+    """ Returns date_from from locale of current user 
+    to parse dates from forms. 
+    """
+    if context is None:
+        context = {}
+    lang = context.get('lang')
+    if lang:
+        res_lang = request.registry.get('res.lang')
+        ids = res_lang.search(cr, uid, [('code', '=', lang)])
+        if ids:
+            lang_params = res_lang.read(cr, uid, ids[0], ['date_format'])
+            return lang_params['date_format']
+    return DEFAULT_SERVER_DATE_FORMAT
 
 class search_controller(http.Controller):
 
@@ -34,21 +48,6 @@ class search_controller(http.Controller):
         'type', 'name', 'category', 'city', 'date_from', 
         'date_to', 'from_who', 'qty_from', 'qty_to', 'currency'
     ]
-
-    def _get_date_format(self, cr, uid, context):
-        """ Returns date_from from locale of current user 
-        to parse dates from forms. 
-        """
-        if context is None:
-            context = {}
-        lang = context.get('lang')
-        if lang:
-            res_lang = request.registry.get('res.lang')
-            ids = res_lang.search(cr, uid, [('code', '=', lang)])
-            if ids:
-                lang_params = res_lang.read(cr, uid, ids[0], ['date_format'])
-                return lang_params['date_format']
-        return DEFAULT_SERVER_DATE_FORMAT
 
     def _build_query(self, data, date_format, limit=QUERY_LIMIT, page=0, return_count=False):
         """ Returns SQL query and params that should be applied 
@@ -167,7 +166,7 @@ class search_controller(http.Controller):
         mp_announcement_pool = request.registry.get('marketplace.announcement')
         category_pool = request.registry.get('marketplace.announcement.category')
         result = {'wants': [], 'offers': []}
-        date_format = self._get_date_format(cr, uid, context)
+        date_format = get_date_format(cr, uid, context)
         post_params = dict([(k,v) for k,v in kw.iteritems() if k in self.SEARCH_PARAMS])
         # Search in child categories
         category_id = int(kw.get('category','0'))
@@ -211,7 +210,7 @@ class search_controller(http.Controller):
         cr, uid, context = request.cr, request.uid, request.context
         mp_announcement_pool = request.registry.get('marketplace.announcement')
         result = {'wants': [], 'offers': []}
-        date_format = self._get_date_format(cr, uid, context)
+        date_format = get_date_format(cr, uid, context)
         sql = self._build_query(dict([(k,v) for k,v in kw.iteritems() if k in self.SEARCH_PARAMS]), 
             date_format, kw.get('limit',self.QUERY_LIMIT), kw.get('offset'))
         cr.execute(sql[0], sql[1] or ())
