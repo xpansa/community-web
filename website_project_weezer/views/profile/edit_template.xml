@@ -14,9 +14,9 @@
 
                     <div class="container">
                         <div class="col-md-4">
-                            <img src="http://lorempixel.com/1000/500/?1" class="img img-responsive thumbnail"/>
+                            <img t-att-src="image" class="img img-responsive thumbnail"/>
                             <div class="pull-right">
-                                <img src="http://lorempixel.com/40/40/" class="img img-circle" width="40" height="40"/>
+                                <img t-att-src="image_small" class="img img-circle" width="40" height="40"/>
                                 <div class="clearfix"></div>
                                 <span class="badge badge-success mt4"><t t-esc="partner.name"/></span>
                             </div>
@@ -248,7 +248,7 @@
                                                                 <div class="list-item col-md-12 balance_block">
                                                                     <div class="row">
                                                                         <div class="col-xs-7 no-padding-right">
-                                                                            <input t-att-name="'balances[existing][%s][amount]' % balance.id if balance else 'balances[new][0][amount]'" class="form-control mb16" type="text" placeholder="amount" t-att-value="balance and balance.amount or ''"/>
+                                                                            <input t-att-name="'balances[existing][%s][amount]' % balance.id if balance else 'balances[new][0][amount]'" class="form-control mb16" type="text" placeholder="amount" t-att-value="balance and balance.available or ''"/>
                                                                         </div>
                                                                         <div class="col-xs-4 no-padding-right">
                                                                             <select t-att-name="'balances[existing][%s][currency]' % balance.id if balance else 'balances[new][0][currency]'" class="selectpicker form-control" t-att-value="balance and balance.currency_id.name or ''">

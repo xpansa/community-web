@@ -17,9 +17,9 @@ function bind_autocomplete(selector, url, cache) {
         },
         select: function(event, ui) {
             if($(event.target).hasClass('skill_category'))
-                $(event.target).attr('name', 'skills[existing][' + ui.item.id + ']')
-            console.log(event);
-            console.log(ui);
+                $(event.target).attr('name', 'skills[existing][' + ui.item.id + ']');
+            else if($(event.target).hasClass('skill_tag'))
+                $(event.target).attr('name', 'tags[existing][' + ui.item.id + ']');
         }
     });
 }

@@ -26,6 +26,7 @@ from openerp.addons.website.controllers.main import Website as controllers
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
 
 from datetime import datetime
+import re
 from search import get_date_format
 
 
@@ -37,7 +38,14 @@ class search_controller(http.Controller):
     def profile_parse_data(self, data, date_format):
         cr, uid, context, registry = request.cr, request.uid, request.context, request.registry
         print data
-        values = {'partner': {}}
+        print '+'*100
+        values = {
+            'partner': {},
+            'limits': {'new': {}, 'existing': {}},
+            'balances': {'new': {}, 'existing': {}},
+            'skills': {'new': [], 'existing': []},
+            'interests': {'new': [], 'existing': []},
+        }
         for k, val in data.iteritems():
             if k in self.PARTNER_FIELDS:
                 if k == 'birthdate':
@@ -49,7 +57,40 @@ class search_controller(http.Controller):
                     values['partner'][k] = int(val) if val else False
                 else:
                     values['partner'].update({k: val})
-
+            elif k.startswith('skills'):
+                existing = re.search('skills\[existing\]\[(\d+)\]', k)
+                if existing:
+                    values['skills']['existing'].append(existing.group(1))
+                else:
+                    values['skills']['new'].append(val)
+            elif k.startswith('tags'):
+                existing = re.search('tags\[existing\]\[(\d+)\]', k)
+                if existing:
+                    values['interests']['existing'].append(existing.group(1))
+                else:
+                    values['interests']['new'].append(val)
+            elif k.startswith('limits'):
+                for key in ['currency', 'min', 'max']:
+                    for key2 in ['new', 'existing']:
+                        limit_number = re.search('limits\[%s\]\[(\d+)\]\[%s\]' % (key2, key), k)
+                        if limit_number:
+                            limit_number = int(limit_number.group(1))
+                            if not limit_number in values['limits'][key2]:
+                                values['limits'][key2][limit_number] = {key: val}
+                            else:
+                                values['limits'][key2][limit_number].update({key: val})
+            elif k.startswith('balances'):
+                for key in ['currency', 'amount']:
+                    for key2 in ['new', 'existing']:
+                        balance_number = re.search('balances\[%s\]\[(\d+)\]\[%s\]' % (key2, key), k)
+                        if balance_number:
+                            balance_number = int(balance_number.group(1))
+                            if not balance_number in values['balances'][key2]:
+                                values['balances'][key2][balance_number] = {key: val}
+                            else:
+                                values['balances'][key2][balance_number].update({key: val})
+        values['limits']['new'] = [val for k, val in values['limits']['new'].iteritems()]
+        values['balances']['new'] = [val for k, val in values['balances']['new'].iteritems()]
         return values
 
     def profile_values(self, data=None):
@@ -66,6 +107,10 @@ class search_controller(http.Controller):
         date_format = get_date_format(cr, uid, context=context)
         values = {
             'partner': partner,
+            'image': partner.image and ("data:image/png;base64,%s" % partner.image) or \
+            '/web/static/src/img/placeholder.png',
+            'image_small': partner.image_small and ("data:image/png;base64,%s" % partner.image_small) or \
+            '/web/static/src/img/placeholder.png',
             'partner_titles': title_pool.name_search(cr, uid, '', [], context=context),
             'countries': country_pool.name_search(cr, uid, '', [], context=context),
             'states': state_pool.name_search(cr, uid, '', [], context=context),
@@ -89,9 +134,72 @@ class search_controller(http.Controller):
         cr, uid, context, registry = request.cr, request.uid, request.context, request.registry
         user_pool = request.registry.get('res.users')
         partner_pool = request.registry.get('res.partner')
-        partner_id = user_pool.browse(cr, uid, uid, context=context).partner_id
-        partner_pool.write(cr, uid, [partner_id.id], data['partner'], context=context)
+        skill_category_pool = request.registry.get('marketplace.announcement.category')
+        tag_pool = request.registry.get('marketplace.tag')
+        limit_pool = request.registry.get('res.partner.centralbank.currency')
+        balance_pool = request.registry.get('res.partner.centralbank.balance')
+        partner = user_pool.browse(cr, uid, uid, context=context).partner_id
+        partner_pool.write(cr, uid, [partner.id], data['partner'], context=context)
         
+        # Create new skills (marketplace.announcement.category)
+        for skill in data['skills']['new']:
+            skill_id = skill_category_pool.search(cr, uid, [('name','=',skill)], context=context)
+            if not skill_id:
+                skill_id = skill_category_pool.create(cr, uid, {'name': skill}, context=context)
+                data['skills']['existing'].append(skill_id)
+        # Create new interests (marketplace.tag)
+        for tag in data['interests']['new']:
+            tag_id = tag_pool.search(cr, uid, [('name','=',tag)], context=context)
+            if not tag_id:
+                tag_id = tag_pool.create(cr, uid, {'name': tag}, context=context)
+                data['interests']['existing'].append(tag_id)
+        # Update partner skills and interests
+        partner_pool.write(cr, uid, [partner.id], {
+            'skill_category_ids': [(6, 0, data['skills']['existing'])],
+            'skill_tag_ids': [(6, 0, data['interests']['existing'])],
+        }, context=context)
+
+        # Delete limits
+        limits_to_delete = list(set([item.id for item in partner.centralbank_currency_ids]) \
+            - set(data['limits']['existing'].keys()))
+        limit_pool.unlink(cr, uid, limits_to_delete, context=context)
+        # Create limits
+        for limit in data['limits']['new']:
+            if int(limit['currency']) and (float(limit['min']) or float(limit['max'])):
+                limit_pool.create(cr, uid, {
+                    'limit_negative_value': float(limit['min']),
+                    'limit_positive_value': float(limit['max']),
+                    'currency_id': int(limit['currency']),
+                    'partner_id': partner.id,
+                }, context=context)
+        # Update existing limits
+        for id, limit in data['limits']['existing'].iteritems():
+            if int(limit['currency']) and (float(limit['min']) or float(limit['max'])):
+                limit_pool.write(cr, uid, id, {
+                    'limit_negative_value': float(limit['min']),
+                    'limit_positive_value': float(limit['max']),
+                    'currency_id': int(limit['currency']),
+                }, context=context)
+
+        # Delete balances
+        balances_to_delete = list(set([item.id for item in partner.centralbank_balance_ids]) \
+            - set(data['balances']['existing'].keys()))
+        balance_pool.unlink(cr, uid, balances_to_delete, context=context)
+        # Create balances
+        for balance in data['balances']['new']:
+            if int(balance['currency']) and float(balance['amount']):
+                balance_pool.create(cr, uid, {
+                    'available': float(balance['amount']),
+                    'currency_id': int(balance['currency']),
+                    'partner_id': partner.id,
+                }, context=context)
+        # Update existing balances
+        for id, balance in data['balances']['existing'].iteritems():
+            if int(balance['currency']) and float(balance['amount']):
+                balance_pool.write(cr, uid, id, {
+                    'available': float(balance['amount']),
+                    'currency_id': int(balance['currency']),
+                }, context=context)
 
     @http.route('/marketplace/profile/edit', type='http', auth="user", website=True)
     def profile_edit(self, **kw):
