@@ -71,9 +71,13 @@ class search_controller(http.Controller):
             'states': state_pool.name_search(cr, uid, '', [], context=context),
             'is_administrator': uid == SUPERUSER_ID,
             'currencies': [(c['currency_id'][0], c['currency_id'][1]) for c in curr_config_lines],
-            'birthdate': datetime.strptime(partner.birthdate, DEFAULT_SERVER_DATETIME_FORMAT).strftime(date_format),
+            'birthdate': '',
             'date_placeholder': date_format.replace('%d','DD').replace('%m','MM').replace('%Y','YYYY'),
         }
+        if partner.birthdate:
+            values.update({
+                'birthdate': datetime.strptime(partner.birthdate, DEFAULT_SERVER_DATETIME_FORMAT).strftime(date_format),    
+            })
         if data:
             values['profile'] = self.profile_parse_data(data, date_format)
         return values

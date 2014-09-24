@@ -39,8 +39,8 @@ class announcement_controller(http.Controller):
 
     
     class save_annnouncement_parser():
-    """ Class for parsing and validate save announcement request's params
-    """
+        """ Class for parsing and validate save announcement request's params
+        """
         def __init__(self, cr, uid, registry, context=None):
             self.error_message_list = list()
             self.error_param_list = list()
@@ -51,8 +51,8 @@ class announcement_controller(http.Controller):
             self.context = context
 
         def __parse_bool_param(self, post, param, attr):
-        """ Process bool value from post params and save it to vals dict
-        """
+            """ Process bool value from post params and save it to vals dict
+            """
             if post.get(param):
                 if post.get(param) == 'on':
                     self.vals.update({attr: True})
@@ -60,14 +60,14 @@ class announcement_controller(http.Controller):
                     self.vals.update({attr: False})
 
         def __parse_text_param(self, post, param, attr):
-        """ Process text value from post params and save it to vals dict
-        """
+            """ Process text value from post params and save it to vals dict
+            """
             if post.get(param):
                 self.vals.update({attr: post.get(param)})
 
         def __parse_date_param(self, post, param, attr, error_msg):
-        """ Process date value from post params and save it to vals dict
-        """
+            """ Process date value from post params and save it to vals dict
+            """
             if post.get(param):
                 try:
                     date_val = datetime.datetime.strptime(post.get(param), '%Y-%m-%d')
@@ -78,8 +78,8 @@ class announcement_controller(http.Controller):
                     self.vals.update({attr: date_val})            
 
         def __parse_float_param(self, post, param, attr, error_msg):
-        """ Process float value from post params and save it to vals dict
-        """
+            """ Process float value from post params and save it to vals dict
+            """
             if post.get(param):
                 try:
                     value = float(post.get(param))
@@ -90,8 +90,8 @@ class announcement_controller(http.Controller):
                     self.vals.update({attr: value})
 
         def __parse_binary_param(self, post, param, attr):
-        """ Process binary value from post params and save it to vals dict
-        """
+            """ Process binary value from post params and save it to vals dict
+            """
             if post.get(param):
                 binary = post.get(param)
                 try:
@@ -101,8 +101,8 @@ class announcement_controller(http.Controller):
                     self.error_param_list.append(param)
 
         def __parse_m2o_param(self, post, param, attr, res_model, error_msg):
-        """ Process many2one value from post params and save it to vals dict
-        """
+            """ Process many2one value from post params and save it to vals dict
+            """
             if post.get(param):
                 model_id = post.get(param)
                 if model_id != 'None':
@@ -117,8 +117,8 @@ class announcement_controller(http.Controller):
                     self.vals.update({attr: False})
 
         def __parse_o2m_param(self, post, param, attr, res_model):
-        """ Process one2many value from post params and save it to vals dict
-        """
+            """ Process one2many value from post params and save it to vals dict
+            """
             if post.get(param):
                 many_value_list = list()
                 value_list = post.get(param)
@@ -136,8 +136,8 @@ class announcement_controller(http.Controller):
                 self.vals.update({attr: [(6, 0, many_value_list)]})
 
         def _parse_param(self, post):
-        """ Parse post params with simple values
-        """
+            """ Parse post params with simple values
+            """
             bool_params = [
                 ('unlimited', 'infinite_qty'), 
                 ('emergency', 'emergency'),
@@ -193,8 +193,8 @@ class announcement_controller(http.Controller):
                     callback()
 
         def check_date_interval(self):
-        """ Check interval from date_from to date_to 
-        """
+            """ Check interval from date_from to date_to 
+            """
             date_to = self.vals.get('date_to')
             date_from = self.vals.get('date_from')
             if date_to and date_from:
@@ -204,8 +204,8 @@ class announcement_controller(http.Controller):
                     self.error_param_list.append('date_from')
 
         def check_m2o_value(self):
-        """ Check all many2one values 
-        """
+            """ Check all many2one values 
+            """
             vals = self.vals
             country_pool = self.registry.get('res.country')
 
@@ -219,8 +219,8 @@ class announcement_controller(http.Controller):
                     self.error_param_list.append('state_id')
         
         def _parse_attachment(self, post, param, res_model, res_id):
-        """ Process attachment from post params
-        """
+            """ Process attachment from post params
+            """
             if post.get(param):
                 document = post.get(param)
                 try:
@@ -236,8 +236,8 @@ class announcement_controller(http.Controller):
                     self.error_param_list.append(param)
 
         def _parse_tags(self, post, exist_tag_param, new_tag_param, attr, category_attr):
-        """ Process exited tags from post params and create new
-        """
+            """ Process exited tags from post params and create new
+            """
             tag_list = list()
             if post.get(exist_tag_param):
                 marketplace_tag_pool = self.registry.get('marketplace.tag')
@@ -270,13 +270,13 @@ class announcement_controller(http.Controller):
                 self.vals.update({attr: [(6, 0, tag_list)]})
 
         def _parse_currency(self, post, announcement):
-        """ Process currency amounts and currency ids from post params. 
+            """ Process currency amounts and currency ids from post params. 
 
-        Convert amount to float format then check existence of currency_id. Check currency_id duplication.
-        Then, if there is no error raising in parse process, edit existed currency line and, if it necessary,
-        remove or create new currency line.  
+            Convert amount to float format then check existence of currency_id. Check currency_id duplication.
+            Then, if there is no error raising in parse process, edit existed currency line and, if it necessary,
+            remove or create new currency line.  
 
-        """
+            """
             currency_dict = dict()
 
             null_amount = False
@@ -365,8 +365,8 @@ class announcement_controller(http.Controller):
                     currency_line_pool.unlink(self.cr, self.uid, currency_line_id, context=self.context)
 
         def parse(self, announcement, post):
-        """ Process all post params and create vals dict to write to announcement
-        """
+            """ Process all post params and create vals dict to write to announcement
+            """
             self._parse_param(post)
             self._parse_attachment(post, 'document', 'marketplace.announcement', announcement.id)
             self._parse_tags(post, 'tag_ids', 'new_tags', 'tag_ids', 'category_id')
@@ -525,13 +525,13 @@ class announcement_controller(http.Controller):
         return responce
 
     def _parse_and_save_announcement(self, cr, uid, registry, announcement, post, context=None):
-    """ Parse all post params and render to the appropriate page
+        """ Parse all post params and render to the appropriate page
 
-    Parse post params. In case, if some values was no valid, rollback all changes in cache, and render
-    new announcement or edit announcement page. In case, if all values was successfully parsed - write vals dict
-    to announcement and render view announcement page. 
+        Parse post params. In case, if some values was no valid, rollback all changes in cache, and render
+        new announcement or edit announcement page. In case, if all values was successfully parsed - write vals dict
+        to announcement and render view announcement page. 
 
-    """
+        """
         parser = self.save_annnouncement_parser(cr, uid, registry, context=context)
         parser.parse(announcement, post)
 
