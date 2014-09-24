@@ -36,6 +36,7 @@ class search_controller(http.Controller):
 
     def profile_parse_data(self, data, date_format):
         cr, uid, context, registry = request.cr, request.uid, request.context, request.registry
+        print data
         values = {'partner': {}}
         for k, val in data.iteritems():
             if k in self.PARTNER_FIELDS:

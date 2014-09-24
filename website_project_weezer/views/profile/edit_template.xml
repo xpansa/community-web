@@ -167,7 +167,7 @@
                                                             <div class="list-item col-md-12 skill_category_block">
                                                                 <div class="row">
                                                                     <div class="col-xs-10 no-padding-right">
-                                                                        <input class="form-control mb16 skill_category" type="text" t-att-value="category and category.name"/>
+                                                                        <input t-att-name="('skills[existing][%s]' % category.id) if category else 'skills[existing][new][0]'" class="form-control mb16 skill_category" type="text" t-att-value="category and category.name"/>
                                                                     </div>
                                                                     <div class="col-xs-2 no-padding-right">
                                                                         <button class="list-remove btn btn-danger"><i class="fa fa-minus"></i></button>
@@ -189,7 +189,7 @@
                                                             <div class="list-item col-md-12 skill_tag_block">
                                                                 <div class="row">
                                                                     <div class="col-xs-10 no-padding-right">
-                                                                        <input class="form-control mb16 skill_tag" t-att-value="tag and tag.name" type="text" />
+                                                                        <input t-att-name="('tags[existing][%s]' % tag.id) if tag else 'tags[new][0]'" class="form-control mb16 skill_tag" t-att-value="tag and tag.name" type="text" />
                                                                     </div>
                                                                     <div class="col-xs-2 no-padding-right">
                                                                         <button class="list-remove btn btn-danger"><i class="fa fa-minus"></i></button>
@@ -211,30 +211,30 @@
                                                 <div class="form-group">
                                                     <label class="col-md-4 control-label">Credit limits</label>
                                                     <div class="col-md-8 dynamic-list">
-                                                        <t t-foreach="partner.centralbank_currency_ids or [False]" t-as="limit">
-                                                            <div class="row">
-                                                                <div class="list-item col-md-12">
+                                                        <div class="row">
+                                                            <t t-foreach="partner.centralbank_currency_ids or [False]" t-as="limit">
+                                                                <div class="list-item col-md-12 limit_block">
                                                                     <div class="row">
                                                                         <div class="col-xs-4 no-padding-right">
-                                                                            <select t-att-name="'limits[currency][%s]' % ((limit and limit.id) or '')" class="selectpicker form-control">
+                                                                            <select t-att-name="('limits[existing][%s][currency]' % limit.id) if limit else 'limits[new][0][currency]'" class="selectpicker form-control">
                                                                                 <t t-foreach="currencies" t-as="currency">
                                                                                     <option t-att-value="currency[0]"><t t-esc="currency[1]" t-att-selected="'selected' if limit and limit.currency_id == currency[0] else ''"/></option>
                                                                                 </t>
                                                                             </select>
                                                                         </div>
                                                                         <div class="col-xs-3 no-padding-right">
-                                                                            <input t-att-name="'limits[min][%s]' % (limit and limit.id) or ''" class="form-control mb16" type="text" placeholder="min" t-att-value="limit and limit.limit_negative_value"/>
+                                                                            <input t-att-name="('limits[existing][%s][min]' % limit.id) if limit else 'limits[new][0][min]'" class="form-control mb16 limit_min_input" type="text" placeholder="min" t-att-value="limit and limit.limit_negative_value"/>
                                                                         </div>
                                                                         <div class="col-xs-3 no-padding-right">
-                                                                            <input t-att-name="'limits[max][%s]' % ((limit and limit.id) or '')" class="form-control mb16" type="text" placeholder="max" t-att-value="limit and limit.limit_positive_value"/>
+                                                                            <input t-att-name="('limits[existing][%s][max]' % limit.id) if limit else 'limits[new][0][max]'" class="form-control mb16 limit_max_input" type="text" placeholder="max" t-att-value="limit and limit.limit_positive_value"/>
                                                                         </div>
                                                                         <div class="col-xs-1 no-padding-right">
                                                                             <button class="list-remove btn btn-danger"><i class="fa fa-minus"></i></button>
                                                                         </div>
                                                                     </div>
                                                                 </div>
-                                                            </div>
-                                                        </t>
+                                                            </t>
+                                                        </div>
                                                         <a href="#" class="list-add btn btn-small btn-primary mb16"><i class="fa fa-plus"></i></a>
                                                     </div>
                                                 </div>
@@ -244,23 +244,25 @@
                                                     <label class="col-md-4 control-label">Balance</label>
                                                     <div class="col-md-8 dynamic-list">
                                                         <div class="row">
-                                                            <div class="list-item col-md-12">
-                                                                <div class="row">
-                                                                    <div class="col-xs-7 no-padding-right">
-                                                                        <input class="form-control mb16" type="text" placeholder="amount"  />
-                                                                    </div>
-                                                                    <div class="col-xs-4 no-padding-right">
-                                                                        <select class="selectpicker form-control">
-                                                                            <t t-foreach="currencies" t-as="currency">
-                                                                                <option t-att-value="currency[0]"><t t-esc="currency[1]"/></option>
-                                                                            </t>
-                                                                        </select>
-                                                                    </div>
-                                                                    <div class="col-xs-1 no-padding-right">
-                                                                        <button class="list-remove btn btn-danger"><i class="fa fa-minus"></i></button>
+                                                            <t t-foreach="partner.centralbank_balance_ids or [False]" t-as="balance">
+                                                                <div class="list-item col-md-12 balance_block">
+                                                                    <div class="row">
+                                                                        <div class="col-xs-7 no-padding-right">
+                                                                            <input t-att-name="'balances[existing][%s][amount]' % balance.id if balance else 'balances[new][0][amount]'" class="form-control mb16" type="text" placeholder="amount" t-att-value="balance and balance.amount or ''"/>
+                                                                        </div>
+                                                                        <div class="col-xs-4 no-padding-right">
+                                                                            <select t-att-name="'balances[existing][%s][currency]' % balance.id if balance else 'balances[new][0][currency]'" class="selectpicker form-control" t-att-value="balance and balance.currency_id.name or ''">
+                                                                                <t t-foreach="currencies" t-as="currency">
+                                                                                    <option t-att-value="currency[0]"><t t-esc="currency[1]"/></option>
+                                                                                </t>
+                                                                            </select>
+                                                                        </div>
+                                                                        <div class="col-xs-1 no-padding-right">
+                                                                            <button class="list-remove btn btn-danger"><i class="fa fa-minus"></i></button>
+                                                                        </div>
                                                                     </div>
                                                                 </div>
-                                                            </div>
+                                                            </t>
                                                         </div>
                                                         <a href="#" class="list-add btn btn-small btn-primary mb16"><i class="fa fa-plus"></i></a>
                                                     </div>

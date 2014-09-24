@@ -14,6 +14,12 @@ function bind_autocomplete(selector, url, cache) {
                     cache[ term ] = data;
                     response( data );
                 });
+        },
+        select: function(event, ui) {
+            if($(event.target).hasClass('skill_category'))
+                $(event.target).attr('name', 'skills[existing][' + ui.item.id + ']')
+            console.log(event);
+            console.log(ui);
         }
     });
 }
@@ -25,10 +31,27 @@ $(document).ready(function(){
     $('.date-picker').datepicker({dateFormat: JQueryDateFormat});
     $('.dynamic-list').dynamiclist({'addCallbackFn': function(el) {
             el = el[0]
-            if($(el).hasClass('skill_category_block'))
-                bind_autocomplete($(el).find('input'), '/marketplace/profile/get_skills', skill_category_cache)
-            else if($(el).hasClass('skill_tag_block'))
-                bind_autocomplete($(el).find('input'), '/marketplace/profile/get_interests', skill_tag_cache)
+            if($(el).hasClass('skill_category_block')) {
+                $(el).find('input').attr('name','skills[new][' + skill_category_new_counter + ']');
+                bind_autocomplete($(el).find('input'), '/marketplace/profile/get_skills', skill_category_cache);
+                skill_category_new_counter++;
+            }
+            else if($(el).hasClass('skill_tag_block')) {
+                $(el).find('input').attr('name','tags[new][' + skill_tag_new_counter + ']');
+                bind_autocomplete($(el).find('input'), '/marketplace/profile/get_interests', skill_tag_cache);
+                skill_tag_new_counter++;
+            }
+            else if($(el).hasClass('limit_block')) {
+                $(el).find('input.limit_min_input').attr('name','limits[new][' + limit_new_counter + '][min]');
+                $(el).find('input.limit_max_input').attr('name','limits[new][' + limit_new_counter + '][max]');
+                $(el).find('select').attr('name','limits[new][' + limit_new_counter + '][currency]');
+                limit_new_counter++;
+            }
+            else if($(el).hasClass('balance_block')) {
+                $(el).find('input').attr('name','balances[new][' + balance_new_counter + '][amount]');
+                $(el).find('select').attr('name','balances[new][' + balance_new_counter + '][currency]');
+                balance_new_counter++;
+            }
         }
     });
     $('.scrollable').tinyscrollbar({ thumbSize: 100 });
@@ -63,7 +86,11 @@ $(document).ready(function(){
     });
 
     var skill_category_cache = {};
+    var skill_category_new_counter = 1;
     var skill_tag_cache = {};
+    var skill_tag_new_counter = 1;
+    var limit_new_counter = 1;
+    var balance_new_counter = 1;
     bind_autocomplete('.skill_category', '/marketplace/profile/get_skills', skill_category_cache);
     bind_autocomplete('.skill_tag', '/marketplace/profile/get_interests', skill_tag_cache);
 });
