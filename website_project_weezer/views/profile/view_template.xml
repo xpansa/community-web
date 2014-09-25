@@ -6,15 +6,19 @@
             <t t-call="website.layout">
                 <div class="container">
                     <div class="col-md-12 mt32">
-                        <h2 class="mb32">I am</h2>
+                        <h2 class="mb32">I am
+                            <t t-if="is_administrator or partner_id.id == user_id.partner_id.id">
+                                <a t-att-href="'/marketplace/profile/edit/%s' % partner.id">Edit</a>
+                            </t>
+                        </h2>
                     </div>
                 </div>
 
                 <div class="container">
                     <div class="col-md-4">
-                        <img src="http://lorempixel.com/1000/500/?1" class="img img-responsive thumbnail"/>
+                        <img t-att-src="images['image_big']" class="img img-responsive thumbnail"/>
                         <div class="pull-right">
-                            <img src="http://lorempixel.com/40/40/" class="img img-circle" width="40" height="40"/>
+                            <img t-att-src="images['image_small']" class="img img-circle" width="40" height="40"/>
                             <div class="clearfix"></div>
                             <span class="badge badge-success mt4"><t t-esc="partner.name"/></span>
                         </div>
@@ -43,7 +47,7 @@
                                     <label class="col-md-4 control-label" for="birthdate">Birthdate</label>
                                     <div class="col-md-8">
                                         <div class="input-group">
-                                            <t t-esc="partner.birthdate"/>
+                                            <t t-esc="birthdate"/>
                                         </div>
                                     </div>
                                 </div>
@@ -180,9 +184,153 @@
                                     </div>
                                 </div>
                             </div>
+                            <t t-if="is_administrator or partner.id == user_id.partner_id.id">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label class="col-md-4 control-label">Credit limits</label>
+                                                <div class="col-md-8 dynamic-list">
+                                                    <div class="row">
+                                                        <t t-foreach="partner.centralbank_currency_ids" t-as="limit">
+                                                            <div class="list-item col-md-12 limit_block">
+                                                                <div class="row">
+                                                                    <div class="col-xs-4 no-padding-right">
+                                                                        <t t-esc="limit.currency_id and limit.currency_id.name"/>
+                                                                    </div>
+                                                                    <div class="col-xs-3 no-padding-right">
+                                                                        <t t-esc="limit.limit_negative_value"/>
+                                                                    </div>
+                                                                    <div class="col-xs-3 no-padding-right">
+                                                                        <t t-esc="limit.limit_positive_value"/>
+                                                                    </div>
+                                                                    <div class="col-xs-1 no-padding-right">
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </t>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label class="col-md-4 control-label">Balance</label>
+                                                <div class="col-md-8 dynamic-list">
+                                                    <div class="row">
+                                                        <t t-foreach="partner.centralbank_balance_ids" t-as="balance">
+                                                            <div class="list-item col-md-12 balance_block">
+                                                                <div class="row">
+                                                                    <div class="col-xs-7 no-padding-right">
+                                                                        <t t-esc="balance.available"/>
+                                                                    </div>
+                                                                    <div class="col-xs-4 no-padding-right">
+                                                                        <t t-esc="balance.currency_id and balance.currency_id.name"/>
+                                                                    </div>
+                                                                    <div class="col-xs-1 no-padding-right">
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </t>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </t>
                         </div>
                     </div>
                 </section>
+
+                <!-- marketplace listing -->
+                <section class="pt32 bg-success">
+                    <div class="container">
+                    <!-- Our Wants column -->
+                    <div class="col-md-6">
+                        <div class="col-md-12 mb16">
+                            <h3 class="pull-left">My Wants</h3>
+                        </div>
+                        <t t-foreach="wants" t-as="item">
+                            <!-- single item -->
+                            <div class="col-md-12">
+                                <t t-call="website_project_weezer.mp_single_item"/>
+                            </div>
+                            <!-- /single item -->
+                        </t>
+                    </div>
+                    <!-- /Our Wants column -->
+
+                    <!-- Our Offers column -->
+                    <div class="col-md-6">
+                        <div class="col-md-12 mb16">
+                            <h3 class="pull-left">My Offers</h3>
+                        </div>
+                        <t t-foreach="offers" t-as="item">
+                            <!-- single item -->
+                            <div class="col-md-12">
+                                <t t-call="website_project_weezer.mp_single_item"/>
+                            </div>
+                            <!-- /single item -->
+                        </t>
+                    </div>
+                    <!-- /Our Offers column -->
+                    </div>
+                </section>
+                <!-- /marketplace listing -->
+
+                <!-- activity -->
+                <section class="pb32">
+                    <div class="container">
+                        <div class="col-md-12 mt32">
+                            <h2 class="mb32">My Activity</h2>
+                        </div>
+                    </div>
+
+                    <div class="container">
+                        <div class="col-md-12">
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <h3>My last exchanges</h3>
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th>Type</th>
+                                                <th>What</th>
+                                                <th>How many</th>
+                                                <th>With who</th>
+                                                <th>When</th>
+                                                <th>Where</th>
+                                                <th>Paid</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <t t-foreach="last_exchanges" t-as="exchange">
+                                                <tr>
+                                                    <td><t t-esc="exchange.type"/></td>
+                                                    <td><t t-esc="exchange.announcement_id.name"/></td>
+                                                    <td><t t-esc="exchange.quantity"/> <t t-esc="exchange.uom_id.name"/></td>
+                                                    <td>
+                                                        <t t-if="exchange.announcement_id.partner_id == partner.id">
+                                                            <t t-esc="exchange.receiver_id.name"/>
+                                                        </t>
+                                                        <t t-if="not exchange.announcement_id.partner_id == partner.id">
+                                                            <t t-esc="exchange.sender_id.name"/>
+                                                        </t>
+                                                    </td>
+                                                    <td><t t-esc="exchange.write_date"/></td>
+                                                    <td><t t-esc="exchange.announcement_id.city"/></td>
+                                                    <td><t t-esc="exchange.total"/></td>
+                                                </tr>
+                                            </t>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <!-- /activity -->
             </t>
         </template>
     </data>

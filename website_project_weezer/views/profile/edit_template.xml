@@ -10,13 +10,14 @@
                     </div>
                 </div>
 
-                <form class="form-horizontal" method="post">
-
+                <form class="form-horizontal" method="post" enctype="multipart/form-data">
                     <div class="container">
                         <div class="col-md-4">
-                            <img t-att-src="image" class="img img-responsive thumbnail"/>
+                            <img t-att-src="images['image_big']" class="img img-responsive thumbnail"/>
+                            <input type="file" name="image" id="new_image"/>
+                            <label for="new_image">Upload New Image</label>
                             <div class="pull-right">
-                                <img t-att-src="image_small" class="img img-circle" width="40" height="40"/>
+                                <img t-att-src="images['image_small']" class="img img-circle" width="40" height="40"/>
                                 <div class="clearfix"></div>
                                 <span class="badge badge-success mt4"><t t-esc="partner.name"/></span>
                             </div>
@@ -29,6 +30,9 @@
                                         <label class="col-md-4 control-label" for="firstname">Name</label>
                                         <div class="col-md-8">
                                             <input name="name" id="firstname" t-att-value="partner.name" type="text" class="form-control" placeholder="Name"/>
+                                            <t t-if="'name' in errors">
+                                                <t t-esc="errors['name']"/>
+                                            </t>
                                         </div>
                                     </div>
                                 </div>
@@ -147,6 +151,7 @@
                             </div>
                         </div>
                     </div>
+
                     <section class="bg-gray pt32 pb32">
                         <div class="container">
                             <div class="col-md-12">
@@ -218,7 +223,7 @@
                                                                         <div class="col-xs-4 no-padding-right">
                                                                             <select t-att-name="('limits[existing][%s][currency]' % limit.id) if limit else 'limits[new][0][currency]'" class="selectpicker form-control">
                                                                                 <t t-foreach="currencies" t-as="currency">
-                                                                                    <option t-att-value="currency[0]"><t t-esc="currency[1]" t-att-selected="'selected' if limit and limit.currency_id == currency[0] else ''"/></option>
+                                                                                    <option t-att-value="currency[0]" t-att-selected="'selected' if limit and limit.currency_id.id == currency[0] else ''"><t t-esc="currency[1]"/></option>
                                                                                 </t>
                                                                             </select>
                                                                         </div>
@@ -251,9 +256,9 @@
                                                                             <input t-att-name="'balances[existing][%s][amount]' % balance.id if balance else 'balances[new][0][amount]'" class="form-control mb16" type="text" placeholder="amount" t-att-value="balance and balance.available or ''"/>
                                                                         </div>
                                                                         <div class="col-xs-4 no-padding-right">
-                                                                            <select t-att-name="'balances[existing][%s][currency]' % balance.id if balance else 'balances[new][0][currency]'" class="selectpicker form-control" t-att-value="balance and balance.currency_id.name or ''">
+                                                                            <select t-att-name="'balances[existing][%s][currency]' % balance.id if balance else 'balances[new][0][currency]'" class="selectpicker form-control">
                                                                                 <t t-foreach="currencies" t-as="currency">
-                                                                                    <option t-att-value="currency[0]"><t t-esc="currency[1]"/></option>
+                                                                                    <option t-att-value="currency[0]" t-att-selected="'selected' if balance and balance.currency_id.id == currency[0] else ''"><t t-esc="currency[1]"/></option>
                                                                                 </t>
                                                                             </select>
                                                                         </div>
@@ -274,7 +279,105 @@
                             </div>
                         </div>
                     </section>
-                    <button type="submit" class="btn btn-success pull-right mt16 btn-nolink" name="save_form">Save</button>
+
+                    <!-- marketplace listing -->
+                    <section class="pt32 bg-success">
+                        <div class="container">
+                        <!-- Our Wants column -->
+                        <div class="col-md-6">
+                            <div class="col-md-12 mb16">
+                                <button class="btn btn-success pull-right mt16 btn-nolink">Add new Want</button>
+                                <h3 class="pull-left">My Wants</h3>
+                            </div>
+                            <t t-foreach="wants" t-as="item">
+                                <!-- single item -->
+                                <div class="col-md-12">
+                                    <t t-call="website_project_weezer.mp_single_item"/>
+                                </div>
+                                <!-- /single item -->
+                            </t>
+                        </div>
+                        <!-- /Our Wants column -->
+
+                        <!-- Our Offers column -->
+                        <div class="col-md-6">
+                            <div class="col-md-12 mb16">
+                                <button class="btn btn-success pull-right mt16 btn-nolink">Add new Offer</button>
+                                <h3 class="pull-left">My Offers</h3>
+                            </div>
+                            <t t-foreach="offers" t-as="item">
+                                <!-- single item -->
+                                <div class="col-md-12">
+                                    <t t-call="website_project_weezer.mp_single_item"/>
+                                </div>
+                                <!-- /single item -->
+                            </t>
+                        </div>
+                        <!-- /Our Offers column -->
+                        </div>
+                    </section>
+                    <!-- /marketplace listing -->
+                    
+                    <!-- activity -->
+                    <section class="pb32">
+                        <div class="container">
+                            <div class="col-md-12 mt32">
+                                <h2 class="mb32">My Activity</h2>
+                            </div>
+                        </div>
+
+                        <div class="container">
+                            <div class="col-md-12">
+                                <div class="row">
+                                    <div class="col-md-8">
+                                        <h3>My last exchanges</h3>
+                                        <table class="table">
+                                            <thead>
+                                                <tr>
+                                                    <th>Type</th>
+                                                    <th>What</th>
+                                                    <th>How many</th>
+                                                    <th>With who</th>
+                                                    <th>When</th>
+                                                    <th>Where</th>
+                                                    <th>Paid</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <t t-foreach="last_exchanges" t-as="exchange">
+                                                    <tr>
+                                                        <td><t t-esc="exchange.type"/></td>
+                                                        <td><t t-esc="exchange.announcement_id.name"/></td>
+                                                        <td><t t-esc="exchange.quantity"/> <t t-esc="exchange.uom_id.name"/></td>
+                                                        <td>
+                                                            <t t-if="exchange.announcement_id.partner_id == partner.id">
+                                                                <t t-esc="exchange.receiver_id.name"/>
+                                                            </t>
+                                                            <t t-if="not exchange.announcement_id.partner_id == partner.id">
+                                                                <t t-esc="exchange.sender_id.name"/>
+                                                            </t>
+                                                        </td>
+                                                        <td><t t-esc="exchange.write_date"/></td>
+                                                        <td><t t-esc="exchange.announcement_id.city"/></td>
+                                                        <td><t t-esc="exchange.total"/></td>
+                                                    </tr>
+                                                </t>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                    <!-- /activity -->
+
+                    <section class="pb32">
+                        <div class="container">
+                            <div class="col-md-12 mt32">
+                                <button type="submit" class="btn btn-success pull-right mt16 btn-nolink" name="save_form">Save</button>
+                            </div>
+                        </div>
+                    </section>
                 </form>
             </t>
         </template>

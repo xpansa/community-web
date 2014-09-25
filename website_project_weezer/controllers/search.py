@@ -41,6 +41,19 @@ def get_date_format(cr, uid, context):
             return lang_params['date_format']
     return DEFAULT_SERVER_DATE_FORMAT
 
+def format_text(text):
+        """ Cut long descriptions 
+        """
+        if not text:
+            return ''
+        text = text[0:300]
+        dot_pos = text.rfind('.')
+        if dot_pos:
+            text = text[0:dot_pos]
+        else:
+            text = text[0:text.rfind(' ')]
+        return text + ' '*(300 - len(text))
+
 class search_controller(http.Controller):
 
     QUERY_LIMIT = 4
@@ -144,19 +157,6 @@ class search_controller(http.Controller):
         url = '/marketplace/search?' + '&'.join(['='.join(x) for x in url_pairs])
         return url
 
-    def format_text(self, text):
-        """ Cut long descriptions 
-        """
-        if not text:
-            return ''
-        text = text[0:300]
-        dot_pos = text.rfind('.')
-        if dot_pos:
-            text = text[0:dot_pos]
-        else:
-            text = text[0:text.rfind(' ')]
-        return text + ' '*(300 - len(text))
-
     @http.route('/marketplace/search', type='http', auth="public", website=True)
     def search(self, **kw):
         """ Display search page and first results 
@@ -200,7 +200,7 @@ class search_controller(http.Controller):
             'page_count': count/self.QUERY_LIMIT + (1 if count%self.QUERY_LIMIT else 0),
             'next_url': self._get_url('next', int(kw.get('page', '1')), post_params),
             'prev_url': self._get_url('prev', int(kw.get('page', '1'))-1, post_params),
-            'format_text': self.format_text
+            'format_text': format_text
         })
 
     @http.route(['/marketplace/search/load_more'], type='http', auth="public", methods=['GET'], website=True)
