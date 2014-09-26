@@ -42,7 +42,84 @@ class search_controller(http.Controller):
     ANNOUNCEMENT_LIMIT = 3
     date_format = '%d-%m-%Y'
 
+    def profile_parse_partner(self, partner):
+        """
+        Collect partner data to render it in view
+
+        :param browse_record partner
+        """
+        cr, uid, context, registry = request.cr, request.uid, request.context, request.registry
+        values = {
+            'partner': {
+                'name': partner.name,
+                'title': partner.title.id,
+                'street': partner.street,
+                'street2': partner.street2,
+                'city': partner.city,
+                'state_id': partner.state_id.id,
+                'country_id': partner.country_id.id,
+                'zip': partner.zip,
+                'email': partner.email,
+                'phone': partner.phone,
+                'mobile': partner.mobile,
+                'birthdate': '' if not partner.birthdate else \
+                    datetime.strptime(partner.birthdate, DEFAULT_SERVER_DATETIME_FORMAT).strftime(self.date_format),
+            },
+            'limits': {
+                'new': [],
+                'existing': [
+                    {
+                        'id': limit.id,
+                        'min': limit.limit_negative_value,
+                        'max': limit.limit_positive_value,
+                        'currency': limit.currency_id.id,
+                    } for limit in partner.centralbank_currency_ids
+                ],
+            },
+            'balances': {
+                'new': {},
+                'existing': [
+                    {
+                        'id': balance.id,
+                        'amount': balance.limit_positive_value,
+                        'currency': balance.currency_id.id,
+                    } for balance in partner.centralbank_balance_ids
+                ],
+            },
+            'skills': {
+                'new': [], 
+                'existing': [
+                    {
+                        'id': skill.id,
+                        'name': skill.name,
+                    } for skill in partner.skill_category_ids
+                ],
+            },
+            'interests': {
+                'new': [], 
+                'existing': [
+                    {
+                        'id': tag.id,
+                        'name': tag.name,
+                    } for tag in partner.skill_tag_ids
+                ],
+            },
+        }
+        if not values['limits']['existing']:
+            values['limits']['new'] = [{'id': 0, 'min': '', 'max': '', 'currency': ''}]
+        if not values['balances']['existing']:
+            values['balances']['new'] = [{'id':0, 'amount': '', 'currency': ''}]
+        if not values['skills']['existing']:
+            values['skills']['new'] = [{'id':0, 'name': ''}]
+        if not values['interests']['existing']:
+            values['interests']['new'] = [{'id':0, 'name': ''}]
+
+        return values
+
     def profile_parse_data(self, data):
+        """
+        Parse raw POST data from form
+        """
         cr, uid, context, registry = request.cr, request.uid, request.context, request.registry
         values = {
             'partner': {},
@@ -53,15 +130,7 @@ class search_controller(http.Controller):
         }
         for k, val in data.iteritems():
             if k in self.PARTNER_FIELDS:
-                if k == 'birthdate':
-                    if val:
-                        try:
-                            values['partner'][k] = datetime.strptime(val, self.date_format)
-                        except:
-                            values['partner'][k] = False
-                    else:
-                        values['partner'][k] = False
-                elif k in ['state_id', 'country_id']:
+                if k in ['state_id', 'country_id', 'title']:
                     values['partner'][k] = int(val) if val else False
                 elif k == 'image':
                     if val:
@@ -69,17 +138,27 @@ class search_controller(http.Controller):
                 else:
                     values['partner'].update({k: val})
             elif k.startswith('skills'):
-                existing = re.search('skills\[existing\]\[(\d+)\]', k)
-                if existing:
-                    values['skills']['existing'].append(existing.group(1))
-                else:
-                    values['skills']['new'].append(val)
+                for key in ['new', 'existing']:
+                    if key == 'new' and not val:
+                        continue
+                    skill_number = re.search('skills\[%s\]\[(\d+)\]' % key, k)
+                    if skill_number:
+                        skill_number = int(skill_number.group(1))
+                        values['skills'][key].append({
+                            'id': skill_number,
+                            'name': val,
+                        })
             elif k.startswith('tags'):
-                existing = re.search('tags\[existing\]\[(\d+)\]', k)
-                if existing:
-                    values['interests']['existing'].append(existing.group(1))
-                else:
-                    values['interests']['new'].append(val)
+                for key in ['new', 'existing']:
+                    if key == 'new' and not val:
+                        continue
+                    tag_number = re.search('tags\[%s\]\[(\d+)\]' % key, k)
+                    if tag_number:
+                        tag_number = int(tag_number.group(1))
+                        values['interests'][key].append({
+                            'id': tag_number,
+                            'name': val,
+                        })
             elif k.startswith('limits'):
                 for key in ['currency', 'min', 'max']:
                     for key2 in ['new', 'existing']:
@@ -87,7 +166,10 @@ class search_controller(http.Controller):
                         if limit_number:
                             limit_number = int(limit_number.group(1))
                             if not limit_number in values['limits'][key2]:
-                                values['limits'][key2][limit_number] = {key: val}
+                                values['limits'][key2][limit_number] = {
+                                    'id': limit_number,
+                                    key: val,
+                                }
                             else:
                                 values['limits'][key2][limit_number].update({key: val})
             elif k.startswith('balances'):
@@ -97,14 +179,21 @@ class search_controller(http.Controller):
                         if balance_number:
                             balance_number = int(balance_number.group(1))
                             if not balance_number in values['balances'][key2]:
-                                values['balances'][key2][balance_number] = {key: val}
+                                values['balances'][key2][balance_number] = {
+                                    'id': balance_number,
+                                    key: val
+                                }
                             else:
                                 values['balances'][key2][balance_number].update({key: val})
-        values['limits']['new'] = [val for k, val in values['limits']['new'].iteritems()]
-        values['balances']['new'] = [val for k, val in values['balances']['new'].iteritems()]
+        for key in ['new', 'existing']:
+            values['limits'][key] = [val for k, val in values['limits'][key].iteritems()]
+            values['balances'][key] = [val for k, val in values['balances'][key].iteritems()]
         return values
 
     def profile_images(self, partner):
+        """
+        Big and small avatars to put into <img>'s src
+        """
         values = {
             'image_big': partner.image and ("data:image/png;base64,%s" % partner.image) or \
             '/web/static/src/img/placeholder.png',
@@ -114,6 +203,9 @@ class search_controller(http.Controller):
         return values
 
     def profile_last_exchanges(self, partner_id):
+        """
+        Last user exchanges (marketplace.proposition)
+        """
         cr, uid, context, registry = request.cr, request.uid, request.context, request.registry
         proposition_pool = registry.get('marketplace.proposition')
         args = ['|', ('sender_id', '=', partner_id), ('receiver_id', '=', partner_id)]
@@ -122,6 +214,9 @@ class search_controller(http.Controller):
         return proposition_pool.browse(cr, uid, proposition_ids, context=context)
 
     def profile_announcements(self, partner_id, ttype):
+        """
+        Last user wants and offers (depending on ttype)
+        """
         cr, uid, context, registry = request.cr, request.uid, request.context, request.registry
         announcement_pool = registry.get('marketplace.announcement')
         announcement_ids = announcement_pool.search(cr, uid, [('partner_id', '=', partner_id),
@@ -129,6 +224,13 @@ class search_controller(http.Controller):
         return announcement_pool.browse(cr, uid, announcement_ids, context=context)
 
     def profile_values(self, partner, data=None):
+        """
+        Collect data to render in profile view
+
+        :param browse_record partner
+        :param dict data: raw POST data
+        :return: dict of values to render
+        """
         cr, uid, context, registry = request.cr, request.uid, request.context, request.registry
         title_pool = registry.get('res.partner.title')
         country_pool = registry.get('res.country')
@@ -146,73 +248,105 @@ class search_controller(http.Controller):
             'states': state_pool.name_search(cr, uid, '', [], context=context),
             'is_administrator': uid == SUPERUSER_ID,
             'currencies': [(c['currency_id'][0], c['currency_id'][1]) for c in curr_config_lines],
-            'birthdate': '',
             'date_placeholder': self.date_format.replace('%d','DD').replace('%m','MM').replace('%Y','YYYY'),
             'last_exchanges': self.profile_last_exchanges(partner.id),
             'wants': self.profile_announcements(partner.id, 'want'),
             'offers': self.profile_announcements(partner.id, 'offer'),
         }
-        if partner.birthdate:
-            values.update({
-                'birthdate': datetime.strptime(partner.birthdate, DEFAULT_SERVER_DATETIME_FORMAT).strftime(self.date_format),    
-            })
         if data:
             values['profile'] = self.profile_parse_data(data)
+        else:
+            values['profile'] = self.profile_parse_partner(partner)
         return values
 
     def profile_form_validate(self, data):
+        """
+        Validate user from data
+
+        :param dict data: parsed data from the form
+        """
         cr, uid, context, registry = request.cr, request.uid, request.context, request.registry
         errors = {}
         for k, val in data['partner'].iteritems():
             if k == 'name' and not val:
-                errors[k] = _('Name cannot be empty')
+                errors[k] = _('Name cannot be empty.')
             elif k == 'email' and val:
-                if not re.match('[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}', val):
-                    errors[k] = _('Email is not correct')
-        print data['limits']
-        print data['balances']
+                if not re.match(r'[\w\.-]+@[\w\.]+', val):
+                    errors[k] = _('Email is not correct.')
+            elif k == 'birthdate' and val:
+                try:
+                    time.strptime(val, self.date_format)
+                except:
+                    errors[k] = _('Date format is not correct.')
+        for key in ['new', 'existing']:
+            for limit in data['limits'][key]:
+                try:
+                    float(limit['min'] or '0'), float(limit['max'] or '0')
+                except:
+                    errors['limits'] = _('Limit amount should be a float (integer) number.')
+            for balance in data['balances'][key]:
+                try:
+                    float(balance['amount'] or '0')
+                except:
+                    errors['balances'] = _('Balance amount should be a float (integer) number.')
         return errors
 
     def profile_save(self, partner, data):
-        cr, uid, context, registry = request.cr, request.uid, request.context, request.registry
+        """
+        Save user profile data after successful validation
+
+        :param browse_record partner
+        :param dict data: parsed data from the form
+        """
+        cr, uid, context, registry = request.cr, SUPERUSER_ID, request.context, request.registry
         partner_pool = registry.get('res.partner')
         skill_category_pool = registry.get('marketplace.announcement.category')
         tag_pool = registry.get('marketplace.tag')
         limit_pool = registry.get('res.partner.centralbank.currency')
         balance_pool = registry.get('res.partner.centralbank.balance')
-        partner_pool.write(cr, uid, [partner.id], data['partner'], context=context)
+        data_pool = registry.get('ir.model.data')
+
+        partner_data = data['partner'].copy()
+        if partner_data['birthdate']:
+            partner_data['birthdate'] = datetime.strptime(data['partner']['birthdate'], self.date_format)
+        partner_pool.write(cr, uid, [partner.id], partner_data, context=context)
         
         # Create new skills (marketplace.announcement.category)
         for skill in data['skills']['new']:
-            skill_id = skill_category_pool.search(cr, uid, [('name','=',skill)], context=context)
+            skill_id = skill_category_pool.search(cr, uid, [('name','=',skill['name'])], context=context)
             if not skill_id:
-                skill_id = skill_category_pool.create(cr, uid, {'name': skill}, context=context)
-                data['skills']['existing'].append(skill_id)
+                skill_id = skill_category_pool.create(cr, uid, {'name': skill['name']}, context=context)
+                data['skills']['existing'].append({'id': skill_id, 'name': skill['name']})
+        # Find default user tags category
+        tag_category_id = data_pool.get_object_reference(cr, uid, 'website_project_weezer', 'user_tags_category')[1]
         # Create new interests (marketplace.tag)
         for tag in data['interests']['new']:
-            tag_id = tag_pool.search(cr, uid, [('name','=',tag)], context=context)
+            tag_id = tag_pool.search(cr, uid, [('name','=',tag['name'])], context=context)
             if not tag_id:
-                tag_id = tag_pool.create(cr, uid, {'name': tag}, context=context)
-                data['interests']['existing'].append(tag_id)
+                tag_id = tag_pool.create(cr, uid, {
+                    'name': tag['name'],
+                    'category_id': tag_category_id,
+                }, context=context)
+                data['interests']['existing'].append({'id': tag_id, 'name': tag['name']})
         # Update partner skills and interests
         partner_pool.write(cr, uid, [partner.id], {
-            'skill_category_ids': [(6, 0, data['skills']['existing'])],
-            'skill_tag_ids': [(6, 0, data['interests']['existing'])],
+            'skill_category_ids': [(6, 0, [s['id'] for s in data['skills']['existing']])],
+            'skill_tag_ids': [(6, 0, [t['id'] for t in data['interests']['existing']])],
         }, context=context)
 
         
         limits_to_delete = list(set([item.id for item in partner.centralbank_currency_ids]) \
-            - set(data['limits']['existing'].keys()))
+            - set([limit['id'] for limit in data['limits']['existing']]))
         # Update existing limits
-        for id, limit in data['limits']['existing'].iteritems():
+        for limit in data['limits']['existing']:
             if limit['currency'] and (limit['min'] or limit['max']):
-                limit_pool.write(cr, uid, id, {
+                limit_pool.write(cr, uid, limit['id'], {
                     'limit_negative_value': float(limit['min']),
                     'limit_positive_value': float(limit['max']),
                     'currency_id': int(limit['currency']),
                 }, context=context)
             else:
-                limits_to_delete.append(id)
+                limits_to_delete.append(limit['id'])
         # Delete limits
         limit_pool.unlink(cr, uid, limits_to_delete, context=context)
         # Create limits
@@ -227,16 +361,16 @@ class search_controller(http.Controller):
 
         
         balances_to_delete = list(set([item.id for item in partner.centralbank_balance_ids]) \
-            - set(data['balances']['existing'].keys()))
+            - set([balance['id'] for balance in data['balances']['existing']]))
         # Update existing balances
-        for id, balance in data['balances']['existing'].iteritems():
+        for balance in data['balances']['existing']:
             if balance['currency'] and balance['amount']:
-                balance_pool.write(cr, uid, id, {
+                balance_pool.write(cr, uid, balance['id'], {
                     'available': float(balance['amount']),
                     'currency_id': int(balance['currency']),
                 }, context=context)
             else:
-                balances_to_delete.append(id)
+                balances_to_delete.append(balance['id'])
         # Delete balances
         balance_pool.unlink(cr, uid, balances_to_delete, context=context)
         # Create balances
@@ -254,20 +388,32 @@ class search_controller(http.Controller):
         Display profile edit page, save canges
         :param dict kw: POST data from form
         """
+        # Check if user edit his own profile
+        cr, uid, context, registry = request.cr, request.uid, request.context, request.registry
+        user_pool = registry.get('res.users')
+        user = user_pool.browse(cr, uid, uid, context=context)
+        if not (uid == SUPERUSER_ID or user.partner_id.id == partner.id):
+            return request.redirect("/marketplace/profile/edit")
+        # Save form and collect values and errors for template
         if 'save_form' in kw:
             values = self.profile_values(partner, kw)
-            # values['errors'] = self.profile_form_validate(values['profile'])
+            values['errors'] = self.profile_form_validate(values['profile'])
             if not values['errors']:
                 self.profile_save(partner, values['profile'])
+                request.session['profile_saved'] = True
+                return request.redirect("/marketplace/profile/%s" % partner.id)
         else:
             values = self.profile_values(partner)
         values['images'] = self.profile_images(partner)
         values['format_text'] = format_text
-
         return request.website.render("website_project_weezer.profile_edit", values)
 
     @http.route('/marketplace/profile/edit', type='http', auth="user", website=True)
     def profile_edit_me(self, **kw):
+        """
+        Display profile edit page for current user
+        :param dict kw: POST data from form
+        """
         cr, uid, context, registry = request.cr, request.uid, request.context, request.registry
         user_pool = registry.get('res.users')
         partner = user_pool.browse(cr, uid, uid, context=context).partner_id
@@ -276,10 +422,14 @@ class search_controller(http.Controller):
 
     @http.route('/marketplace/profile/<model("res.partner"):partner>', type='http', auth="public", website=True)
     def profile_view(self, partner=None):
+        """
+        Display profile view page
+        """
         cr, uid, context, registry = request.cr, request.uid, request.context, request.registry
         date_format = get_date_format(cr, uid, context=context)
         return request.website.render("website_project_weezer.profile_view", {
             'partner': partner,
+            'is_administrator': uid == SUPERUSER_ID,
             'images': self.profile_images(partner),
             'wants': self.profile_announcements(partner.id, 'want'),
             'offers': self.profile_announcements(partner.id, 'offer'),
@@ -287,10 +437,14 @@ class search_controller(http.Controller):
             'last_exchanges': self.profile_last_exchanges(partner.id),
             'birthdate': datetime.strptime(partner.birthdate, DEFAULT_SERVER_DATETIME_FORMAT).strftime(date_format) \
                         if partner.birthdate else '',
+            'profile_saved': request.session.pop('profile_saved') if 'profile_saved' in request.session else False
         })
 
     @http.route('/marketplace/profile', type='http', auth="user", website=True)
     def profile_view_me(self):
+        """
+        Display profile view page for current user
+        """
         cr, uid, context, registry = request.cr, request.uid, request.context, request.registry
         user_pool = registry.get('res.users')
         partner = user_pool.browse(cr, uid, uid, context=context).partner_id
@@ -299,6 +453,9 @@ class search_controller(http.Controller):
 
     @http.route('/marketplace/profile/get_skills', type='json', auth='user', website=True)
     def get_skills(self, term):
+        """
+        Return skills dict for ui-autocomplete
+        """
         cr, uid, context = request.cr, request.uid, request.context
         skill_pool = request.registry.get('marketplace.announcement.category')
         skills = skill_pool.name_search(cr, uid, term, [], context=context)
@@ -306,6 +463,9 @@ class search_controller(http.Controller):
 
     @http.route('/marketplace/profile/get_interests', type='json', auth='user', website=True)
     def get_interests(self, term):
+        """
+        Return interests dict for ui-autocomplete
+        """
         cr, uid, context = request.cr, request.uid, request.context
         tag_pool = request.registry.get('marketplace.tag')
         tags = tag_pool.name_search(cr, uid, term, [], context=context)

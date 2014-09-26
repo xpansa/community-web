@@ -29,9 +29,11 @@
                                     <div class="row">
                                         <label class="col-md-4 control-label" for="firstname">Name</label>
                                         <div class="col-md-8">
-                                            <input name="name" id="firstname" t-att-value="partner.name" type="text" class="form-control" placeholder="Name"/>
+                                            <input name="name" id="firstname" t-att-value="profile['partner']['name']" type="text" class="form-control" placeholder="Name"/>
                                             <t t-if="'name' in errors">
-                                                <t t-esc="errors['name']"/>
+                                                <p class="bg-danger">
+                                                    <t t-esc="errors['name']"/>
+                                                </p>
                                             </t>
                                         </div>
                                     </div>
@@ -42,7 +44,7 @@
                                         <div class="col-md-8">
                                             <select name="title" id="gender" class="selectpicker form-control">
                                                 <t t-foreach="partner_titles" t-as="title">
-                                                    <option t-att-value="title[0]" t-att-selected="'selected' if partner.title.id == title[0] else ''"><t t-esc="title[1]"/></option>
+                                                    <option t-att-value="title[0]" t-att-selected="'selected' if profile['partner']['title'] == title[0] else ''"><t t-esc="title[1]"/></option>
                                                 </t>
                                             </select>
                                         </div>
@@ -53,9 +55,14 @@
                                         <label class="col-md-4 control-label" for="birthdate">Birthdate</label>
                                         <div class="col-md-8">
                                             <div class="input-group">
-                                                <input name="birthdate" id="birthdate" t-att-value="birthdate" t-att-placeholder="date_placeholder" type="text" class="date-picker form-control" />
+                                                <input name="birthdate" id="birthdate" t-att-value="profile['partner']['birthdate']" t-att-placeholder="date_placeholder" type="text" class="date-picker form-control" />
                                                 <label for="birthdate" class="input-group-addon btn btn-default"><span class="fa fa-calendar"></span></label>
                                             </div>
+                                            <t t-if="'birthdate' in errors">
+                                                <span class="bg-danger">
+                                                    <t t-esc="errors['birthdate']"/>
+                                                </span>
+                                            </t>
                                         </div>
                                     </div>
                                 </div>
@@ -65,7 +72,7 @@
                                     <div class="row">
                                         <label class="col-md-4 control-label" for="street1">Street #1</label>
                                         <div class="col-md-8">
-                                            <input name="street" id="street1" t-att-value="partner.street" type="text" class="form-control" placeholder="Street"/>
+                                            <input name="street" id="street1" t-att-value="profile['partner']['street']" type="text" class="form-control" placeholder="Street"/>
                                         </div>
                                     </div>
                                 </div>
@@ -73,7 +80,7 @@
                                     <div class="row">
                                         <label class="col-md-4 control-label" for="street2">Street #2</label>
                                         <div class="col-md-8">
-                                            <input name="street2" id="street2" t-att-value="partner.street2" type="text" class="form-control" placeholder="Street"/>
+                                            <input name="street2" id="street2" t-att-value="profile['partner']['street2']" type="text" class="form-control" placeholder="Street"/>
                                         </div>
                                     </div>
                                 </div>
@@ -81,7 +88,7 @@
                                     <div class="row">
                                         <label class="col-md-4 control-label" for="zip">Postalcode</label>
                                         <div class="col-md-8">
-                                            <input name="zip" id="zip" t-att-value="partner.zip" type="text" class="form-control" placeholder="Postalcode"/>
+                                            <input name="zip" id="zip" t-att-value="profile['partner']['zip']" type="text" class="form-control" placeholder="Postalcode"/>
                                         </div>
                                     </div>
                                 </div>
@@ -89,7 +96,7 @@
                                     <div class="row">
                                         <label class="col-md-4 control-label" for="city">City</label>
                                         <div class="col-md-8">
-                                            <input name="city" id="city" t-att-value="partner.city" type="text" class="form-control" placeholder="City"/>
+                                            <input name="city" id="city" t-att-value="profile['partner']['city']" type="text" class="form-control" placeholder="City"/>
                                         </div>
                                     </div>
                                 </div>
@@ -100,7 +107,7 @@
                                             <select name="state_id" id="state" class="selectpicker form-control">
                                                 <option value="0">Nothing Selected</option>
                                                 <t t-foreach="states" t-as="state">
-                                                    <option t-att-value="state[0]" t-att-selected="'selected' if partner.state_id.id == state[0] else ''"><t t-esc="state[1]"/></option>
+                                                    <option t-att-value="state[0]" t-att-selected="'selected' if profile['partner']['state_id'] == state[0] else ''"><t t-esc="state[1]"/></option>
                                                 </t>
                                             </select>
                                         </div>
@@ -113,7 +120,7 @@
                                             <select name="country_id" id="country" class="selectpicker form-control">
                                                 <option value="0">Nothing Selected</option>
                                                 <t t-foreach="countries" t-as="country">
-                                                    <option t-att-value="country[0]" t-att-selected="'selected' if partner.country_id.id == country[0] else ''"><t t-esc="country[1]"/></option>
+                                                    <option t-att-value="country[0]" t-att-selected="'selected' if profile['partner']['country_id'] == country[0] else ''"><t t-esc="country[1]"/></option>
                                                 </t>
                                             </select>
                                         </div>
@@ -126,7 +133,12 @@
                                     <div class="row">
                                         <label class="col-md-4 control-label" for="email">Email</label>
                                         <div class="col-md-8">
-                                            <input name="email" id="email" t-att-value="partner.email" type="email" class="form-control" placeholder="your@email.com"/>
+                                            <input name="email" id="email" t-att-value="profile['partner']['email']" type="email" class="form-control" placeholder="your@email.com"/>
+                                            <t t-if="'email' in errors">
+                                                <span class="bg-danger">
+                                                    <t t-esc="errors['email']"/>
+                                                </span>
+                                            </t>
                                         </div>
                                     </div>
                                 </div>
@@ -136,7 +148,7 @@
                                     <div class="row">
                                         <label class="col-md-4 control-label" for="gsm">GSM</label>
                                         <div class="col-md-8">
-                                            <input name="mobile" id="gsm" t-att-value="partner.mobile" type="text" class="form-control" placeholder="+33 123 45 67 890"/>
+                                            <input name="mobile" id="gsm" t-att-value="profile['partner']['mobile']" type="text" class="form-control" placeholder="+33 123 45 67 890"/>
                                         </div>
                                     </div>
                                 </div>
@@ -144,7 +156,7 @@
                                     <div class="row">
                                         <label class="col-md-4 control-label" for="home">Home</label>
                                         <div class="col-md-8">
-                                            <input name="phone" id="home" t-att-value="partner.phone" type="text" class="form-control" placeholder="+33 123 45 67 890"/>
+                                            <input name="phone" id="home" t-att-value="profile['partner']['phone']" type="text" class="form-control" placeholder="+33 123 45 67 890"/>
                                         </div>
                                     </div>
                                 </div>
@@ -167,19 +179,21 @@
                                             <div class="form-group">
                                                 <label class="col-md-4 control-label">Skills</label>
                                                 <div class="col-md-8 dynamic-list">
-                                                    <t t-foreach="partner.skill_category_ids or [False]" t-as="category">
-                                                        <div class="row">
-                                                            <div class="list-item col-md-12 skill_category_block">
-                                                                <div class="row">
-                                                                    <div class="col-xs-10 no-padding-right">
-                                                                        <input t-att-name="('skills[existing][%s]' % category.id) if category else 'skills[existing][new][0]'" class="form-control mb16 skill_category" type="text" t-att-value="category and category.name"/>
-                                                                    </div>
-                                                                    <div class="col-xs-2 no-padding-right">
-                                                                        <button class="list-remove btn btn-danger"><i class="fa fa-minus"></i></button>
+                                                    <t t-foreach="['existing', 'new']" t-as="key">
+                                                        <t t-foreach="profile['skills'][key]" t-as="skill">
+                                                            <div class="row">
+                                                                <div class="list-item col-md-12 skill_category_block">
+                                                                    <div class="row">
+                                                                        <div class="col-xs-10 no-padding-right">
+                                                                            <input t-att-name="('skills[%s][%s]' % (key, skill['id']))" class="form-control mb16 skill_category" type="text" t-att-value="skill['name']"/>
+                                                                        </div>
+                                                                        <div class="col-xs-2 no-padding-right">
+                                                                            <button class="list-remove btn btn-danger"><i class="fa fa-minus"></i></button>
+                                                                        </div>
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                        </div>
+                                                        </t>
                                                     </t>
                                                     <a href="#" class="list-add btn btn-small btn-primary mb16"><i class="fa fa-plus"></i></a>
                                                 </div>
@@ -189,19 +203,21 @@
                                             <div class="form-group">
                                                 <label class="col-md-4 control-label">Interests</label>
                                                 <div class="col-md-8 dynamic-list">
-                                                    <t t-foreach="partner.skill_tag_ids or [False]" t-as="tag">
-                                                        <div class="row">
-                                                            <div class="list-item col-md-12 skill_tag_block">
-                                                                <div class="row">
-                                                                    <div class="col-xs-10 no-padding-right">
-                                                                        <input t-att-name="('tags[existing][%s]' % tag.id) if tag else 'tags[new][0]'" class="form-control mb16 skill_tag" t-att-value="tag and tag.name" type="text" />
-                                                                    </div>
-                                                                    <div class="col-xs-2 no-padding-right">
-                                                                        <button class="list-remove btn btn-danger"><i class="fa fa-minus"></i></button>
+                                                    <t t-foreach="['existing', 'new']" t-as="key">
+                                                        <t t-foreach="profile['interests'][key]" t-as="tag">
+                                                            <div class="row">
+                                                                <div class="list-item col-md-12 skill_tag_block">
+                                                                    <div class="row">
+                                                                        <div class="col-xs-10 no-padding-right">
+                                                                            <input t-att-name="('tags[%s][%s]' % (key, tag['id']))" class="form-control mb16 skill_tag" t-att-value="tag['name']" type="text" />
+                                                                        </div>
+                                                                        <div class="col-xs-2 no-padding-right">
+                                                                            <button class="list-remove btn btn-danger"><i class="fa fa-minus"></i></button>
+                                                                        </div>
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                        </div>
+                                                        </t>
                                                     </t>
                                                     <a href="#" class="list-add btn btn-small btn-primary mb16"><i class="fa fa-plus"></i></a>
                                                 </div>
@@ -217,31 +233,38 @@
                                                     <label class="col-md-4 control-label">Credit limits</label>
                                                     <div class="col-md-8 dynamic-list">
                                                         <div class="row">
-                                                            <t t-foreach="partner.centralbank_currency_ids or [False]" t-as="limit">
-                                                                <div class="list-item col-md-12 limit_block">
-                                                                    <div class="row">
-                                                                        <div class="col-xs-4 no-padding-right">
-                                                                            <select t-att-name="('limits[existing][%s][currency]' % limit.id) if limit else 'limits[new][0][currency]'" class="selectpicker form-control">
-                                                                                <t t-foreach="currencies" t-as="currency">
-                                                                                    <option t-att-value="currency[0]" t-att-selected="'selected' if limit and limit.currency_id.id == currency[0] else ''"><t t-esc="currency[1]"/></option>
-                                                                                </t>
-                                                                            </select>
-                                                                        </div>
-                                                                        <div class="col-xs-3 no-padding-right">
-                                                                            <input t-att-name="('limits[existing][%s][min]' % limit.id) if limit else 'limits[new][0][min]'" class="form-control mb16 limit_min_input" type="text" placeholder="min" t-att-value="limit and limit.limit_negative_value"/>
-                                                                        </div>
-                                                                        <div class="col-xs-3 no-padding-right">
-                                                                            <input t-att-name="('limits[existing][%s][max]' % limit.id) if limit else 'limits[new][0][max]'" class="form-control mb16 limit_max_input" type="text" placeholder="max" t-att-value="limit and limit.limit_positive_value"/>
-                                                                        </div>
-                                                                        <div class="col-xs-1 no-padding-right">
-                                                                            <button class="list-remove btn btn-danger"><i class="fa fa-minus"></i></button>
+                                                            <t t-foreach="['existing', 'new']" t-as="key">
+                                                                <t t-foreach="profile['limits'][key]" t-as="limit">
+                                                                    <div class="list-item col-md-12 limit_block">
+                                                                        <div class="row">
+                                                                            <div class="col-xs-4 no-padding-right">
+                                                                                <select t-att-name="('limits[%s][%s][currency]' % (key, limit['id']))" class="selectpicker form-control">
+                                                                                    <t t-foreach="currencies" t-as="currency">
+                                                                                        <option t-att-value="currency[0]" t-att-selected="'selected' if limit['currency'] == currency[0] else ''"><t t-esc="currency[1]"/></option>
+                                                                                    </t>
+                                                                                </select>
+                                                                            </div>
+                                                                            <div class="col-xs-3 no-padding-right">
+                                                                                <input t-att-name="('limits[%s][%s][min]' % (key, limit['id']))" class="form-control mb16 limit_min_input" type="text" placeholder="min" t-att-value="limit['min']"/>
+                                                                            </div>
+                                                                            <div class="col-xs-3 no-padding-right">
+                                                                                <input t-att-name="('limits[%s][%s][max]' % (key, limit['id']))" class="form-control mb16 limit_max_input" type="text" placeholder="max" t-att-value="limit['max']"/>
+                                                                            </div>
+                                                                            <div class="col-xs-1 no-padding-right">
+                                                                                <button class="list-remove btn btn-danger"><i class="fa fa-minus"></i></button>
+                                                                            </div>
                                                                         </div>
                                                                     </div>
-                                                                </div>
+                                                                </t>
                                                             </t>
                                                         </div>
                                                         <a href="#" class="list-add btn btn-small btn-primary mb16"><i class="fa fa-plus"></i></a>
                                                     </div>
+                                                    <t t-if="'limits' in errors">
+                                                        <p class="bg-danger">
+                                                            <t t-esc="errors['limits']"/>
+                                                        </p>
+                                                    </t>
                                                 </div>
                                             </div>
                                             <div class="col-md-4">
@@ -249,28 +272,35 @@
                                                     <label class="col-md-4 control-label">Balance</label>
                                                     <div class="col-md-8 dynamic-list">
                                                         <div class="row">
-                                                            <t t-foreach="partner.centralbank_balance_ids or [False]" t-as="balance">
-                                                                <div class="list-item col-md-12 balance_block">
-                                                                    <div class="row">
-                                                                        <div class="col-xs-7 no-padding-right">
-                                                                            <input t-att-name="'balances[existing][%s][amount]' % balance.id if balance else 'balances[new][0][amount]'" class="form-control mb16" type="text" placeholder="amount" t-att-value="balance and balance.available or ''"/>
-                                                                        </div>
-                                                                        <div class="col-xs-4 no-padding-right">
-                                                                            <select t-att-name="'balances[existing][%s][currency]' % balance.id if balance else 'balances[new][0][currency]'" class="selectpicker form-control">
-                                                                                <t t-foreach="currencies" t-as="currency">
-                                                                                    <option t-att-value="currency[0]" t-att-selected="'selected' if balance and balance.currency_id.id == currency[0] else ''"><t t-esc="currency[1]"/></option>
-                                                                                </t>
-                                                                            </select>
-                                                                        </div>
-                                                                        <div class="col-xs-1 no-padding-right">
-                                                                            <button class="list-remove btn btn-danger"><i class="fa fa-minus"></i></button>
+                                                            <t t-foreach="['existing', 'new']" t-as="key">
+                                                                <t t-foreach="profile['balances'][key]" t-as="balance">
+                                                                    <div class="list-item col-md-12 balance_block">
+                                                                        <div class="row">
+                                                                            <div class="col-xs-7 no-padding-right">
+                                                                                <input t-att-name="'balances[%s][%s][amount]' % (key, balance['id'])" class="form-control mb16" type="text" placeholder="amount" t-att-value="balance['amount']"/>
+                                                                            </div>
+                                                                            <div class="col-xs-4 no-padding-right">
+                                                                                <select t-att-name="'balances[%s][%s][currency]' % (key, balance['id'])" class="selectpicker form-control">
+                                                                                    <t t-foreach="currencies" t-as="currency">
+                                                                                        <option t-att-value="currency[0]" t-att-selected="'selected' if balance['currency'] == currency[0] else ''"><t t-esc="currency[1]"/></option>
+                                                                                    </t>
+                                                                                </select>
+                                                                            </div>
+                                                                            <div class="col-xs-1 no-padding-right">
+                                                                                <button class="list-remove btn btn-danger"><i class="fa fa-minus"></i></button>
+                                                                            </div>
                                                                         </div>
                                                                     </div>
-                                                                </div>
+                                                                </t>
                                                             </t>
                                                         </div>
                                                         <a href="#" class="list-add btn btn-small btn-primary mb16"><i class="fa fa-plus"></i></a>
                                                     </div>
+                                                    <t t-if="'balances' in errors">
+                                                        <p class="bg-danger">
+                                                            <t t-esc="errors['balances']"/>
+                                                        </p>
+                                                    </t>
                                                 </div>
                                             </div>
                                         </div>
