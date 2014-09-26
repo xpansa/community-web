@@ -669,6 +669,7 @@
                             <h4 class="mb16">When?</h4>
                             
                             <div class="form-group">
+                                <!-- TODO: WHERE THIS COMES FROM? -->
                                 <label class="col-md-3 control-label" for="date-picker-1">From</label>
                                 <div class="col-md-9">
                                     <input type="text" class="form-control" t-att-value="announcement.date_from" placeholder="DD/MM/YYYY" readonly="readonly"/>
@@ -676,6 +677,7 @@
                             </div>
                             
                             <div class="form-group">
+                                <!-- TODO: WHERE THIS COMES FROM? -->
                                 <label class="col-md-3 control-label" for="date-picker-2">To</label>
                                 <div class="col-md-9">
                                     <input id="date-picker-2" type="text" class="form-control" t-att-value="announcement.date_to" placeholder="DD/MM/YYYY" readonly="readonly"/>
@@ -724,6 +726,7 @@
                             <div class="form-group">
                                 <label class="col-md-5 control-label" for="available">Available</label>
                                 <div class="col-md-7">
+                                    <!-- TODO: IF EMPTY SHOW NOTHING -->
                                     <input id="available" type="text" class="form-control" placeholder="available" t-att-value="announcement.quantity_available" readonly="readonly"/>
                                 </div>
                             </div>
@@ -746,131 +749,305 @@
                       </div>
                     </div>
                     </form>
-                    
-                    <div class="row mt16">
-                        <div class="col-md-2 col-md-offset-5">
-                            <a class="btn btn-success btn-lg btn-block btn-announcement-reply mr25" href="#">Make a reply</a>
-                        </div>
-                    </div>
         
                 </section>
 
-                <!-- START: Replies section -->
-                <section class="bg-info pt32 mt32"> 
-                    <div class="container">
-                        <h2 class="col-md-12 mt0">Who has replied?</h2>
-                    </div>
+                <t t-if="len(replied_list) > 0">
 
-                    <!-- START : Single reply -->
-                    <form class="form-horizontal bg-info">
-                        <div class="container">
-                            <div class="col-md-12 mt32 mb32">
-                                <div class="row">
-                                    <!-- START: Reply Left side -->
-                                    <div class="col-md-4">
-                                        
-                                        <div class="col-md-4">
-                                            <img src="http://lorempixel.com/80/80/?4" class="img img-responsive thumbnail"/>
-                                        </div>
-                                        <div class="col-md-8">
-                                            <h5>Ninja Ninja Ninja</h5>
-                                            <p class="text-muted">Administrator</p>
-                                        </div>
-                                    
-                                        <div class="col-md-12">
-                                            <h5>Description</h5>
-                                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed sed tellus lectus. Vivamus placerat elit in pulvinar sagittis. Integer at egestas purus, dictum ultricies nisl.</p>
-                                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed sed tellus lectus. Vivamus placerat elit in pulvinar sagittis. Integer at egestas purus, dictum ultricies nisl.</p>
-                                        </div>
-                                    </div>
-                                    <!-- END: Reply Left side -->
-                                    
-                                    <!-- START: Reply Right side -->
-                                    <div class="col-md-8">
-                                        
-                                        <div class="row">
-                                            <div class="col-md-4">
-                                                <div class="form-group">
-                                                    <div class="col-md-4 control-label">
-                                                        <label>Quantity</label>
-                                                    </div>
-                                                    <div class="col-md-8">
-                                                    <input type="text" class="form-control" readonly="readonly" />
-                                                    </div>
-                                                </div>
-                                                <div class="form-group">
-                                                    <div class="col-md-4 control-label">
-                                                        <label>When?</label>
-                                                    </div>
-                                                    <div class="col-md-8">
-                                                    <input type="text" class="form-control" readonly="readonly" />
-                                                    </div>
-                                                </div>
-                                                <div class="form-group">
-                                                    <div class="col-md-4 control-label">
-                                                        <label>Where</label>
-                                                    </div>
-                                                    <div class="col-md-8">
-                                                    <input type="text" class="form-control" readonly="readonly" />
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            
-                                            <div class="col-md-8">
-                                                <table class="table">
-                                                    <thead>
-                                                        <tr>
-                                                            <th>Unit price</th>
-                                                            <th>Currency</th>
-                                                            <th>Subtotal</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        <tr class="list-item">
-                                                            <td><input type="text" class="form-control" readonly="readonly"/></td>
-                                                            <td>
-                                                                <select id="category" class="selectpicker form-control" disabled="disabled">
-                                                                    <option>EUR</option>
-                                                                    <option>COM</option>
-                                                                </select>
-                                                            </td>
-                                                            <td><input type="text" class="form-control" readonly="readonly"/></td>
-                                                      </tr>
-                                                    </tbody>
-                                                </table>
-                                                
-                                                <table class="table">
-                                                    <thead>
-                                                        <tr>
-                                                            <th>Rat.</th>
-                                                            <th>Indicat.</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        <tr class="list-item">
-                                                            <td><input type="text" class="form-control" readonly="readonly"/></td>
-                                                            <td><input type="text" class="form-control" readonly="readonly"/></td>
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                        </div>
-                                    
-                                        <div class="row mt32">
-                                            <div class="col-md-12">
-                                                <label>Feedback</label>
-                                                <textarea class="form-control" rows="3" readonly="readonly"></textarea>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <!-- END: Reply Right side -->
-                                </div>
+                    <t t-if="website.user_id != user_id">
+                        <div class="row mt16">
+                            <div class="col-md-2 col-md-offset-5">
+                                <a class="btn btn-success btn-lg btn-block btn-announcement-reply mr25" href="#">Make a reply</a>
                             </div>
                         </div>
-                    </form>
-                    <!-- END : Single reply -->
-                </section>
+                    </t>
+
+                    <!-- START: Replies section -->
+                    <section class="bg-info pt32 mt32"> 
+                        <div class="container">
+                            <h2 class="col-md-12 mt0">Who has replied?</h2>
+                        </div>
+
+                        <t t-foreach="replied_list" t-as="reply">
+                            <t t-call="website_project_weezer.single_reply"/>
+                        </t>
+                        
+                    </section>
+                </t>
+
+                <!-- TODO POST REPLY ROUTE -->
+                <t t-if="website.user_id != user_id">
+
+                    <!-- reply CTA banner -->
+                    <section id="replysection" class="bg-success pt32 pb32">
+                        <div class="container">
+                            
+                            <t t-if="website.user_id != user_id">
+                                <div id="replycta" class="col-md-2 col-md-offset-5">      
+                                    <a class="btn btn-lg btn-block btn-success btn-announcement-reply" href="#">Make a reply</a>
+                                </div>
+                            </t>
+                            
+                            <div id="replyform" class="hidden">
+                                <!-- START : My reply Section -->
+                                <h2 class="col-md-12 mt0">My Reply</h2>
+                
+                                <!-- START : Reply Form -->
+                                <form class="form-horizontal">
+                                    <div class="container">
+                                        <div class="col-md-12 mt32 mb32">
+                                            <div class="row">
+                                                <!-- START: Reply Left side -->
+                                                <div class="col-md-4">
+                                                
+                                                    <div class="col-md-4">
+                                                        <span t-field="user_id.image" t-field-options='{"widget": "image", "class": "thumbnail"}'/>
+                                                    </div>
+                                                    
+                                                    <div class="col-md-8">
+                                                        <!-- TODO CURRENT USE STATUS -->
+                                                        <h5>Ninja Ninja Ninja</h5>
+                                                        <p class="text-muted" t-field="user_id.name"/>
+                                                    </div>
+                                                    
+                                                    <div class="col-md-12">
+                                                        <h5>Description</h5>
+                                                        <!-- TODO CURRENT USER DESCRIPTION -->
+                                                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed sed tellus lectus. Vivamus placerat elit in pulvinar sagittis. Integer at egestas purus, dictum ultricies nisl.</p>
+                                                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed sed tellus lectus. Vivamus placerat elit in pulvinar sagittis. Integer at egestas purus, dictum ultricies nisl.</p>
+                                                    </div>
+                                                </div>
+                                                <!-- END: Reply Left side -->
+                                                
+                                                <!-- START: Reply Right side -->
+                                                <div class="col-md-8">
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <div class="form-group">
+                                                                <div class="col-md-12">
+                                                                    <div class="col-md-4 control-label">
+                                                                        <label>Quantity</label>
+                                                                    </div>
+                                                                    <div class="col-md-8">
+                                                                        <input type="text" class="form-control" placeholder="" />
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <div class="col-md-12">
+                                                                    <div class="col-md-4 control-label">
+                                                                        <label>When?</label>
+                                                                    </div>
+                                                                    <div class="col-md-8">
+                                                                        <input type="text" placeholder="DD/MM/YYYY" class="date-picker form-control" />
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                    <div class="col-md-12">
+                                                                        <div class="col-md-4 control-label">
+                                                                            <label>Where?</label>
+                                                                        </div>
+                                                                        <div class="col-md-8">
+                                                                            <input type="text" class="form-control" placeholder="" />
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                        </div>
+                                                        
+                                                        <div class="col-md-8">
+                                                            <div class="dynamic-list">
+                                                                <table class="table">
+                                                                    <thead>
+                                                                        <tr>
+                                                                            <th>Unit price</th>
+                                                                            <th>Currency</th>
+                                                                            <th>Subtotal</th>
+                                                                            <th></th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody>
+                                                                        <tr class="list-item">
+                                                                            <td><input type="text" class="form-control"/></td>
+                                                                            <td>
+                                                                                <!-- python code to get currencies -->
+                                                                                <t t-set="currencies_obj" t-value="request.registry['account.centralbank.config.currency']"/>
+                                                                                <t t-set="currency_info_ids" t-value="currencies_obj.search(request.cr, request.uid, [], context=request.context)"/>
+                                                                                <t t-set="currencies" t-value="currencies_obj.read(request.cr, request.uid, currency_info_ids, ['currency_id'], context=request.context)"/>
+
+                                                                                <select name="currency" class="selectpicker form-control mb16" style="display: none;">
+                                                                                    <option value="0" t-att-selected="'selected' if not int(request.httprequest.args.get('currency',0)) else None">All</option>
+                                                                                    <t t-foreach="currencies or []" t-as="c">
+                                                                                        <option t-att-value="c['currency_id'][0]" t-att-selected="'selected' if int(request.httprequest.args.get('currency',0)) == c['currency_id'][0] else None"><t t-esc="c['currency_id'][1]"/></option>
+                                                                                    </t>
+                                                                                </select>
+                                                
+                                                                            </td>
+                                                                            <td><input type="text" class="form-control"/></td>
+                                                                            <td><button class="list-remove btn btn-danger"><i class="fa fa-minus"></i></button></td>
+                                                                        </tr>
+                                                                    </tbody>
+                                                                </table>
+                                                                <a class="list-add btn btn-small btn-primary mb16 margin-left-10"><i class="fa fa-plus"></i></a>
+                                                            </div> 
+                                                            <div class="dynamic-list">                                                       
+                                                                <table class="table">
+                                                                    <thead>
+                                                                        <tr>
+                                                                            <th>Rat.</th>
+                                                                            <th>Indicat.</th>
+                                                                            <th></th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody>
+                                                                        <tr class="list-item">
+                                                                            <td><input type="text" class="form-control"/></td>
+                                                                            <td><input type="text" class="form-control"/></td>
+                                                                            <td><button class="list-remove btn btn-danger"><i class="fa fa-minus"></i></button></td>
+                                                                        </tr>
+                                                                    </tbody>
+                                                                </table>
+                                                                <a class="list-add btn btn-small btn-primary mb16 margin-left-10"><i class="fa fa-plus"></i></a>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row mt32">
+                                                            <div class="col-md-12">
+                                                                <label>Feedback</label>
+                                                                <textarea class="form-control" rows="3"></textarea>
+                                                                <a href="#" class="btn col-md-2 pull-right btn-success mt8 btn-simulateload">Add reply</a>
+                                                            </div>
+                                                        </div>
+                
+                                                    </div>
+                                                </div>
+                                                <!-- END: Reply Right side -->
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                                <!-- END : Reply Form -->
+                            </div>
+                            <!-- END : My reply Section -->
+                        </div>
+                    </section>
+                </t>
             </t>
+        </template>
+
+        <template id="single_reply">
+            <!-- START : Single reply -->
+            <form class="form-horizontal bg-info">
+                <div class="container">
+                    <div class="col-md-12 mt32 mb32">
+                        <div class="row">
+                            <!-- START: Reply Left side -->
+                            <div class="col-md-4">
+                                
+                                <div class="col-md-4">
+                                    <span t-field="reply.create_uid.image" t-field-options='{"widget": "image", "class": "thumbnail"}'/>
+                                </div>
+                                <div class="col-md-8">
+                                    <!-- TODO USER STATUS -->
+                                    <h5>Ninja Ninja Ninja</h5>
+                                    <p class="text-muted" t-field="reply.create_uid.name"/>
+                                </div>
+                            
+                                <div class="col-md-12">
+                                    <h5>Description</h5>
+                                    <span t-field="reply.description"/>
+                                 </div>
+                            </div>
+                            <!-- END: Reply Left side -->
+                            
+                            <!-- START: Reply Right side -->
+                            <div class="col-md-8">
+                                
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <div class="col-md-4 control-label">
+                                                <label>Quantity</label>
+                                            </div>
+                                            <div class="col-md-8">
+                                            <input type="text" t-att-value="reply.quantity" class="form-control" readonly="readonly" />
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-4 control-label">
+                                                <label>When?</label>
+                                            </div>
+                                            <div class="col-md-8">
+                                            <input type="text" t-att-value="reply.write_date" class="form-control" readonly="readonly" />
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-4 control-label">
+                                                <label>Where</label>
+                                            </div>
+                                            <div class="col-md-8">
+                                                <!-- TODO WHERE -->
+                                            <input type="text" class="form-control" readonly="readonly" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="col-md-8">
+                                        <table class="table">
+                                            <thead>
+                                                <tr>
+                                                    <th>Unit price</th>
+                                                    <th>Currency</th>
+                                                    <th>Subtotal</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <t t-foreach="reply.currency_ids" t-as="line">
+                                                    <tr class="list-item">
+                                                        <td><input type="text" t-att-value="line.price_unit" class="form-control" readonly="readonly"/></td>
+                                                        <td>
+                                                            <select id="category" class="selectpicker form-control" disabled="disabled">
+                                                                <option><span t-esc="line.currency_id.name"/></option>
+                                                            </select>
+                                                        </td>
+                                                        <td><input type="text" t-att-value="line.subtotal" class="form-control" readonly="readonly"/></td>
+                                                    </tr>
+                                                </t>
+                                            </tbody>
+                                        </table>
+                                        
+                                        <table class="table">
+                                            <thead>
+                                                <tr>
+                                                    <th>Rat.</th>
+                                                    <th>Indicat.</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr class="list-item">
+                                                    <!-- TODO RAT. -->
+                                                    <td><input type="text" class="form-control" readonly="readonly"/></td>
+                                                    <!-- TODO INDICAT. -->
+                                                    <td><input type="text" class="form-control" readonly="readonly"/></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            
+                                <div class="row mt32">
+                                    <div class="col-md-12">
+                                        <label>Feedback</label>
+                                        <!-- TODO FEEDBACK -->
+                                        <textarea class="form-control" rows="3" readonly="readonly"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- END: Reply Right side -->
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <!-- END : Single reply -->
         </template>
     </data>
 </openerp>

@@ -95,6 +95,19 @@ $(document).ready(function(){
     bind_autocomplete('.skill_tag', '/marketplace/profile/get_interests', skill_tag_cache);
 });
 
+$(document).ready(function(){
+
+    $('.btn-announcement-reply').click( function(e) {
+        e.preventDefault();
+        $('#replycta').fadeOut(300, function() {
+            $(this).addClass('hidden');         
+            $('#replyform').hide().removeClass('hidden').slideDown(300, function() {
+                $('body').animate({scrollTop:$('#replysection').position().top}, 750);
+            });
+        });
+     });
+});
+
 
 /* 
 THIS IS THE MAIN KICKOFF JS FILE FOR VIEW SCRIPTS
