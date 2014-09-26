@@ -72,7 +72,6 @@ $(document).ready(function(){
 
         $.ajax(URL+'load_wants=1'+'&offset='+offset, {'method': 'GET'})
             .then(function (data) {
-                console.log(data);
                 $('.mp_search_wants').append(data);
                 $.ajax(URL+'load_offers=1'+'&offset='+offset, {'method': 'GET'})
                 .then(function (data) {
@@ -87,10 +86,26 @@ $(document).ready(function(){
 
     var skill_category_cache = {};
     var skill_category_new_counter = 1;
+    $('.skill_category_block input').each(function(i, el){
+        el_number = parseInt(el.name.match(/\d+/)[0]);
+        skill_category_new_counter = el_number > skill_category_new_counter ? el_number : skill_category_new_counter;
+    });
     var skill_tag_cache = {};
     var skill_tag_new_counter = 1;
+    $('.skill_tag_block input').each(function(i, el){
+        el_number = parseInt(el.name.match(/\d+/)[0]);
+        skill_tag_new_counter = el_number > skill_tag_new_counter ? el_number : skill_tag_new_counter;
+    });
     var limit_new_counter = 1;
+    $('.limit_block input').each(function(i, el){
+        el_number = parseInt(el.name.match(/\d+/)[0]);
+        limit_new_counter = el_number > limit_new_counter ? el_number : limit_new_counter;
+    });
     var balance_new_counter = 1;
+    $('.balance_block input').each(function(i, el){
+        el_number = parseInt(el.name.match(/\d+/)[0]);
+        balance_new_counter = el_number > balance_new_counter ? el_number : balance_new_counter;
+    });
     bind_autocomplete('.skill_category', '/marketplace/profile/get_skills', skill_category_cache);
     bind_autocomplete('.skill_tag', '/marketplace/profile/get_interests', skill_tag_cache);
 });

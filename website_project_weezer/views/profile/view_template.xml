@@ -7,10 +7,13 @@
                 <div class="container">
                     <div class="col-md-12 mt32">
                         <h2 class="mb32">I am
-                            <t t-if="is_administrator or partner_id.id == user_id.partner_id.id">
+                            <t t-if="is_administrator or partner.id == user_id.partner_id.id">
                                 <a t-att-href="'/marketplace/profile/edit/%s' % partner.id">Edit</a>
                             </t>
                         </h2>
+                        <t t-if="profile_saved">
+                            <p class="bg-success">Profile has been saved successfully</p>
+                        </t>
                     </div>
                 </div>
 

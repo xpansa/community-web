@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="0">
+        <record model="marketplace.announcement.category" id="user_tags_category">
+            <field name="name">User Tags</field>
+        </record>
+    </data>
+</openerp>
