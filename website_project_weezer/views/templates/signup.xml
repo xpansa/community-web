@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <template id="signup" inherit_id="auth_signup.signup">
+            <xpath expr="//form[@class='oe_signup_form']" position="replace">
+                <header class="text-center">
+                    <a href="/">
+                        <img src="/website_project_weezer/static/src/assets/logo.png" class="img-rounded img-login"/>
+                    </a>
+                </header>
+
+                <div>
+                    <div class="thumbnail thumbnail-signin">
+                        <div class="inner">
+                            <h2>Sign up</h2>
+
+                            <form class="oe_signup_form mt16" role="form" method="post" t-if="not message">
+
+                                <t t-call="website_project_weezer.signup_fields"/>
+
+                                <p class="alert alert-danger" t-if="error">
+                                    <t t-esc="error"/>
+                                </p>
+                                <input type="hidden" name="redirect" value="/"/>
+                                <input type="hidden" name="token" t-att-value="token"/>
+                                <div class="clearfix oe_login_buttons">
+                                    <a t-attf-href="/web/login?{{ keep_query() }}" class="btn btn-link pull-right">Back to Login</a>
+                                    <button type="submit" class="btn btn-success pull-left">Sign up</button>
+                                </div>
+
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </template>
+    </data>
+</openerp>

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <template id="404" inherit_id="website.404">
+            <xpath expr="//div[@id='wrap']" position="replace">
+                <t t-set="hide_header" t-value="True"/>
+                <t t-set="hide_footer" t-value="True"/>
+
+                <div id="wrap" class="table-cell jumbotron bg-primary">
+                    <div class="container text-center pt128 pb128 mt0">
+                        
+                        <h1>Oops! <small>404 Not Found</small></h1>
+                        <h3>Sorry, we weren't able to find the page you requested</h3>
+                        
+                        <div class="col-md">
+                            <a href="/web/login" class="btn btn-success btn-lg">Sign in</a> 
+                            <a href="/web/signup" class="btn btn-default btn-lg">Sign up</a> 
+                            <a href="#" class="btn btn-primary btn-lg btn-nolink">Learn more</a> 
+                        </div>
+
+                    </div>
+                </div>
+            </xpath>
+        </template>
+    </data>
+</openerp>

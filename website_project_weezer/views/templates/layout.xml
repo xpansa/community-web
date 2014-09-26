@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <template id="layout" name="Weezer Layout" inherit_id="website.layout">
+            <xpath expr="//header" position="replace">
+                <t t-if="not hide_header">
+                    <header>
+                        <nav class="navbar navbar-default mb0" role="navigation">
+                            <div class="container">
+                                <div class="col-md-12">
+                                    <div class="row">
+                                        <!-- Brand and toggle get grouped for better mobile display -->
+                                        <div class="navbar-header">
+                                            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                                            <span class="sr-only">Toggle navigation</span>
+                                            <span class="icon-bar"></span>
+                                            <span class="icon-bar"></span>
+                                            <span class="icon-bar"></span>
+                                            </button>
+                                            <!-- essential element for logo - .navbar-brand -->
+                                            <!-- class cannot be changed -->
+                                            <a href="/" class="navbar-brand">
+                                                <img src="/website_project_weezer/static/src/assets/navbar-logo-exchange.png"/>
+                                            </a>
+                                        </div>
+                                        <!-- Collect the nav links, forms, and other content for toggling -->
+                                        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                                            <ul class="nav navbar-nav" id="top_menu">
+                                                <t t-foreach="website.menu_id.child_id" t-as="submenu">
+                                                    <t t-call="website.submenu"/>
+                                                </t>
+                                                <li><a href="/marketplace/announcement_detail/new"><span class="fa fa-pencil"></span></a></li>
+                                                <li><a href="#" class="btn-nolink"><span class="fa fa-usd"></span></a></li>
+                                            </ul>
+                                            <ul class="nav navbar-nav pull-right">
+                                                <li><a href="members-list.html"><span class="fa fa-users"></span></a></li>
+                                                <li><a href="/page/website.contactus" class="btn-nolink"><span class="fa fa-envelope"></span></a></li>
+                                                <li t-ignore="true" t-if="website.user_id == user_id">
+                                                    <a href="/web/login">
+                                                        <span class="fa fa-user"></span>
+                                                    </a>
+                                                </li>
+                                                <li class="dropdown" t-ignore="true" t-if="website.user_id != user_id">
+                                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                                        <span class="fa fa-user"></span>
+                                                    </a>
+                                                    <ul class="dropdown-menu js_usermenu" role="menu">
+                                                        <li><a href="/web" role="menuitem">My Account</a></li>
+                                                        <li class="divider"/>
+                                                        <li><a t-attf-href="/web/session/logout?redirect=/" role="menuitem">Logout</a></li>
+                                                    </ul>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <!-- /.navbar-collapse -->
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- /.container-fluid -->
+                        </nav>
+                    </header>
+                </t>
+            </xpath>
+            <xpath expr="//footer" position="replace">
+                <t t-if="not hide_footer">
+                    <footer>
+
+                        <div id="footer_container" class="container">
+                            
+                            <div class="col-md-12 mb16 mt16">
+                                <ul class="nav nav-pills pull-right">
+                                    <li><a href="/">Home</a></li>
+                                    <li class="active"><a href="/marketplace/search">Market Place</a></li>
+                                    <li><a href="#" class="btn-nolink">Our Activity</a></li>
+                                </ul>
+                                <a href="/page/website.contactus" class="btn btn-primary btn-contact-us pull-left btn-nolink" type="button">Contact Us</a>  
+                                <h4 class="text-center">See the <a href="#" class="btn-nolink">FAQ</a> or <a href="register.html">Sign up now, it's FREE</a></h4>
+                            </div>                    
+                            
+                            <div class="clearfix"></div>
+                            
+                            <div class="col-md-3">
+                                <h4 class="page-header">Learn more</h4>
+                                <ul class="nav">
+                                    <li><a href="#" class="btn-nolink">How It Works</a></li>
+                                    <li><a href="#" class="btn-nolink">Feature Tour</a></li>
+                                    <li><a href="#" class="btn-nolink">Sign Up</a></li>
+                                    <li><a href="#" class="btn-nolink">Set It Up</a></li>
+                                    <li><a href="#" class="btn-nolink">About Us</a></li>
+                                </ul>
+                            </div>
+
+                            <div class="col-md-3">
+                                <h4 class="page-header">Support</h4>
+                                <ul class="nav">
+                                    <li><a href="#" class="btn-nolink">FAQ</a></li>
+                                    <li><a href="#" class="btn-nolink">Contact Us</a></li>
+                                </ul>
+                            </div>
+
+
+                            <div class="col-md-3">
+                                <h4 class="page-header">Legal</h4>
+                                <ul class="nav">
+                                    <li><a href="#" class="btn-nolink">Terms of Service</a></li>
+                                    <li><a href="#" class="btn-nolink">Privacy Policy</a></li>
+                                </ul>
+                            </div>
+                            
+                            <div class="col-md-3">
+                                <h4 class="page-header">Follow Us</h4>
+                                <ul class="nav">
+                                    <li><a href="#" class="btn-nolink">Twitter</a></li>
+                                    <li><a href="#" class="btn-nolink">Facebook</a></li>
+                                    <li><a href="#" class="btn-nolink">Blog</a></li>
+                                </ul>
+                            </div>
+                            
+                            <div class="clearfix"></div>
+                            <h5 class="footer-title">Wezer, designed by <a href="http://www.valeureux.org" class="footer-logo logo-valeureux">Valeureux</a>, common good tools fabrics, based on <a href="http://www.odoo.org" class="footer-logo logo-odoo">Odoo</a></h5>
+                            
+                        </div>
+                    </footer>
+                </t>
+            </xpath>
+        </template>
+    </data>
+</openerp>

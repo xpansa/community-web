@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <template id="single_reply">
+            <!-- START : Single reply -->
+            <form class="form-horizontal bg-info">
+                <div class="container">
+                    <div class="col-md-12 mt32 mb32">
+                        <div class="row">
+                            <!-- START: Reply Left side -->
+                            <div class="col-md-4">
+                                
+                                <div class="col-md-4">
+                                    <span t-field="reply.create_uid.image" t-field-options='{"widget": "image", "class": "thumbnail"}'/>
+                                </div>
+                                <div class="col-md-8">
+                                    <!-- TODO USER STATUS -->
+                                    <h5>Ninja Ninja Ninja</h5>
+                                    <p class="text-muted" t-field="reply.create_uid.name"/>
+                                </div>
+                            
+                                <div class="col-md-12">
+                                    <h5>Description</h5>
+                                    <span t-field="reply.description"/>
+                                 </div>
+                            </div>
+                            <!-- END: Reply Left side -->
+                            
+                            <!-- START: Reply Right side -->
+                            <div class="col-md-8">
+                                
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <div class="col-md-4 control-label">
+                                                <label>Quantity</label>
+                                            </div>
+                                            <div class="col-md-8">
+                                            <input type="text" t-att-value="reply.quantity" class="form-control" readonly="readonly" />
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-4 control-label">
+                                                <label>When?</label>
+                                            </div>
+                                            <div class="col-md-8">
+                                            <input type="text" t-att-value="reply.write_date" class="form-control" readonly="readonly" />
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-4 control-label">
+                                                <label>Where</label>
+                                            </div>
+                                            <div class="col-md-8">
+                                                <!-- TODO WHERE -->
+                                            <input type="text" class="form-control" readonly="readonly" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="col-md-8">
+                                        <table class="table">
+                                            <thead>
+                                                <tr>
+                                                    <th>Unit price</th>
+                                                    <th>Currency</th>
+                                                    <th>Subtotal</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <t t-foreach="reply.currency_ids" t-as="line">
+                                                    <tr class="list-item">
+                                                        <td><input type="text" t-att-value="line.price_unit" class="form-control" readonly="readonly"/></td>
+                                                        <td>
+                                                            <select id="category" class="selectpicker form-control" disabled="disabled">
+                                                                <option><span t-esc="line.currency_id.name"/></option>
+                                                            </select>
+                                                        </td>
+                                                        <td><input type="text" t-att-value="line.subtotal" class="form-control" readonly="readonly"/></td>
+                                                    </tr>
+                                                </t>
+                                            </tbody>
+                                        </table>
+                                        
+                                        <table class="table">
+                                            <thead>
+                                                <tr>
+                                                    <th>Rat.</th>
+                                                    <th>Indicat.</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr class="list-item">
+                                                    <!-- TODO RAT. -->
+                                                    <td><input type="text" class="form-control" readonly="readonly"/></td>
+                                                    <!-- TODO INDICAT. -->
+                                                    <td><input type="text" class="form-control" readonly="readonly"/></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            
+                                <div class="row mt32">
+                                    <div class="col-md-12">
+                                        <label>Feedback</label>
+                                        <!-- TODO FEEDBACK -->
+                                        <textarea class="form-control" rows="3" readonly="readonly"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- END: Reply Right side -->
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <!-- END : Single reply -->
+        </template>
+    </data>
+</openerp>

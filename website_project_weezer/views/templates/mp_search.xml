@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <!-- MarketPlace(Search) Page -->
+        <template id="mp_search">
+            <t t-call="website.layout">
+                <t t-call="website_project_weezer.mp_search_form"/>
+                <div id="wrap" class="container">
+                    <div class="oe_structure"/>
+                    <div class="oe_structure">
+                        <section class="clearfix">
+                            
+                            <!-- START: Scrollable -->
+                            <div class="col-md-12 page-header pb8">
+
+                                <div class="row">
+
+                                    <!-- START: Our wants -->
+                                    <div class="col-md-6">
+                                        <div class="row">
+                                            <h3 class="text-center page-header mb8">Our Wants</h3>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <t t-foreach="result['wants'] or []" t-as="item">
+                                                <t t-call="website_project_weezer.mp_single_item"/>
+                                            </t>
+                                        </div> 
+                                    </div> 
+                                    <!-- END: Our wants -->
+                                     
+                                    <!-- START: Our offers -->
+                                    <div class="col-md-6">
+                                        <div class="row">
+                                            <h3 class="text-center page-header mb8">Our Offers</h3>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <t t-foreach="result['offers'] or []" t-as="item">
+                                                <t t-call="website_project_weezer.mp_single_item"/>
+                                            </t>
+                                        </div> 
+                                    </div> 
+                                    <!-- END: Our offers -->   
+
+                                </div>
+                                
+                            </div>
+                            <!-- END: Scrollable -->
+                            <div class="col-md-12 mt16 mb32">
+                                <t t-if="page &gt; 1">
+                                    <a t-att-href="prev_url" class="btn text-center btn-primary pull-left">Previous page</a>
+                                </t>
+                                <t t-if="page &lt; page_count">
+                                   <a t-att-href="next_url" class="btn text-center btn-primary pull-right">Next page</a>
+                                </t>
+                            </div>
+                        </section>
+                    </div>
+                    <div class="oe_structure"/>
+                </div>
+            </t>
+        </template>
+    </data>
+</openerp>

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <!-- Template of single offer/want to call in search result block or somewhere else -->
+        <template id="mp_single_item">
+            <div class="row">
+                <div class="col-md-12 thumbnail mb32">
+                    <div class="col-md-3 mt16">
+                        <div class="col-md-12">
+                            <div class="row" t-field="item.picture" t-field-options='{"widget": "image", "class": "img img-responsive thumbnail" }'/>
+                            <div class="row">
+                                <p class="text-muted mt8"><span t-esc="item.partner_id.name"/></p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-sm-9 mt16">
+                        <div class="col-md-12">
+                            <div class="row">
+                                <h3 class="mt0"><a t-attf-href="/marketplace/announcement_detail/#{item.id}"><span t-field="item.name"/></a></h3>
+                                <h5>Description</h5>
+                            </div>
+                            <div class="row">
+                                <p><span t-field="item.description"/></p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-sm-3 mt16">
+                        <t t-foreach="item.currency_ids" t-as="price">
+                            <p class="text-muted text-right"><span class="label label-default"><span t-field="price.price_unit"/> <span t-esc="price.currency_id.name"/></span></p>
+                        </t>
+                        <t t-if="item.quantity_available"><p class="text-muted text-right"><span class="label label-default"> <span t-field="item.quantity_available"/> <span t-esc="item.uom_id.name"/></span></p></t>
+                        <t t-if="item.expiration_date"><p class="text-muted text-right"><span class="label label-default" t-field="item.expiration_date"/></p></t>
+                        <t t-if="item.city"><p class="text-muted text-right"><span class="label label-default" t-field="item.city"/></p></t>
+                        <p class="text-muted text-right"><span class="badge" t-esc="len(item.proposition_ids)"></span> replies</p>
+                    </div>
+                </div>
+            </div>
+        </template>
+    </data>
+</openerp>

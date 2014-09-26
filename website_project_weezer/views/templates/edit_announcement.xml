@@ -1,0 +1,325 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <template id="website_project_weezer.edit_announcement" name="View announcement">
+
+            <t t-call="website.layout">
+
+                <t t-call="website_project_weezer.mp_search_form"/>
+
+                <div class="container">
+                    <!-- TODO: remove on release -->
+                    <t t-if='error_param_list'>
+                        <t t-foreach="error_param_list" t-as="message">
+                            <div class="alert alert-danger"><t t-esc="message"/></div>
+                        </t>
+                    </t>
+
+                    <t t-if='error_message_list'>
+                        <t t-foreach="error_message_list" t-as="message">
+                            <div class="alert alert-danger"><t t-esc="message"/></div>
+                        </t>
+                    </t>
+
+                    <t t-if='success_message_list'>
+                        <t t-foreach="success_message_list" t-as="message">
+                            <div class="alert alert-success"><t t-esc="message"/></div>
+                        </t>
+                    </t>
+                </div>
+                
+                <section class="container mt32">
+                    <form action="save" method="POST" enctype="multipart/form-data">
+                        <div class="row">
+                            <div class="col-md-8">
+                                <div class="form-horizontal col-md-12">
+                                    <div class="form-group">
+            
+                                        <label class="col-md-2 control-label" for="category">Category</label>
+                                        <div class="col-md-2">
+                                            <select id="category" name="category_id" class="selectpicker form-control">
+                                                <t t-if="bool(announcement.category_id) == False">
+                                                    <option value="None" selected="selected"></option>                      
+                                                </t>
+                                                <t t-if="bool(announcement.category_id) != False">
+                                                    <option value="None"></option>                      
+                                                </t>
+                             
+                                                <t t-foreach="category_dict.keys()" t-as="category_id">
+                                                    <t t-if="category_id == announcement.category_id.id">
+                                                        <option selected="selected" t-att-value='category_id'><span t-esc='category_dict[category_id]'/></option>
+                                                    </t>
+                                                    <t t-if="category_id != announcement.category_id.id">
+                                                        <option t-att-value='category_id'><span t-esc='category_dict[category_id]'/></option>
+                                                    </t>
+                                                </t>
+                                            </select>
+                                        </div>
+                              
+                                        <label class="col-md-1 control-label" for="tags">Tags</label>
+                                        <div class="col-md-3">
+                                            <!-- TODO AUTOCOMPLETE WIDGET + CREATE NEW -->
+                                            <select id="tags" name="tag_ids" multiple="multiple" class="selectpicker form-control">
+                                                <t t-if="bool(announcement.tag_ids) == False">
+                                                    <option value="None" selected="selected"></option>                      
+                                                </t>
+                                                <t t-if="bool(announcement.tag_ids) != False">
+                                                    <option value="None"></option>                      
+                                                </t>
+                                                
+                                               <!--  TODO: ERROR: File "/opt/openerp/odoo/openerp/models.py", line 5348, in __contains__
+    raise except_orm("ValueError", "Mixing apples and oranges: %s in %s" % (item, self))
+QWebException: ('ValueError', 'Mixing apples and oranges: 1 in marketplace.tag()') -->
+                                               <!--  <t t-foreach="tag_dict.keys()" t-as="tag_id">
+                                                    <t t-if="tag_id in announcement.tag_ids">
+                                                        <option selected="selected" t-att-value='tag_id'><span t-esc='tag_dict[tag_id]'/></option>
+                                                    </t>
+                                                    <t t-if="tag_id not in announcement.tag_ids">
+                                                        <option t-att-value='tag_id'><span t-esc='tag_dict[tag_id]'/></option>
+                                                    </t>
+                                                </t> -->
+                                            </select>
+                                        </div>
+                                    
+                                        <label class="col-md-1 control-label" for="groups">Groups</label>
+                                        <div class="col-md-3">
+                                            <!-- TODO CHECK GROUPS -->
+                                            <!-- <select id="groups" class="selectpicker form-control" name="groups" multiple="multiple">
+                                                <t t-if="bool(announcement.context_group_ids) == False">
+                                                    <option selected="selected"></option>                      
+                                                </t>
+                                                <t t-if="bool(announcement.context_group_ids) != False">
+                                                    <t t-foreach="announcement.context_group_ids" t-as="group">
+                                                        <option selected="selected"><t t-esc='group.name'/></option>
+                                                    </t>
+                                                </t>
+                                            </select> -->
+                                        </div>
+            
+                                    </div>
+                                </div>
+                          </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-8 text-right">
+                                <div class="text-left col-md-9 m16 mb16">
+                                    <t t-if="attachment_dict">
+                                        <t t-foreach="attachment_dict.keys()" t-as="attach">
+                                            <!-- TODO: FIX DELETE -->
+                                            <span class="label label-primary"><t t-esc='attachment_dict[attach]'/><a class="remove-attachment" t-att-href="attach"><i class="margin-left-10 glyphicon glyphicon-remove"/></a></span>
+                                        </t>
+                                    </t>
+                                    <input type="file" name="document"/>
+                                </div>
+                                <div class="text-right col-md-3 m16 mb16">
+                                    <div class="row">
+                                        <input type="text" name="link" t-att-value="announcement.link" class="form-control"/>
+                                    </div>  
+                                </div>  
+                            </div>  
+                        </div>
+            
+                        <div class="row">
+                            <div class="col-md-3">
+                                <div class="col-md-12 mb8">
+                                    <t t-if="announcement.emergency == False">
+                                        <input name="emergency" type="checkbox"/> 
+                                    </t>
+                                    <t t-if="announcement.emergency">
+                                        <input name="emergency" type="checkbox" checked="checked"/>
+                                    </t>
+                                    <label for="emergency">Emergency</label>
+                                </div>
+                                <div class="col-md-12">
+                                    <span t-field="announcement.picture" t-field-options='{"widget": "image"}'/>
+                                    <input type="file" name="picture"/>
+                                </div>
+                            </div>
+            <!-- TODO: add placeholders to all fields -->
+                            <div class="col-md-5">
+                                <input name="title" class="form-control" t-att-value="announcement.name"/> 
+                                <h5>Description</h5>
+                                <textarea class="form-control" rows="6" cols="20" name="description" t-field="announcement.description"/>
+                            </div>
+            
+                            <div class="col-md-4">
+                               
+                                <div class="form-group mt16">
+                                    <div class="col-md-9 pull-right">
+                                      <input type="text" class="form-control" t-att-value="author.name" readonly="readonly"/>
+                                    </div>
+                                    <div class="col-md-9 pull-right mt16">
+                                      <span t-field="author.image" t-field-options='{"widget": "image", "class": "thumbnail mb16"}'/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+            
+                        <div class="form-horizontal">
+                            <div class="row mt32">
+                                <div class="col-md-3">
+                                    <h4 class="mb16">Where?</h4>
+                                    
+                                    <div class="form-group">
+                                        <div class="col-xs-12">
+                                            <input name="street" type="text" class="form-control" t-att-value="announcement.street"/>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-xs-12">
+                                            <input name="street2" type="text" class="form-control" t-att-value="announcement.street2"/>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-xs-5 no-padding-right">
+                                            <input name="zip" type="text" class="form-control" t-att-value="announcement.zip"/>
+                                        </div>
+                                        <div class="col-xs-7">
+                                            <input name="city" type="text" class="form-control" t-att-value="announcement.city"/>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-xs-5 no-padding-right">
+                                            <select name="state_id" class="selectpicker form-control"> 
+                                                <t t-if="bool(announcement.state_id) == False">
+                                                    <option value="None" selected="selected"></option>                      
+                                                </t>
+                                                <t t-if="bool(announcement.state_id) != False">
+                                                    <option value="None"></option>                      
+                                                </t>
+
+                                                <t t-foreach="us_state_dict.keys()" t-as="state_id">
+                                                    <t t-if="state_id == announcement.state_id.id">
+                                                        <option selected="selected" t-att-value='state_id'><t t-esc='us_state_dict[state_id]'/></option>
+                                                    </t>
+                                                    <t t-if="state_id != announcement.state_id.id">
+                                                        <option t-att-value='state_id'><t t-esc='us_state_dict[state_id]'/></option>
+                                                    </t>
+                                                </t>
+                                            </select>
+                                        </div>
+                                        <div class="col-xs-7">
+                                           <select name="country_id" class="selectpicker form-control">
+                                                <t t-if="bool(announcement.country_id) == False">
+                                                    <option value="None" selected="selected"></option>                      
+                                                </t> 
+                                                <t t-if="bool(announcement.country_id) != False">
+                                                    <option value="None"></option>                      
+                                                </t>
+                                                <t t-foreach="country_dict.keys()" t-as="country_id">
+                                                    <t t-if="country_id == announcement.country_id.id">
+                                                        <option selected="selected" t-att-value='country_id'><t t-esc='country_dict[country_id]'/></option>
+                                                    </t>
+                                                    <t t-if="country_id != announcement.country_id.id">
+                                                        <option t-att-value='country_id'><t t-esc='country_dict[country_id]'/></option>                         
+                                                    </t>
+                                                </t>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-3">
+                                    <h4 class="mb16">When?</h4>
+                                    
+                                    <div class="form-group">
+                                        <!-- TODO: WHERE THIS COMES FROM? -->
+                                        <label class="col-md-3 control-label" for="date-picker-1">From</label>
+                                        <div class="col-md-9">
+                                            <input name="date_from" type="text" class="date-picker form-control" t-att-value="announcement.date_from" placeholder="DD-MM-YYYY" readonly="readonly"/>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <!-- TODO: WHERE THIS COMES FROM? -->
+                                        <label class="col-md-3 control-label" for="date-picker-2">To</label>
+                                        <div class="col-md-9">
+                                            <input name="date_to" id="date-picker-2" type="text" class="date-picker form-control" t-att-value="announcement.date_to" placeholder="DD-MM-YYYY" readonly="readonly"/>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <div class="col-md-9 col-md-offset-3 control-label">
+                                            <input type="checkbox" id="unique"/>
+                                            <label for="unique">Unique</label>
+                                            <!-- TODO UNIQUE -->
+                                        </div>
+                                    </div>
+                                </div>
+                                    
+                                <div class="col-md-3">
+                                    <h4 class="mb16">Quantity?</h4>
+                                    
+                                    <div class="form-group">
+                                        <div class="col-md-5 control-label">
+                                            <!-- TODO: FIX INFINITE -->
+                                            <t t-if="announcement.infinite_qty == False">
+                                                <input name="unlimited" type="checkbox"/>
+                                            </t>
+                                            <t t-if="announcement.infinite_qty">
+                                                <input name="unlimited" type="checkbox" checked="checked"/>
+                                            </t>
+                                            <label for="quantity">Infinite</label>
+                                        </div>
+                                        <div class="col-md-7">
+                                            <input name="qty" id="quantity" type="text" class="form-control" t-att-value="announcement.quantity" placeholder="Quantity"/>
+                                        </div>
+
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label class="col-md-5 control-label" for="units">Units</label>
+                                        <div class="col-md-7">
+                                            <!-- TODO: get all units -->
+                                            <select id="units" class="selectpicker form-control">
+                                                <option><t t-esc="announcement.uom_id.name"/></option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label class="col-md-5 control-label" for="available">Available</label>
+                                        <div class="col-md-7">
+                                            <!-- TODO: IF EMPTY SHOW NOTHING -->
+                                            <input id="available" type="text" class="form-control" placeholder="available" t-att-value="announcement.quantity_available" readonly="readonly"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-3">
+                                    <h4 class="mb16">How much?</h4>
+                                    <t t-set="index" t-value="1"/>
+                                    <t t-foreach="announcement.currency_ids" t-as="currency_line">
+                                        <input class="form-control" t-att-name="'%s%s' % ('currency_amount', index)" t-att-value="currency_line.price_unit"/>
+                                        <select class="selectpicker form-control" t-att-name="'%s%s' % ('currency_id', index)"> 
+                                            <t t-foreach="currency_dict.keys()" t-as="currency_id">
+                                                <t t-if="currency_id == currency_line.currency_id.id">
+                                                    <option selected="selected" t-att-value='currency_id'><t t-esc='currency_dict[currency_id]'/></option>
+                                                </t>
+                                                <t t-if="currency_id != currency_line.currency_id.id">
+                                                    <option t-att-value='currency_id'><t t-esc='currency_dict[currency_id]'/></option>
+                                                </t>
+                                            </t>
+                                        </select>
+                                        <t t-set="index" t-value="index + 1"/>
+                                        <t t-foreach="range(len(announcement.currency_ids) + 1, 4)" t-as="i">
+                                            <input class="form-control" t-att-name="'%s%s' % ('currency_amount', i)"/>
+                                            <select class="form-control selectpicker" t-att-name="'%s%s' % ('currency_id', i)"> 
+                                                <t t-foreach="currency_dict.keys()" t-as="currency_id">
+                                                    <option t-att-value='currency_id'><t t-esc='currency_dict[currency_id]'/></option>
+                                                </t>
+                                            </select>
+
+                                        </t>
+                                    </t>
+                              </div>
+                            </div>
+                        </div>
+                        <button type="submit" name="submit" class="btn btn-success pull-right mb64">Submit</button>
+                    </form>
+                </section>
+            </t>
+        </template>
+    </data>
+</openerp>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <template id="signup_fields">
+            <t t-call="web.database_select"/>
+
+            <input type="text" name="name" t-att-value="name" id="name" class="form-control first" placeholder="Your name"
+                    required="required" t-att-readonly="'readonly' if only_passwords else None"
+                    t-att-autofocus="'autofocus' if login and not only_passwords else None" />
+
+            <input type="text" name="login" t-att-value="login" id="login" class="form-control last mb8" autofocus="autofocus"
+                required="required" t-att-readonly="'readonly' if only_passwords else None" placeholder="Your email"/>
+
+            <input type="password" name="password" id="password" class="form-control first"
+                    required="required" t-att-autofocus="'autofocus' if only_passwords else None" placeholder="Password"/>
+
+            <input type="password" name="confirm_password" id="confirm_password" class="form-control last"
+                    required="required" placeholder="Repeat Password"/>
+
+        </template>
+    </data>
+</openerp>

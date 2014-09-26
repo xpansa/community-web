@@ -121,6 +121,21 @@ $(document).ready(function(){
             });
         });
      });
+
+    // REMOVE ATTACHMENT
+    $('.remove-attachment').on('click',function(e){
+        e.preventDefault();
+
+        var self = $(this);
+
+        $.ajax({
+            url: $(this).attr('href')+'/delete',
+            // contentType:"application/json; charset=utf-8",
+            // dataType:"json"
+        }).done(function(){
+            self.remove();
+        });
+    });
 });
 
 
