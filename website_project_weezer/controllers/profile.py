@@ -271,7 +271,7 @@ class search_controller(http.Controller):
             if k == 'name' and not val:
                 errors[k] = _('Name cannot be empty.')
             elif k == 'email' and val:
-                if not re.match(r'\w+@\w+', val):
+                if not re.match(r'[\w\.-]+@[\w\.]+', val):
                     errors[k] = _('Email is not correct.')
             elif k == 'birthdate' and val:
                 try:
