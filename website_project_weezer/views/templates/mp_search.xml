@@ -16,7 +16,7 @@
                                 <div class="row">
 
                                     <!-- START: Our wants -->
-                                    <div class="col-md-6">
+                                    <div class="col-md-6 clearfix">
                                         <div class="row">
                                             <h3 class="text-center page-header mb8">Our Wants</h3>
                                         </div>
@@ -29,7 +29,7 @@
                                     <!-- END: Our wants -->
                                      
                                     <!-- START: Our offers -->
-                                    <div class="col-md-6">
+                                    <div class="col-md-6 clearfix">
                                         <div class="row">
                                             <h3 class="text-center page-header mb8">Our Offers</h3>
                                         </div>

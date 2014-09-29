@@ -13,7 +13,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-6 col-sm-9 mt16">
+                    <div class="col-md-6 col-sm-9 mt16 clearfix">
                         <div class="col-md-12">
                             <div class="row">
                                 <h3 class="mt0"><a t-attf-href="/marketplace/announcement_detail/#{item.id}"><span t-field="item.name"/></a></h3>

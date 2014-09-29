@@ -67,17 +67,23 @@
 
                         <div id="footer_container" class="container">
                             
-                            <div class="col-md-12 mb16 mt16">
-                                <ul class="nav nav-pills pull-right">
-                                    <li><a href="/">Home</a></li>
-                                    <li class="active"><a href="/marketplace/search">Market Place</a></li>
-                                    <li><a href="#" class="btn-nolink">Our Activity</a></li>
-                                </ul>
-                                <a href="/page/website.contactus" class="btn btn-primary btn-contact-us pull-left btn-nolink" type="button">Contact Us</a>  
-                                <h4 class="text-center">See the <a href="#" class="btn-nolink">FAQ</a> or <a href="register.html">Sign up now, it's FREE</a></h4>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="col-md-4 mb16 mt16 clearfix">
+                                        <a href="/page/website.contactus" class="btn btn-primary btn-contact-us pull-left btn-nolink" type="button">Contact Us</a>  
+                                    </div>
+                                    <div class="col-md-4 mb16 mt16 clearfix">
+                                        <h4 class="text-center">See the <a href="#" class="btn-nolink">FAQ</a> or <a href="register.html">Sign up now, it's FREE</a></h4>
+                                    </div>
+                                    <div class="col-md-4 mb16 mt16 clearfix">
+                                        <ul class="nav nav-pills pull-right">
+                                            <li><a href="/">Home</a></li>
+                                            <li class="active"><a href="/marketplace/search">Market Place</a></li>
+                                            <li><a href="#" class="btn-nolink">Our Activity</a></li>
+                                        </ul>
+                                    </div>                 
+                                </div>                    
                             </div>                    
-                            
-                            <div class="clearfix"></div>
                             
                             <div class="col-md-3">
                                 <h4 class="page-header">Learn more</h4>
