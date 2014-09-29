@@ -8,12 +8,6 @@
                 <t t-call="website_project_weezer.mp_search_form"/>
 
                 <div class="container">
-                    <!-- TODO: remove on release -->
-                    <t t-if='error_param_list'>
-                        <t t-foreach="error_param_list" t-as="message">
-                            <div class="alert alert-danger"><t t-esc="message"/></div>
-                        </t>
-                    </t>
 
                     <t t-if='error_message_list'>
                         <t t-foreach="error_message_list" t-as="message">
@@ -83,7 +77,8 @@ QWebException: ('ValueError', 'Mixing apples and oranges: 1 in marketplace.tag()
                                     
                                         <label class="col-md-1 control-label" for="groups">Groups</label>
                                         <div class="col-md-3">
-                                            <!-- TODO CHECK GROUPS -->
+                                            <!-- TODO: RROR: "'marketplace.announcement' object has no attribute 'context_group_ids'" while evaluating
+'bool(announcement.context_group_ids) == False' -->
                                             <!-- <select id="groups" class="selectpicker form-control" name="groups" multiple="multiple">
                                                 <t t-if="bool(announcement.context_group_ids) == False">
                                                     <option selected="selected"></option>                      
@@ -224,7 +219,6 @@ QWebException: ('ValueError', 'Mixing apples and oranges: 1 in marketplace.tag()
                                     <h4 class="mb16">When?</h4>
                                     
                                     <div class="form-group">
-                                        <!-- TODO: WHERE THIS COMES FROM? -->
                                         <label class="col-md-3 control-label" for="date-picker-1">From</label>
                                         <div class="col-md-9">
                                             <input name="date_from" type="text" class="date-picker form-control" t-att-value="announcement.date_from" placeholder="DD-MM-YYYY" readonly="readonly"/>
@@ -232,7 +226,6 @@ QWebException: ('ValueError', 'Mixing apples and oranges: 1 in marketplace.tag()
                                     </div>
                                     
                                     <div class="form-group">
-                                        <!-- TODO: WHERE THIS COMES FROM? -->
                                         <label class="col-md-3 control-label" for="date-picker-2">To</label>
                                         <div class="col-md-9">
                                             <input name="date_to" id="date-picker-2" type="text" class="date-picker form-control" t-att-value="announcement.date_to" placeholder="DD-MM-YYYY" readonly="readonly"/>
@@ -281,7 +274,6 @@ QWebException: ('ValueError', 'Mixing apples and oranges: 1 in marketplace.tag()
                                     <div class="form-group">
                                         <label class="col-md-5 control-label" for="available">Available</label>
                                         <div class="col-md-7">
-                                            <!-- TODO: IF EMPTY SHOW NOTHING -->
                                             <input id="available" type="text" class="form-control" placeholder="available" t-att-value="announcement.quantity_available" readonly="readonly"/>
                                         </div>
                                     </div>
@@ -289,29 +281,41 @@ QWebException: ('ValueError', 'Mixing apples and oranges: 1 in marketplace.tag()
                                 
                                 <div class="col-md-3">
                                     <h4 class="mb16">How much?</h4>
+
                                     <t t-set="index" t-value="1"/>
                                     <t t-foreach="announcement.currency_ids" t-as="currency_line">
-                                        <input class="form-control" t-att-name="'%s%s' % ('currency_amount', index)" t-att-value="currency_line.price_unit"/>
-                                        <select class="selectpicker form-control" t-att-name="'%s%s' % ('currency_id', index)"> 
-                                            <t t-foreach="currency_dict.keys()" t-as="currency_id">
-                                                <t t-if="currency_id == currency_line.currency_id.id">
-                                                    <option selected="selected" t-att-value='currency_id'><t t-esc='currency_dict[currency_id]'/></option>
-                                                </t>
-                                                <t t-if="currency_id != currency_line.currency_id.id">
-                                                    <option t-att-value='currency_id'><t t-esc='currency_dict[currency_id]'/></option>
-                                                </t>
-                                            </t>
-                                        </select>
-                                        <t t-set="index" t-value="index + 1"/>
-                                        <t t-foreach="range(len(announcement.currency_ids) + 1, 4)" t-as="i">
-                                            <input class="form-control" t-att-name="'%s%s' % ('currency_amount', i)"/>
-                                            <select class="form-control selectpicker" t-att-name="'%s%s' % ('currency_id', i)"> 
-                                                <t t-foreach="currency_dict.keys()" t-as="currency_id">
-                                                    <option t-att-value='currency_id'><t t-esc='currency_dict[currency_id]'/></option>
-                                                </t>
-                                            </select>
-
-                                        </t>
+                                        <div class="list-item form-group">
+                                            <div class="col-xs-5 no-padding-right">
+                                                <input class="form-control" t-att-name="'%s%s' % ('currency_amount', index)" t-att-value="currency_line.price_unit"/>
+                                            </div>
+                                            <div class="col-xs-5 no-padding-right">
+                                                <select class="selectpicker form-control" t-att-name="'%s%s' % ('currency_id', index)"> 
+                                                    <t t-foreach="currency_dict.keys()" t-as="currency_id">
+                                                        <t t-if="currency_id == currency_line.currency_id.id">
+                                                            <option selected="selected" t-att-value='currency_id'><t t-esc='currency_dict[currency_id]'/></option>
+                                                        </t>
+                                                        <t t-if="currency_id != currency_line.currency_id.id">
+                                                            <option t-att-value='currency_id'><t t-esc='currency_dict[currency_id]'/></option>
+                                                        </t>
+                                                    </t>
+                                                </select>
+                                            </div>
+                                            <t t-set="index" t-value="index + 1"/>
+                                        </div>
+                                    </t>
+                                    <t t-foreach="range(len(announcement.currency_ids) + 1, 4)" t-as="i">
+                                        <div class="list-item form-group">
+                                            <div class="col-xs-5 no-padding-right">
+                                                <input class="form-control" t-att-name="'%s%s' % ('currency_amount', i)"/>
+                                            </div>
+                                            <div class="col-xs-5 no-padding-right">
+                                                <select class="selectpicker form-control" t-att-name="'%s%s' % ('currency_id', i)"> 
+                                                    <t t-foreach="currency_dict.keys()" t-as="currency_id">
+                                                        <option t-att-value='currency_id'><t t-esc='currency_dict[currency_id]'/></option>
+                                                    </t>
+                                                </select>
+                                            </div>
+                                        </div>
                                     </t>
                               </div>
                             </div>

@@ -1,21 +1,21 @@
+@import url(http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600);
 /* 
  * Project Name : <Name of project>
  */
-@import url(http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600);
 /* line 14, ../sass/project/_fonts.scss */
 h1, h2, h3, h4, h5, h6 {
-  font-family: 'Source Sans Pro', sans-serif;
+  font-family: "Source Sans Pro", sans-serif;
   font-weight: 600 !important;
 }
 /* line 19, ../sass/project/_fonts.scss */
 h1 small, h2 small, h3 small, h4 small, h5 small, h6 small {
-  font-family: 'Source Sans Pro', sans-serif;
+  font-family: "Source Sans Pro", sans-serif;
   font-weight: 600 !important;
 }
 
 /* line 25, ../sass/project/_fonts.scss */
 p, li, span, label, input, .btn {
-  font-family: 'Source Sans Pro', sans-serif;
+  font-family: "Source Sans Pro", sans-serif;
 }
 
 @font-face {
@@ -98,7 +98,7 @@ p, li, span, label, input, .btn {
 
 /* line 88, ../sass/project/_fonts.scss */
 .fa-border {
-  padding: .2em .25em .15em;
+  padding: 0.2em 0.25em 0.15em;
   border: solid 0.08em #eeeeee;
   border-radius: .1em;
 }
@@ -2981,7 +2981,7 @@ html .inline-label {
 }
 /* line 39, ../sass/project/_core.scss */
 html .banner-box {
-  border-left: 1px solid #CCC;
+  border-left: 1px solid #cccccc;
 }
 /* line 42, ../sass/project/_core.scss */
 html .banner-box h6 {
@@ -3066,6 +3066,16 @@ html .banner-box h6 {
 /* line 119, ../sass/project/_core.scss */
 .table-cell {
   display: table-cell !important;
+}
+
+/* line 124, ../sass/project/_core.scss */
+h3 a {
+  color: #333333;
+}
+/* line 126, ../sass/project/_core.scss */
+h3 a:hover {
+  color: #333333;
+  text-decoration: none;
 }
 
 /* line 9, ../sass/project/_header.scss */

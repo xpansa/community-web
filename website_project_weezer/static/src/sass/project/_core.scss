@@ -119,4 +119,14 @@
 	{
 		display: table-cell !important;
 	}
+
+	h3 a
+	{
+		&:hover
+		{
+			color: rgb(51, 51, 51);
+			text-decoration: none;
+		}
+		color: rgb(51, 51, 51);
+	}
 }
