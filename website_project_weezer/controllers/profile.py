@@ -34,7 +34,7 @@ from search import format_text
 import time
 
 
-class search_controller(http.Controller):
+class profile_controller(http.Controller):
 
     PARTNER_FIELDS = ['name', 'title', 'street', 'street2', 'zip', 'city', 'state_id',
                       'country_id', 'birthdate', 'email', 'phone', 'mobile', 'image']
@@ -470,3 +470,34 @@ class search_controller(http.Controller):
         tag_pool = request.registry.get('marketplace.tag')
         tags = tag_pool.name_search(cr, uid, term, [], context=context)
         return [{'label': s[1], 'id': s[0], 'value': s[1]} for s in tags]
+
+    @http.route('/marketplace/register-part2', type='http', auth="public", website=True)
+    def register_part2(self, **kw):
+        cr, uid, context, registry = request.cr, request.uid, request.context, request.registry
+        user_pool = registry.get('res.users')
+        title_pool = registry.get('res.partner.title')
+        country_pool = registry.get('res.country')
+        state_pool = registry.get('res.country.state')
+        config_currency_pool = registry.get('account.centralbank.config.currency')
+        curr_config_ids = config_currency_pool.search(cr, uid, [], context=context)
+        curr_config_lines = config_currency_pool.read(cr, uid, curr_config_ids, 
+                                                      ['currency_id'], context=context)
+        partner = user_pool.browse(cr, uid, uid, context=context).partner_id
+        self.date_format = get_date_format(cr, uid, context=context)
+        values = {
+            'errors': {},
+            'partner': partner,
+            'images': self.profile_images(partner),
+            'partner_titles': title_pool.name_search(cr, uid, '', [], context=context),
+            'countries': country_pool.name_search(cr, uid, '', [], context=context),
+            'states': state_pool.name_search(cr, uid, '', [], context=context),
+            'currencies': [(c['currency_id'][0], c['currency_id'][1]) for c in curr_config_lines],
+            'date_placeholder': self.date_format.replace('%d','DD').replace('%m','MM').replace('%Y','YYYY'),
+        }
+        if kw:
+            values['profile'] = self.profile_parse_data(kw)
+        else:
+            values['profile'] = self.profile_parse_partner(partner)
+        return request.website.render("website_project_weezer.register_part_2", values)
+
+
