@@ -2665,6 +2665,27 @@ ul.wizard li:first-child {
 .btn.loading.btn-link {
   background-image: url("img/btn/link-spinner.gif");
 }
+/* line 33, ../sass/project/ui/_buttons.scss */
+.btn.btn-file {
+  position: relative;
+  overflow: hidden;
+}
+/* line 37, ../sass/project/ui/_buttons.scss */
+.btn.btn-file input[type=file] {
+  position: absolute;
+  top: 0;
+  right: 0;
+  min-width: 100%;
+  min-height: 100%;
+  font-size: 100px;
+  text-align: right;
+  filter: alpha(opacity=0);
+  opacity: 0;
+  outline: none;
+  background: white;
+  cursor: inherit;
+  display: block;
+}
 
 /* line 4, ../sass/project/ui/_badges.scss */
 .badge.badge-success {

@@ -136,6 +136,27 @@ $(document).ready(function(){
             self.remove();
         });
     });
+
+    // FILESELECT CUSTOM EVENT
+    $(document).on('change', '.btn-file :file', function(e) {
+        var input = $(this);
+        var files = [];
+        for (var i = 0; i < input[0].files.length; ++i) {
+            var name = input[0].files.item(i).name;
+            files.push(name);
+        }
+        input.trigger('fileselect', [files]);
+    });
+
+    // FILESELECT DOCUMENT, PICTURE
+    $(document).on('fileselect', 'input[name="document"],input[name="picture"]', function(e, files){
+        var allFiles = '';
+        $.each(files,function(k,v){
+            allFiles += '<span class="label label-warning margin-right-10">'+v+'</span>';
+        });
+        $(e.target).parent().next('.files-to-upload').append(allFiles);
+    });
+
 });
 
 

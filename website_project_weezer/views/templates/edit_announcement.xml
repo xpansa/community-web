@@ -105,11 +105,22 @@ QWebException: ('ValueError', 'Mixing apples and oranges: 1 in marketplace.tag()
                                             <span class="label label-primary"><t t-esc='attachment_dict[attach]'/><a class="remove-attachment" t-att-href="attach"><i class="margin-left-10 glyphicon glyphicon-remove"/></a></span>
                                         </t>
                                     </t>
-                                    <input type="file" name="document"/>
+                                    <div class="row mt16">
+                                        <div class="col-md-12">
+
+                                            <!-- TODO: make multiple upload possible-->
+                                            <span class="btn btn-primary btn-file">
+                                                Upload new document 
+                                                <input type="file" name="document" multiple="multiple"/>
+                                            </span>  
+                                            <div class="files-to-upload mt8 mb8"/>
+
+                                        </div>
+                                    </div>
                                 </div>
                                 <div class="text-right col-md-3 m16 mb16">
                                     <div class="row">
-                                        <input type="text" name="link" t-att-value="announcement.link" class="form-control"/>
+                                        <input placeholder="Website" type="text" name="link" t-att-value="announcement.link" class="form-control"/>
                                     </div>  
                                 </div>  
                             </div>  
@@ -128,12 +139,18 @@ QWebException: ('ValueError', 'Mixing apples and oranges: 1 in marketplace.tag()
                                 </div>
                                 <div class="col-md-12">
                                     <span t-field="announcement.picture" t-field-options='{"widget": "image"}'/>
-                                    <input type="file" name="picture"/>
+                                    
+                                    <span class="btn btn-primary btn-file mt16">
+                                        Upload new picture 
+                                        <input type="file" name="picture"/>
+                                    </span>  
+                                    <div class="files-to-upload mt8 mb8"/>
+
                                 </div>
                             </div>
-            <!-- TODO: add placeholders to all fields -->
+                            
                             <div class="col-md-5">
-                                <input name="title" class="form-control" t-att-value="announcement.name"/> 
+                                <input placeholder="Title" name="title" class="form-control" t-att-value="announcement.name"/> 
                                 <h5>Description</h5>
                                 <textarea class="form-control" rows="6" cols="20" name="description" t-field="announcement.description"/>
                             </div>
@@ -142,7 +159,7 @@ QWebException: ('ValueError', 'Mixing apples and oranges: 1 in marketplace.tag()
                                
                                 <div class="form-group mt16">
                                     <div class="col-md-9 pull-right">
-                                      <input type="text" class="form-control" t-att-value="author.name" readonly="readonly"/>
+                                      <input placeholder="Author" type="text" class="form-control" t-att-value="author.name" readonly="readonly"/>
                                     </div>
                                     <div class="col-md-9 pull-right mt16">
                                       <span t-field="author.image" t-field-options='{"widget": "image", "class": "thumbnail mb16"}'/>
@@ -158,20 +175,20 @@ QWebException: ('ValueError', 'Mixing apples and oranges: 1 in marketplace.tag()
                                     
                                     <div class="form-group">
                                         <div class="col-xs-12">
-                                            <input name="street" type="text" class="form-control" t-att-value="announcement.street"/>
+                                            <input placeholder="Street" name="street" type="text" class="form-control" t-att-value="announcement.street"/>
                                         </div>
                                     </div>
                                     <div class="form-group">
                                         <div class="col-xs-12">
-                                            <input name="street2" type="text" class="form-control" t-att-value="announcement.street2"/>
+                                            <input placeholder="Street2" name="street2" type="text" class="form-control" t-att-value="announcement.street2"/>
                                         </div>
                                     </div>
                                     <div class="form-group">
                                         <div class="col-xs-5 no-padding-right">
-                                            <input name="zip" type="text" class="form-control" t-att-value="announcement.zip"/>
+                                            <input placeholder="Zip" name="zip" type="text" class="form-control" t-att-value="announcement.zip"/>
                                         </div>
                                         <div class="col-xs-7">
-                                            <input name="city" type="text" class="form-control" t-att-value="announcement.city"/>
+                                            <input placeholder="City" name="city" type="text" class="form-control" t-att-value="announcement.city"/>
                                         </div>
                                     </div>
                                     <div class="form-group">
@@ -256,7 +273,7 @@ QWebException: ('ValueError', 'Mixing apples and oranges: 1 in marketplace.tag()
                                             <label for="quantity">Infinite</label>
                                         </div>
                                         <div class="col-md-7">
-                                            <input name="qty" id="quantity" type="text" class="form-control" t-att-value="announcement.quantity" placeholder="Quantity"/>
+                                            <input placeholder="Quantity" name="qty" id="quantity" type="text" class="form-control" t-att-value="announcement.quantity"/>
                                         </div>
 
                                     </div>
@@ -274,7 +291,7 @@ QWebException: ('ValueError', 'Mixing apples and oranges: 1 in marketplace.tag()
                                     <div class="form-group">
                                         <label class="col-md-5 control-label" for="available">Available</label>
                                         <div class="col-md-7">
-                                            <input id="available" type="text" class="form-control" placeholder="available" t-att-value="announcement.quantity_available" readonly="readonly"/>
+                                            <input id="available" type="text" class="form-control" placeholder="Available" t-att-value="announcement.quantity_available" readonly="readonly"/>
                                         </div>
                                     </div>
                                 </div>
@@ -286,7 +303,7 @@ QWebException: ('ValueError', 'Mixing apples and oranges: 1 in marketplace.tag()
                                     <t t-foreach="announcement.currency_ids" t-as="currency_line">
                                         <div class="list-item form-group">
                                             <div class="col-xs-5 no-padding-right">
-                                                <input class="form-control" t-att-name="'%s%s' % ('currency_amount', index)" t-att-value="currency_line.price_unit"/>
+                                                <input placeholder="Amount" class="form-control" t-att-name="'%s%s' % ('currency_amount', index)" t-att-value="currency_line.price_unit"/>
                                             </div>
                                             <div class="col-xs-5 no-padding-right">
                                                 <select class="selectpicker form-control" t-att-name="'%s%s' % ('currency_id', index)"> 
@@ -306,7 +323,7 @@ QWebException: ('ValueError', 'Mixing apples and oranges: 1 in marketplace.tag()
                                     <t t-foreach="range(len(announcement.currency_ids) + 1, 4)" t-as="i">
                                         <div class="list-item form-group">
                                             <div class="col-xs-5 no-padding-right">
-                                                <input class="form-control" t-att-name="'%s%s' % ('currency_amount', i)"/>
+                                                <input placeholder="Amount" class="form-control" t-att-name="'%s%s' % ('currency_amount', i)"/>
                                             </div>
                                             <div class="col-xs-5 no-padding-right">
                                                 <select class="selectpicker form-control" t-att-name="'%s%s' % ('currency_id', i)"> 
