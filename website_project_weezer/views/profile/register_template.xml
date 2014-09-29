@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <template id="register_membership">
+        <!-- membership -->
+        <section class="pb64 pt16">
+            <div class="container">
+                <div class="col-md-12 mt32">
+                    <h2 class="mb32">My membership<small> — You are a Ninja</small></h2>
+                </div>
+                
+                <div class="col-md-2 col-md-offset-1">
+                    <button class="btn-nolink btn btn-success btn-block disabled">Become a Ninja</button>
+                </div>
+                <div class="col-md-2 col-md-offset-2">
+                    <button class="btn-nolink btn btn-warning btn-block">Become an Amateur</button>
+                </div>
+                <div class="col-md-2 col-md-offset-2">
+                    <button class="btn-nolink btn btn-danger btn-block">Become a Tourist</button>
+                </div>
+                
+            </div>
+
+        </section>
+        <!-- membership -->
+        </template>
+
+        <!-- Registration / Step 2 -->
+        <template id="register_part_2">
+            <t t-call="website.layout">
+                <div class="container">
+                    <div class="col-md-12 mt32">
+                        <h2 class="mb32">I am</h2>
+                    </div>
+                </div>
+                <form class="form-horizontal" method="post" enctype="multipart/form-data">
+                    <t t-call="website_project_weezer.profile_edit_general"/>
+                    <t t-call="website_project_weezer.profile_edit_resources"/>
+                    <t t-call="website_project_weezer.register_membership"/>
+                    <section class="bg-success pt64 pb64">
+                        <div class="container">
+                            <div class="col-md-12">
+                                <button class="btn btn-success btn-lg pull-right" type="submit">Register</button>
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox"/> I agree with the <a href="#" class="btn-nolink">terms and conditions</a>.
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                  </section>
+                </form>
+            </t>
+        </template>
+
+    </data>
+</openerp>
