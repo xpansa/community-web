@@ -148,8 +148,8 @@ $(document).ready(function(){
         input.trigger('fileselect', [files]);
     });
 
-    // FILESELECT DOCUMENT, PICTURE
-    $(document).on('fileselect', 'input[name="document"],input[name="picture"]', function(e, files){
+    // FILESELECT
+    $(document).on('fileselect', 'input[type="file"]', function(e, files){
         var allFiles = '';
         $.each(files,function(k,v){
             allFiles += '<span class="label label-warning margin-right-10">'+v+'</span>';

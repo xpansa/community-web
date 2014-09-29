@@ -45,7 +45,7 @@
                                                         <span class="fa fa-user"></span>
                                                     </a>
                                                     <ul class="dropdown-menu js_usermenu" role="menu">
-                                                        <li><a href="/web" role="menuitem">My Account</a></li>
+                                                        <li><a href="/marketplace/profile" role="menuitem">My Profile</a></li>
                                                         <li class="divider"/>
                                                         <li><a t-attf-href="/web/session/logout?redirect=/" role="menuitem">Logout</a></li>
                                                     </ul>

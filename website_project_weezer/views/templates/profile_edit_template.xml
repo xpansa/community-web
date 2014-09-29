@@ -5,9 +5,12 @@
             <div class="container">
                 <div class="col-md-4">
                     <img t-att-src="images['image_big']" class="img img-responsive thumbnail"/>
-                    <input type="file" name="image" id="new_image"/>
-                    <label for="new_image">Upload New Image</label>
-                    <div class="pull-right">
+                    <span class="btn btn-primary btn-file">
+                        Upload new image 
+                        <input id="new_image" type="file" name="image"/>
+                    </span>  
+                    <div class="files-to-upload mt8 mb16"/>
+                    <div class="mb32">
                         <img t-att-src="images['image_small']" class="img img-circle" width="40" height="40"/>
                         <div class="clearfix"></div>
                         <span class="badge badge-success mt4"><t t-esc="partner.name"/></span>
@@ -403,8 +406,8 @@
         <template id="profile_edit">
             <t t-call="website.layout">
                 <div class="container">
-                    <div class="col-md-12 mt32">
-                        <h2 class="mb32">I am</h2>
+                    <div class="col-md-12">
+                        <h2 class="mt32 mb32">Profile information</h2>
                     </div>
                 </div>
                 <form class="form-horizontal" method="post" enctype="multipart/form-data">
