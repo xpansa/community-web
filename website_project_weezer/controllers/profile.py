@@ -23,7 +23,7 @@ from openerp import SUPERUSER_ID
 from openerp.addons.web import http
 from openerp.addons.web.http import request
 from openerp.addons.website.controllers.main import Website as controllers
-from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
+from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
 from openerp.tools.translate import _
 
 import base64
@@ -40,7 +40,7 @@ class profile_controller(http.Controller):
                       'country_id', 'birthdate', 'email', 'phone', 'mobile', 'image']
     LAST_EXCHANGES_LIMIT = 3
     ANNOUNCEMENT_LIMIT = 3
-    date_format = '%d-%m-%Y'
+    date_format = '%Y-%m-%d'
 
     def profile_parse_partner(self, partner):
         """
@@ -471,6 +471,13 @@ class profile_controller(http.Controller):
         tags = tag_pool.name_search(cr, uid, term, [], context=context)
         return [{'label': s[1], 'id': s[0], 'value': s[1]} for s in tags]
 
+    def get_partner_membership(self, partner):
+        today = datetime.today()
+        for line in partner.member_lines:
+            if line.state == 'paid' and line.date_from <= today and line.date_to >= today:
+                return line.product_id
+        return False
+
     @http.route('/marketplace/register-part2', type='http', auth="public", website=True)
     def register_part2(self, **kw):
         cr, uid, context, registry = request.cr, request.uid, request.context, request.registry
@@ -478,6 +485,7 @@ class profile_controller(http.Controller):
         title_pool = registry.get('res.partner.title')
         country_pool = registry.get('res.country')
         state_pool = registry.get('res.country.state')
+        product_pool = registry.get('product.product')
         config_currency_pool = registry.get('account.centralbank.config.currency')
         curr_config_ids = config_currency_pool.search(cr, uid, [], context=context)
         curr_config_lines = config_currency_pool.read(cr, uid, curr_config_ids, 
@@ -487,9 +495,14 @@ class profile_controller(http.Controller):
         values = {
             'errors': {},
             'partner': partner,
+            'membership': self.get_partner_membership(partner),
             'images': self.profile_images(partner),
             'partner_titles': title_pool.name_search(cr, uid, '', [], context=context),
             'countries': country_pool.name_search(cr, uid, '', [], context=context),
+            'memberships': product_pool.name_search(cr, uid, '',[
+                ('membership', '=', True),
+                ('membership_date_from', '<=', datetime.today()),
+                ('membership_date_to', '>=', datetime.today())], context=context),
             'states': state_pool.name_search(cr, uid, '', [], context=context),
             'currencies': [(c['currency_id'][0], c['currency_id'][1]) for c in curr_config_lines],
             'date_placeholder': self.date_format.replace('%d','DD').replace('%m','MM').replace('%Y','YYYY'),

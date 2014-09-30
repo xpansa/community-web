@@ -33,6 +33,7 @@ Website Marketplace
     'depends': [
         'website',
         'marketplace',
+        'association',
         ],
     'data': [
         'data/menu.xml',
