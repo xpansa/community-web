@@ -33,6 +33,7 @@ Website Marketplace
     'depends': [
         'website',
         'marketplace',
+        'marketplace_groups',
         ],
     'data': [
         'data/menu.xml',

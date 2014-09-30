@@ -103,7 +103,15 @@
                     <input disabled="disabled" type="checkbox" checked="checked"/> Infinity
                 </t>
                 <br/>
-                qty: <input disabled="disabled" t-att-value="announcement.quantity"/> <br/>
+                qty: <input disabled="disabled" t-att-value="announcement.quantity"/> 
+                <select disabled="disabled">
+                    <t t-if="bool(announcement.uom_id) == False">
+                        <option value="None" selected="selected"></option>                      
+                    </t>
+                    <t t-if="bool(announcement.uom_id) != False">
+                        <option selected="selected"><t t-esc="announcement.uom_id.name"/></option>                      
+                    </t>
+                </select><br/><br/>
                 available: <span t-field="announcement.quantity_available"/> <br/>
                 How much:
                 <t t-foreach="announcement.currency_ids" t-as="currency_line">
@@ -312,7 +320,24 @@
         				<input name="unlimited" type="checkbox" checked="checked"/> Infinity
         			</t>
         			<br/>
-        			qty: <input name="qty" t-att-value="announcement.quantity"/> <br/>
+        			qty: <input name="qty" t-att-value="announcement.quantity"/> 
+                    <select name="uom_id">
+                        <t t-if="bool(announcement.uom_id) == False">
+                            <option value="None" selected="selected"></option>                      
+                        </t> 
+                        <t t-if="bool(announcement.uom_id) != False">
+                            <option value="None"></option>                      
+                        </t>
+                        <t t-foreach="uom_dict.keys()" t-as="uom_id">
+                            <t t-if="uom_id == announcement.uom_id.id">
+                                <option selected="selected" t-att-value='uom_id'><t t-esc='uom_dict[uom_id]'/></option>
+                            </t>
+                            <t t-if="uom_id != announcement.uom_id.id">
+                                <option t-att-value='uom_id'><t t-esc='uom_dict[uom_id]'/></option>                         
+                            </t>
+                        </t>
+                    </select>
+                    <br/>
         			available: <span t-field="announcement.quantity_available"/> <br/>
         			How much:
         			<t t-set="index" t-value="1"/>
@@ -423,7 +448,13 @@
         			To: <input name="date_to"/>  <br/>
     				<input name="unlimited" type="checkbox"/> Infinity
         			<br/>
-        			qty: <input name="qty"/> <br/>
+        			qty: <input name="qty"/> 
+                    <select name="uom_id">
+                        <option value="None"></option>                      
+                        <t t-foreach="uom_dict.keys()" t-as="uom_id">
+                            <option t-att-value='uom_id'><t t-esc='uom_dict[uom_id]'/></option>                         
+                        </t>
+                    </select><br/>
         			How much:
         				<input name="currency_amount1" />
         				<select name="currency_uom1"> 
