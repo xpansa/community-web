@@ -34,6 +34,7 @@ Website Marketplace
         'website',
         'marketplace',
         'marketplace_groups',
+        'membership',
         ],
     'data': [
         'data/menu.xml',
