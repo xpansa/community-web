@@ -124,14 +124,17 @@
                 Who has replied?
                 <t t-foreach="replied_list" t-as="reply">
                     <span t-field="reply.create_uid.image" t-field-options='{"widget": "image"}'/> <br/>
+                     <t t-foreach="reply.create_uid.member_lines" t-as="line">
+                        <t t-esc="line.membership_id and line.membership_id.name"/>
+                    </t>
                     <t t-esc="reply.create_uid.name"/> <br/>
                     Description: <t t-esc="reply.description"/> <br/>
                     Quantity: <t t-esc="reply.quantity"/> <br/>
                     When: <t t-esc="reply.write_date"/> <br/>
                     Where: ??? <br/>
-                    Rat: ??? <br/>
+                    Rat: <t t-esc="reply.vote_average"/> <br/>
                     Indicate: ??? <br/>
-                    Feedback: ??? <br/>
+                    Feedback: <textarea disabled="disabled"><t t-esc="reply.message_summary"/></textarea>  <br/>
                     <table>
                         <tr>
                             <td>
