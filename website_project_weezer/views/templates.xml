@@ -1,6 +1,71 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
+        <template id="website_project_weezer.member_list_view" name="Mamber list">
+            <t t-call="website.layout">
+                <t t-foreach="member_list" t-as="member">
+                    <div>
+                        <table colspanding="2">
+                            <tr>
+                                <td rowspan="2">
+                                    <span t-field="member.image" t-field-options='{"widget": "image"}'/>
+                                </td>
+                                <td>
+                                    <b><t t-esc="member.name"/></b>
+                                </td>
+                                <td> 
+                                    <t t-foreach="member.member_lines" t-as="line">
+                                        <t t-esc="line.membership_id.name"/>
+                                    </t>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <t t-esc="member.comment"/>
+                                </td>
+                                <td>
+
+                                </td>
+                                <td>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <small><t t-esc="member.create_uid and member.create_uid.name"/></small>
+                                </td>
+                                <td>
+                                    <t t-foreach="member.skill_tag_ids" t-as="tag">
+                                        <t t-esc="tag.name"/>
+                                    </t>
+                                    <t t-foreach="member.skill_category_ids" t-as="category">
+                                        <t t-esc="category.name"/>
+                                    </t>
+                                </td>
+                                <td>
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                Amount
+                                            </td>
+                                            <td>
+                                                Currency
+                                            </td>
+                                        </tr>
+                                        <t t-foreach="member.centralbank_balance_ids" t-as="limit">
+                                            <tr>
+                                                <td><t t-esc="limit.available"/></td>
+                                                <td><t t-esc="limit.currency_id.name"/></td>
+                                            </tr>
+                                        </t>
+                                    </tbody>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </t>
+            </t>
+        </template>
+
         <template id="website_project_weezer.view_announcement" name="View announcement">
             <t t-call="website.layout">
                 <t t-if='success_message_list'>
