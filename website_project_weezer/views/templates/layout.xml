@@ -33,7 +33,7 @@
                                                 <li><a href="#" class="btn-nolink"><span class="fa fa-usd"></span></a></li>
                                             </ul>
                                             <ul class="nav navbar-nav pull-right">
-                                                <li><a href="members-list.html"><span class="fa fa-users"></span></a></li>
+                                                <li><a href="/marketplace/member_list"><span class="fa fa-users"></span></a></li>
                                                 <li><a href="/page/website.contactus" class="btn-nolink"><span class="fa fa-envelope"></span></a></li>
                                                 <li t-ignore="true" t-if="website.user_id == user_id">
                                                     <a href="/web/login">
@@ -61,6 +61,11 @@
                     </header>
                 </t>
             </xpath>
+
+            <xpath expr="//body" position="inside">
+                <div id="xmlid" class="hidden" t-att-data-xmlid="xmlid"/>
+            </xpath>
+
             <xpath expr="//footer" position="replace">
                 <t t-if="not hide_footer">
                     <footer>
