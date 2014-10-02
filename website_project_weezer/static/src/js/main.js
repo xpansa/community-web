@@ -128,13 +128,10 @@ $(document).ready(function(){
 
         var self = $(this);
 
-        $.ajax({
-            url: $(this).attr('href')+'/delete',
-            // contentType:"application/json; charset=utf-8",
-            // dataType:"json"
-        }).done(function(){
-            self.remove();
-        });
+        openerp.jsonRpc($(this).attr('href')+'/delete', 'call', {})
+            .then(function (data) {
+                self.parent().remove();
+            });
     });
 
     // FILESELECT CUSTOM EVENT

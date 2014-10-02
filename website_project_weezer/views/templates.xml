@@ -273,14 +273,14 @@
         					<option value="None"></option>    					
         				</t>
      
-        				<t t-foreach="tag_dict.keys()" t-as="tag_id">
+        				<!-- <t t-foreach="tag_dict.keys()" t-as="tag_id">
         					<t t-if="tag_id in announcement.tag_ids">
         						<option selected="selected" t-att-value='tag_id'><t t-esc='tag_dict[tag_id]'/></option>
         					</t>
         					<t t-if="tag_id not in announcement.tag_ids">
         						<option t-att-value='tag_id'><t t-esc='tag_dict[tag_id]'/></option>
         					</t>
-        				</t>
+        				</t> -->
         			</select>
                     <select name="new_tags" multiple="multiple">
                         <option value="newtag1">newtag1</option>                      
@@ -297,14 +297,14 @@
     	   				<t t-if="bool(announcement.context_group_ids) != False">
         					<option value="None"></option>    					
         				</t>
-     					<t t-foreach="group_dict.keys()" t-as="group_id">
+     					<!-- <t t-foreach="group_dict.keys()" t-as="group_id">
         					<t t-if="group_id in announcement.context_group_ids">
         						<option selected="selected" t-att-value='group_id'><t t-esc='group_dict[group_id]'/></option>
         					</t>
         					<t t-if="group_id not in announcement.context_group_ids">
         						<option t-att-value='group_id'><t t-esc='group_dict[group_id]'/></option>
         					</t>
-        				</t>
+        				</t> -->
         				
         			</select><br/>
         			State: 
