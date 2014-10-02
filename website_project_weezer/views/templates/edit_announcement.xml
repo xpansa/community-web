@@ -67,22 +67,20 @@
                                                    <!--  TODO: ERROR: File "/opt/openerp/odoo/openerp/models.py", line 5348, in __contains__
         raise except_orm("ValueError", "Mixing apples and oranges: %s in %s" % (item, self))
     QWebException: ('ValueError', 'Mixing apples and oranges: 1 in marketplace.tag()') -->
-                                                   <!--  <t t-foreach="tag_dict.keys()" t-as="tag_id">
+                                                    <!-- <t t-foreach="tag_dict.keys()" t-as="tag_id">
                                                         <t t-if="tag_id in announcement.tag_ids">
                                                             <option selected="selected" t-att-value='tag_id'><span t-esc='tag_dict[tag_id]'/></option>
                                                         </t>
                                                         <t t-if="tag_id not in announcement.tag_ids">
                                                             <option t-att-value='tag_id'><span t-esc='tag_dict[tag_id]'/></option>
                                                         </t>
-                                                    </t> -->
-                                                </select>
+                                                    </t>
+ -->                                                </select>
                                             </div>
                                         
                                             <label class="col-md-1 control-label" for="groups">Groups</label>
                                             <div class="col-md-3">
-                                                <!-- TODO: RROR: "'marketplace.announcement' object has no attribute 'context_group_ids'" while evaluating
-    'bool(announcement.context_group_ids) == False' -->
-                                                <!-- <select id="groups" class="selectpicker form-control" name="groups" multiple="multiple">
+                                                <select id="groups" class="selectpicker form-control" name="groups" multiple="multiple">
                                                     <t t-if="bool(announcement.context_group_ids) == False">
                                                         <option selected="selected"></option>                      
                                                     </t>
@@ -91,7 +89,7 @@
                                                             <option selected="selected"><t t-esc='group.name'/></option>
                                                         </t>
                                                     </t>
-                                                </select> -->
+                                                </select>
                                             </div>
                 
                                         </div>
@@ -252,13 +250,6 @@
                                             </div>
                                         </div>
                                         
-                                        <div class="form-group">
-                                            <div class="col-md-9 col-md-offset-3 control-label">
-                                                <input type="checkbox" id="unique"/>
-                                                <label for="unique">Unique</label>
-                                                <!-- TODO UNIQUE -->
-                                            </div>
-                                        </div>
                                     </div>
                                         
                                     <div class="col-md-3">
@@ -266,7 +257,6 @@
                                         
                                         <div class="form-group">
                                             <div class="col-md-5 control-label">
-                                                <!-- TODO: FIX INFINITE -->
                                                 <t t-if="announcement.infinite_qty == False">
                                                     <input name="unlimited" type="checkbox"/>
                                                 </t>
@@ -284,9 +274,21 @@
                                         <div class="form-group">
                                             <label class="col-md-5 control-label" for="units">Units</label>
                                             <div class="col-md-7">
-                                                <!-- TODO: get all units -->
-                                                <select id="units" class="selectpicker form-control">
-                                                    <option><t t-esc="announcement.uom_id.name"/></option>
+                                                <select name="uom_id" class="selectpicker form-control">
+                                                    <t t-if="bool(announcement.uom_id) == False">
+                                                        <option value="None" selected="selected"></option>                      
+                                                    </t> 
+                                                    <t t-if="bool(announcement.uom_id) != False">
+                                                        <option value="None"></option>                      
+                                                    </t>
+                                                    <t t-foreach="uom_dict.keys()" t-as="uom_id">
+                                                        <t t-if="uom_id == announcement.uom_id.id">
+                                                            <option selected="selected" t-att-value='uom_id'><t t-esc='uom_dict[uom_id]'/></option>
+                                                        </t>
+                                                        <t t-if="uom_id != announcement.uom_id.id">
+                                                            <option t-att-value='uom_id'><t t-esc='uom_dict[uom_id]'/></option>                         
+                                                        </t>
+                                                    </t>
                                                 </select>
                                             </div>
                                         </div>

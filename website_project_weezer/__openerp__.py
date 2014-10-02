@@ -57,6 +57,7 @@ Website Marketplace
         'views/templates/single_reply.xml',
         'views/templates/view_announcement.xml',
         'views/templates/edit_announcement.xml',
+        'views/templates/new_announcement.xml',
         'views/templates/profile_edit_template.xml',
         'views/templates/profile_view_template.xml',
         'views/templates/register_template.xml',

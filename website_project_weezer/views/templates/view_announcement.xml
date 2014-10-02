@@ -66,8 +66,7 @@
                                     
                                         <label class="col-md-1 control-label" for="groups">Groups</label>
                                         <div class="col-md-3">
-                                            <!-- TODO CHECK GROUPS -->
-                                            <!-- <select id="groups" class="selectpicker form-control" name="groups" multiple="multiple" disabled="disabled">
+                                            <select id="groups" class="selectpicker form-control" name="groups" multiple="multiple" disabled="disabled">
                                                 <t t-if="bool(announcement.context_group_ids) == False">
                                                     <option selected="selected"></option>                      
                                                 </t>
@@ -76,7 +75,7 @@
                                                         <option selected="selected"><t t-esc='group.name'/></option>
                                                     </t>
                                                 </t>
-                                            </select> -->
+                                            </select>
                                         </div>
             
                                     </div>
@@ -193,20 +192,12 @@
                                 </div>
                                 
                                 <div class="form-group">
-                                    <!-- TODO: WHERE THIS COMES FROM? -->
                                     <label class="col-md-3 control-label" for="date-picker-2">To</label>
                                     <div class="col-md-9">
                                         <input id="date-picker-2" type="text" class="form-control" t-att-value="announcement.date_to" placeholder="DD/MM/YYYY" readonly="readonly"/>
                                     </div>
                                 </div>
                                 
-                                <div class="form-group">
-                                    <div class="col-md-9 col-md-offset-3 control-label">
-                                        <input type="checkbox" id="unique" disabled="disabled" readonly="readonly"/>
-                                        <label for="unique">Unique</label>
-                                        <!-- TODO UNIQUE -->
-                                    </div>
-                                </div>
                             </div>
                                 
                             <div class="col-md-3">

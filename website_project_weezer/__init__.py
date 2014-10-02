@@ -20,6 +20,7 @@
 ##############################################################################
 
 from controllers import announcement_detail
+from controllers import member_list
 from controllers import profile
 from controllers import search
 from models import marketplace
