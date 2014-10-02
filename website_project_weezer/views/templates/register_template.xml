@@ -6,19 +6,19 @@
         <section class="pb64 pt16">
             <div class="container">
                 <div class="col-md-12 mt32">
-                    <h2 class="mb32">My membership<small> — You are a Ninja</small></h2>
+                    <h2 class="mb32">My membership
+                        <t t-if="membership">
+                            <small> — You are a <t t-esc="membership.name"/></small>
+                        </t>
+                    </h2>
                 </div>
-                
-                <div class="col-md-2 col-md-offset-1">
-                    <button class="btn-nolink btn btn-success btn-block disabled">Become a Ninja</button>
-                </div>
-                <div class="col-md-2 col-md-offset-2">
-                    <button class="btn-nolink btn btn-warning btn-block">Become an Amateur</button>
-                </div>
-                <div class="col-md-2 col-md-offset-2">
-                    <button class="btn-nolink btn btn-danger btn-block">Become a Tourist</button>
-                </div>
-                
+                <t t-set="mship_counter" t-value="1"/>
+                <t t-foreach="memberships" t-as="mship">
+                    <div t-att-class="'col-md-2 col-md-offset-%s' % mship_counter">
+                        <button t-att-name="'membership[%s]' % mship[0]" type="submit" class="btn-nolink btn btn-success btn-block">Become a <t t-esc="mship[1]"/></button>
+                    </div>
+                    <t t-set="mship_counter" t-value="2"/>
+                </t>
             </div>
 
         </section>

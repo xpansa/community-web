@@ -19,19 +19,22 @@
 #
 ##############################################################################
 
+import openerp
 from openerp import SUPERUSER_ID
 from openerp.addons.web import http
 from openerp.addons.web.http import request
 from openerp.addons.website.controllers.main import Website as controllers
-from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
+import openerp.addons.auth_signup.controllers.main as auth_main
+from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
 from openerp.tools.translate import _
 
 import base64
-from datetime import datetime
+from datetime import datetime, timedelta
 import re
 from search import get_date_format
 from search import format_text
 import time
+import werkzeug
 
 
 class profile_controller(http.Controller):
@@ -40,7 +43,7 @@ class profile_controller(http.Controller):
                       'country_id', 'birthdate', 'email', 'phone', 'mobile', 'image']
     LAST_EXCHANGES_LIMIT = 3
     ANNOUNCEMENT_LIMIT = 3
-    date_format = '%d-%m-%Y'
+    date_format = '%Y-%m-%d'
 
     def profile_parse_partner(self, partner):
         """
@@ -185,6 +188,10 @@ class profile_controller(http.Controller):
                                 }
                             else:
                                 values['balances'][key2][balance_number].update({key: val})
+            elif k.startswith('membership'):
+                membership_id = re.search('membership\[(\d+)\]', k)
+                if membership_id:
+                    values['membership'] = membership_id.group(1)
         for key in ['new', 'existing']:
             values['limits'][key] = [val for k, val in values['limits'][key].iteritems()]
             values['balances'][key] = [val for k, val in values['balances'][key].iteritems()]
@@ -305,6 +312,7 @@ class profile_controller(http.Controller):
         limit_pool = registry.get('res.partner.centralbank.currency')
         balance_pool = registry.get('res.partner.centralbank.balance')
         data_pool = registry.get('ir.model.data')
+        product_pool = registry.get('product.product')
 
         partner_data = data['partner'].copy()
         if partner_data['birthdate']:
@@ -381,6 +389,11 @@ class profile_controller(http.Controller):
                     'currency_id': int(balance['currency']),
                     'partner_id': partner.id,
                 }, context=context)
+
+        # Assign membership
+        if 'membership' in data:
+            membership_product = product_pool.browse(cr, uid, int(data['membership']), context=context)
+            partner.create_membership_invoice(int(data['membership']), {'amount': membership_product.lst_price})
 
     @http.route('/marketplace/profile/edit/<model("res.partner"):partner>', type='http', auth="user", website=True)
     def profile_edit(self, partner, **kw):
@@ -471,6 +484,13 @@ class profile_controller(http.Controller):
         tags = tag_pool.name_search(cr, uid, term, [], context=context)
         return [{'label': s[1], 'id': s[0], 'value': s[1]} for s in tags]
 
+    def get_partner_membership(self, partner):
+        today = datetime.today()
+        for line in partner.member_lines:
+            if line.state == 'paid' and line.date_from <= today and line.date_to >= today:
+                return line.product_id
+        return False
+
     @http.route('/marketplace/register-part2', type='http', auth="public", website=True)
     def register_part2(self, **kw):
         cr, uid, context, registry = request.cr, request.uid, request.context, request.registry
@@ -478,6 +498,7 @@ class profile_controller(http.Controller):
         title_pool = registry.get('res.partner.title')
         country_pool = registry.get('res.country')
         state_pool = registry.get('res.country.state')
+        product_pool = registry.get('product.product')
         config_currency_pool = registry.get('account.centralbank.config.currency')
         curr_config_ids = config_currency_pool.search(cr, uid, [], context=context)
         curr_config_lines = config_currency_pool.read(cr, uid, curr_config_ids, 
@@ -487,17 +508,44 @@ class profile_controller(http.Controller):
         values = {
             'errors': {},
             'partner': partner,
+            'membership': self.get_partner_membership(partner),
             'images': self.profile_images(partner),
             'partner_titles': title_pool.name_search(cr, uid, '', [], context=context),
             'countries': country_pool.name_search(cr, uid, '', [], context=context),
+            'memberships': product_pool.name_search(cr, uid, '',[
+                ('membership', '=', True),
+                ('membership_date_from', '<=', datetime.today()),
+                ('membership_date_to', '>=', datetime.today())], context=context),
             'states': state_pool.name_search(cr, uid, '', [], context=context),
             'currencies': [(c['currency_id'][0], c['currency_id'][1]) for c in curr_config_lines],
             'date_placeholder': self.date_format.replace('%d','DD').replace('%m','MM').replace('%Y','YYYY'),
         }
         if kw:
             values['profile'] = self.profile_parse_data(kw)
+            values['errors'] = self.profile_form_validate(values['profile'])
+            if not values['errors']:
+                self.profile_save(partner, values['profile'])
+                request.session['profile_saved'] = True
+                return request.redirect("/marketplace/profile/%s" % partner.id)
         else:
             values['profile'] = self.profile_parse_partner(partner)
         return request.website.render("website_project_weezer.register_part_2", values)
 
 
+class MarketPlaceHome(auth_main.AuthSignupHome):
+
+    @http.route('/web/signup', type='http', auth='public', website=True)
+    def web_auth_signup(self, *args, **kw):
+        qcontext = self.get_auth_signup_qcontext()
+
+        if not qcontext.get('token') and not qcontext.get('signup_enabled'):
+            raise werkzeug.exceptions.NotFound()
+
+        if 'error' not in qcontext and request.httprequest.method == 'POST':
+            try:
+                self.do_signup(qcontext)
+                return super(AuthSignupHome, self).web_login(redirect='/marketplace/register-part2', **kw)
+            except (SignupError, AssertionError), e:
+                qcontext['error'] = _(e.message)
+
+        return request.render('auth_signup.signup', qcontext)
