@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <template id="website_project_weezer.new_announcement" name="New announcement">
+
+            <t t-call="website.layout">
+
+                <t t-call="website_project_weezer.mp_search_form"/>
+
+                <div class="oe_structure"/>
+                    <div class="oe_structure">
+
+                    <div class="container">
+
+                        <t t-if='error_message_list'>
+                            <t t-foreach="error_message_list" t-as="message">
+                                <div class="alert alert-danger"><t t-esc="message"/></div>
+                            </t>
+                        </t>
+
+                        <t t-if='success_message_list'>
+                            <t t-foreach="success_message_list" t-as="message">
+                                <div class="alert alert-success"><t t-esc="message"/></div>
+                            </t>
+                        </t>
+                    </div>
+                    
+                    <section class="container mt32">
+                        <form action="new/save" method="POST" enctype="multipart/form-data">
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <div class="form-horizontal col-md-12">
+                                        <div class="form-group">
+                
+                                            <label class="col-md-2 control-label" for="category">Category</label>
+                                            <div class="col-md-2">
+                                                <select id="category" name="category_id" class="selectpicker form-control">
+                                                    <t t-foreach="category_dict.keys()" t-as="category_id">
+                                                        <option t-att-value='category_id'><span t-esc='category_dict[category_id]'/></option>
+                                                    </t>
+                                                </select>
+                                            </div>
+                                  
+                                            <label class="col-md-1 control-label" for="tags">Tags</label>
+                                            <div class="col-md-3">
+                                                <select name="tag_ids" multiple="multiple" class="selectpicker form-control">
+                                                    <option value="None" selected="selected"></option>                      
+                                                    <!-- Must be added with tags from get tag request -->
+                                                </select>
+                                            </div>
+                                        
+                                            <label class="col-md-1 control-label" for="groups">Groups</label>
+                                            <div class="col-md-3">
+                                                <select name="groups" multiple="multiple" class="selectpicker form-control">
+                                                    <option value="None" selected="selected"></option>                      
+                                                    <t t-foreach="group_dict.keys()" t-as="group_id">
+                                                        <option t-att-value='group_id'><t t-esc='group_dict[group_id]'/></option>
+                                                    </t>
+                                                </select>
+                                            </div>
+                
+                                        </div>
+                                    </div>
+                              </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-8 text-right">
+                                    <div class="text-left col-md-9 m16 mb16">
+                                        <div class="row mt16">
+                                            <div class="col-md-12">
+
+                                                <!-- TODO: make multiple upload possible-->
+                                                <span class="btn btn-primary btn-file">
+                                                    Upload new document 
+                                                    <input type="file" name="document" multiple="multiple"/>
+                                                </span>  
+                                                <div class="files-to-upload mt8 mb8"/>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="text-right col-md-3 m16 mb16">
+                                        <div class="row">
+                                            <input placeholder="Website" type="text" name="link" class="form-control"/>
+                                        </div>  
+                                    </div>  
+                                </div>  
+                            </div>
+                
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <div class="col-md-12 mb8">
+                                        <input name="emergency" type="checkbox"/>
+                                        <label for="emergency">Emergency</label>
+                                    </div>
+                                    <div class="col-md-12">
+                                        
+                                        <span class="btn btn-primary btn-file mt16">
+                                            Upload picture 
+                                            <input type="file" name="picture"/>
+                                        </span>  
+                                        <div class="files-to-upload mt8 mb8"/>
+
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-5">
+                                    <input placeholder="Title" name="title" class="form-control"/> 
+                                    <h5>Description</h5>
+                                    <textarea class="form-control" rows="6" cols="20" name="description"/>
+                                </div>
+                
+                                <div class="col-md-4">
+                                   
+                                    <div class="form-group mt16">
+                                        <div class="col-md-9 pull-right">
+                                          <input placeholder="Author" type="text" class="form-control" t-att-value="author.name" readonly="readonly"/>
+                                        </div>
+                                        <div class="col-md-9 pull-right mt16">
+                                          <span t-field="author.image" t-field-options='{"widget": "image", "class": "thumbnail mb16"}'/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                
+                            <div class="form-horizontal">
+                                <div class="row mt32">
+                                    <div class="col-md-3">
+                                        <h4 class="mb16">Where?</h4>
+                                        
+                                        <div class="form-group">
+                                            <div class="col-xs-12">
+                                                <input placeholder="Street" name="street" type="text" class="form-control"/>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-xs-12">
+                                                <input placeholder="Street2" name="street2" type="text" class="form-control"/>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-xs-5 no-padding-right">
+                                                <input placeholder="Zip" name="zip" type="text" class="form-control"/>
+                                            </div>
+                                            <div class="col-xs-7">
+                                                <input placeholder="City" name="city" type="text" class="form-control"/>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-xs-5 no-padding-right">
+                                                <select name="state_id" class="selectpicker form-control"> 
+                                                    <option value="None" selected="selected"></option>                      
+                                                    <t t-foreach="us_state_dict.keys()" t-as="state_id">
+                                                        <option t-att-value='state_id'><t t-esc='us_state_dict[state_id]'/></option>
+                                                    </t>
+                                                </select>
+                                            </div>
+                                            <div class="col-xs-7">
+                                               <select name="country_id" class="selectpicker form-control">
+                                                    <option value="None" selected="selected"></option>                      
+                                                    <t t-foreach="country_dict.keys()" t-as="country_id">
+                                                        <option t-att-value='country_id'><t t-esc='country_dict[country_id]'/></option>                         
+                                                    </t>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="col-md-3">
+                                        <h4 class="mb16">When?</h4>
+                                        
+                                        <div class="form-group">
+                                            <label class="col-md-3 control-label" for="date-picker-1">From</label>
+                                            <div class="col-md-9">
+                                                <input name="date_from" type="text" class="date-picker form-control" placeholder="DD-MM-YYYY" readonly="readonly"/>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="form-group">
+                                            <label class="col-md-3 control-label" for="date-picker-2">To</label>
+                                            <div class="col-md-9">
+                                                <input name="date_to" id="date-picker-2" type="text" class="date-picker form-control" placeholder="DD-MM-YYYY" readonly="readonly"/>
+                                            </div>
+                                        </div>
+                                        
+                                    </div>
+                                        
+                                    <div class="col-md-3">
+                                        <h4 class="mb16">Quantity?</h4>
+                                        
+                                        <div class="form-group">
+                                            <div class="col-md-5 control-label">
+                                                <input name="unlimited" type="checkbox"/>
+                                                <label for="quantity">Infinite</label>
+                                            </div>
+                                            <div class="col-md-7">
+                                                <input placeholder="Quantity" name="qty" id="quantity" type="text" class="form-control"/>
+                                            </div>
+
+                                        </div>
+                                        
+                                        <div class="form-group">
+                                            <label class="col-md-5 control-label" for="units">Units</label>
+                                            <div class="col-md-7">
+                                                <select name="uom_id" class="selectpicker form-control">
+                                                    <option value="None"></option>                      
+                                                    <t t-foreach="uom_dict.keys()" t-as="uom_id">
+                                                        <option t-att-value='uom_id'><t t-esc='uom_dict[uom_id]'/></option>                         
+                                                    </t>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="form-group">
+                                            <label class="col-md-5 control-label" for="available">Available</label>
+                                            <div class="col-md-7">
+                                                <input id="available" type="text" class="form-control" placeholder="Available" readonly="readonly"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="col-md-3">
+                                        <h4 class="mb16">How much?</h4>
+
+                                        <div class="list-item form-group">
+                                            <div class="col-xs-5 no-padding-right">
+                                                <input placeholder="Amount" class="form-control" name="currency_amount1"/>
+                                            </div>
+                                            <div class="col-xs-5 no-padding-right">
+                                                <select name="currency_uom1" class="selectpicker form-control"> 
+                                                    <t t-foreach="currency_dict.keys()" t-as="currency_id">
+                                                        <option t-att-value='currency_id'><t t-esc='currency_dict[currency_id]'/></option>
+                                                    </t>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="list-item form-group">
+                                            <div class="col-xs-5 no-padding-right">
+                                                <input placeholder="Amount" class="form-control" name="currency_amount2"/>
+                                            </div>
+                                            <div class="col-xs-5 no-padding-right">
+                                                <select name="currency_uom2" class="selectpicker form-control"> 
+                                                    <t t-foreach="currency_dict.keys()" t-as="currency_id">
+                                                        <option t-att-value='currency_id'><t t-esc='currency_dict[currency_id]'/></option>
+                                                    </t>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="list-item form-group">
+                                            <div class="col-xs-5 no-padding-right">
+                                                <input placeholder="Amount" class="form-control" name="currency_amount3"/>
+                                            </div>
+                                            <div class="col-xs-5 no-padding-right">
+                                                <select name="currency_uom3" class="selectpicker form-control"> 
+                                                    <t t-foreach="currency_dict.keys()" t-as="currency_id">
+                                                        <option t-att-value='currency_id'><t t-esc='currency_dict[currency_id]'/></option>
+                                                    </t>
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                  </div>
+                                </div>
+                            </div>
+                            <button type="submit" name="submit" class="btn btn-success pull-right mb64">Submit</button>
+                        </form>
+                    </section>
+                </div>
+                <div class="oe_structure"/>
+            </t>
+        </template>
+    </data>
+</openerp>

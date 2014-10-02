@@ -67,7 +67,7 @@
                                                    <!--  TODO: ERROR: File "/opt/openerp/odoo/openerp/models.py", line 5348, in __contains__
         raise except_orm("ValueError", "Mixing apples and oranges: %s in %s" % (item, self))
     QWebException: ('ValueError', 'Mixing apples and oranges: 1 in marketplace.tag()') -->
-                                                    <t t-foreach="tag_dict.keys()" t-as="tag_id">
+                                                    <!-- <t t-foreach="tag_dict.keys()" t-as="tag_id">
                                                         <t t-if="tag_id in announcement.tag_ids">
                                                             <option selected="selected" t-att-value='tag_id'><span t-esc='tag_dict[tag_id]'/></option>
                                                         </t>
@@ -75,7 +75,7 @@
                                                             <option t-att-value='tag_id'><span t-esc='tag_dict[tag_id]'/></option>
                                                         </t>
                                                     </t>
-                                                </select>
+ -->                                                </select>
                                             </div>
                                         
                                             <label class="col-md-1 control-label" for="groups">Groups</label>
