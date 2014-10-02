@@ -168,6 +168,7 @@ class announcement_controller(http.Controller):
                 ('category_id', 'category_id', 'marketplace.announcement.category', 'There is no such category'),
                 ('country_id', 'country_id', 'res.country', 'There is no such country'),
                 ('state_id', 'state_id', 'res.country.state', 'There is no such state'),
+                ('uom_id', 'uom_id', 'product.uom', 'There is no such unit of measure'),
             ]
 
             o2m_param_list = [
@@ -507,7 +508,8 @@ class announcement_controller(http.Controller):
                 'currency_dict': self.get_all_records(cr, uid, request.registry, 'res.currency', context=context),
                 'group_dict': self.get_all_records(cr, uid, request.registry, 'mail.group', context=context),
                 'attachment_dict': self.get_attachment_dict(cr, uid, request.registry, announcement, context=context),
-                'tag_dict': self.get_tag_dict_by_category(cr, uid, request.registry, announcement.category_id.id, context=context)
+                'tag_dict': self.get_tag_dict_by_category(cr, uid, request.registry, announcement.category_id.id, context=context),
+                'uom_dict': self.get_all_records(cr, uid, registry, 'product.uom', context=context),
             }
 
     @http.route('/marketplace/announcement_detail/<model("marketplace.announcement"):announcement>/edit', type='http', auth="public", website=True)
@@ -578,7 +580,7 @@ class announcement_controller(http.Controller):
         return responce
 
     def _get_new_announcement_dict(self, cr, uid, registry, partner, context=None):
-    	""" Return dict of values needed to new announcement template
+        """ Return dict of values needed to new announcement template
         """
         return {
             'author': partner,
@@ -589,6 +591,7 @@ class announcement_controller(http.Controller):
                                                             'marketplace.announcement.category', context=context),
             'currency_dict': self.get_all_records(cr, uid, registry, 'res.currency', context=context),
             'group_dict': self.get_all_records(cr, uid, registry, 'mail.group', context=context),
+            'uom_dict': self.get_all_records(cr, uid, registry, 'product.uom', context=context),
         }
 
     @http.route('/marketplace/announcement_detail/new', type='http', auth="public", website=True)

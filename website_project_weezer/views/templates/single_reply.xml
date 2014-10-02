@@ -14,9 +14,12 @@
                                     <span t-field="reply.create_uid.image" t-field-options='{"widget": "image", "class": "thumbnail"}'/>
                                 </div>
                                 <div class="col-md-8">
-                                    <!-- TODO USER STATUS -->
-                                    <h5>Ninja Ninja Ninja</h5>
-                                    <p class="text-muted" t-field="reply.create_uid.name"/>
+                                    <h5><t t-esc="reply.create_uid.name"/></h5>
+                                    <t t-foreach="reply.create_uid.member_lines" t-as="member_line">
+                                        <p class="text-muted">
+                                            <t t-esc="member_line.membership_id.name"/>
+                                        </p>
+                                    </t>
                                 </div>
                             
                                 <div class="col-md-12">
@@ -91,8 +94,7 @@
                                             </thead>
                                             <tbody>
                                                 <tr class="list-item">
-                                                    <!-- TODO RAT. -->
-                                                    <td><input type="text" class="form-control" readonly="readonly"/></td>
+                                                    <td><input type="text" class="form-control" readonly="readonly" t-att-value="reply.vote_average"/></td>
                                                     <!-- TODO INDICAT. -->
                                                     <td><input type="text" class="form-control" readonly="readonly"/></td>
                                                 </tr>
@@ -104,8 +106,7 @@
                                 <div class="row mt32">
                                     <div class="col-md-12">
                                         <label>Feedback</label>
-                                        <!-- TODO FEEDBACK -->
-                                        <textarea class="form-control" rows="3" readonly="readonly"></textarea>
+                                        <textarea class="form-control" rows="3" readonly="readonly"><t t-esc="reply.message_summary"/></textarea>
                                     </div>
                                 </div>
                             </div>

@@ -19,19 +19,22 @@
 #
 ##############################################################################
 
+import openerp
 from openerp import SUPERUSER_ID
 from openerp.addons.web import http
 from openerp.addons.web.http import request
 from openerp.addons.website.controllers.main import Website as controllers
+import openerp.addons.auth_signup.controllers.main as auth_main
 from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
 from openerp.tools.translate import _
 
 import base64
-from datetime import datetime
+from datetime import datetime, timedelta
 import re
 from search import get_date_format
 from search import format_text
 import time
+import werkzeug
 
 
 class profile_controller(http.Controller):
@@ -185,6 +188,10 @@ class profile_controller(http.Controller):
                                 }
                             else:
                                 values['balances'][key2][balance_number].update({key: val})
+            elif k.startswith('membership'):
+                membership_id = re.search('membership\[(\d+)\]', k)
+                if membership_id:
+                    values['membership'] = membership_id.group(1)
         for key in ['new', 'existing']:
             values['limits'][key] = [val for k, val in values['limits'][key].iteritems()]
             values['balances'][key] = [val for k, val in values['balances'][key].iteritems()]
@@ -305,6 +312,7 @@ class profile_controller(http.Controller):
         limit_pool = registry.get('res.partner.centralbank.currency')
         balance_pool = registry.get('res.partner.centralbank.balance')
         data_pool = registry.get('ir.model.data')
+        product_pool = registry.get('product.product')
 
         partner_data = data['partner'].copy()
         if partner_data['birthdate']:
@@ -381,6 +389,11 @@ class profile_controller(http.Controller):
                     'currency_id': int(balance['currency']),
                     'partner_id': partner.id,
                 }, context=context)
+
+        # Assign membership
+        if 'membership' in data:
+            membership_product = product_pool.browse(cr, uid, int(data['membership']), context=context)
+            partner.create_membership_invoice(int(data['membership']), {'amount': membership_product.lst_price})
 
     @http.route('/marketplace/profile/edit/<model("res.partner"):partner>', type='http', auth="user", website=True)
     def profile_edit(self, partner, **kw):
@@ -509,8 +522,30 @@ class profile_controller(http.Controller):
         }
         if kw:
             values['profile'] = self.profile_parse_data(kw)
+            values['errors'] = self.profile_form_validate(values['profile'])
+            if not values['errors']:
+                self.profile_save(partner, values['profile'])
+                request.session['profile_saved'] = True
+                return request.redirect("/marketplace/profile/%s" % partner.id)
         else:
             values['profile'] = self.profile_parse_partner(partner)
         return request.website.render("website_project_weezer.register_part_2", values)
 
 
+class MarketPlaceHome(auth_main.AuthSignupHome):
+
+    @http.route('/web/signup', type='http', auth='public', website=True)
+    def web_auth_signup(self, *args, **kw):
+        qcontext = self.get_auth_signup_qcontext()
+
+        if not qcontext.get('token') and not qcontext.get('signup_enabled'):
+            raise werkzeug.exceptions.NotFound()
+
+        if 'error' not in qcontext and request.httprequest.method == 'POST':
+            try:
+                self.do_signup(qcontext)
+                return super(AuthSignupHome, self).web_login(redirect='/marketplace/register-part2', **kw)
+            except (SignupError, AssertionError), e:
+                qcontext['error'] = _(e.message)
+
+        return request.render('auth_signup.signup', qcontext)
