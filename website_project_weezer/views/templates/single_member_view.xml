@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <template id="single_member_view" name="Single Member View">
+            <!-- single item -->
+            <div class="col-md-6 member member-tourist">
+                <div class="col-md-12 thumbnail mb32">
+                    <div class="col-md-3 mt16">
+                        <span t-field="member.image" t-field-options='{"widget": "image", "class": "thumbnail"}'/>
+                        <div class="clearfix"></div>
+                        <p class="text-muted mt8" t-field="member.name"/>
+                    </div>
+                    
+                    <div class="col-md-9 col-sm-9 mt16">
+                        <div class="col-md-8">
+                            <h3 class="mt0" t-field="member.name"/>
+                            <h5 t-field="member.comment"/>
+                        </div>
+                        <div class="col-md-4">
+                            <t t-foreach="member.member_lines" t-as="line">
+                                <span class="badge badge-warning pull-right mt4" t-field="line.membership_id.name"/>
+                            </t>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <t t-foreach="member.skill_tag_ids" t-as="tag">
+                                <span class="label label-primary" t-field="tag.name"/>
+                            </t>
+                            <t t-foreach="member.skill_category_ids" t-as="category">
+                                <span class="label label-primary" t-field="category.name"/>
+                            </t>
+                        </div>
+                        <div class="col-md-6">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Amount</th>
+                                        <th>Curreny</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr t-foreach="member.centralbank_balance_ids" t-as="limit">
+                                        <td><t t-field="limit.available"/></td>
+                                        <td><t t-field="limit.currency_id.name"/></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- /single item -->
+        </template>
+    </data>
+</openerp>

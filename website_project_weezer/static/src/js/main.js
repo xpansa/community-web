@@ -154,6 +154,12 @@ $(document).ready(function(){
         $(e.target).parent().next('.files-to-upload').append(allFiles);
     });
 
+    // MEMBERS WRAP
+    var divs = $("#members-list > .member");
+    for(var i = 0; i < divs.length; i+=2) {
+      divs.slice(i, i+2).wrapAll("<div class='row'></div>");
+    }
+
 });
 
 

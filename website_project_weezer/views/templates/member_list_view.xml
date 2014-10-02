@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <template id="member_list_view" name="Mamber list">
+            <t t-call="website.layout">
+                <!-- members listing -->
+                <section class="bg-info">
+                    <div class="container pt32 pb32">
+
+                        <div class="col-md-12"><h2>Our Members</h2></div>
+                        
+                        <div class="col-md-12">
+
+                            <div id="members-list">
+                                <t t-foreach="member_list" t-as="member">
+
+                                    <t t-call="website_project_weezer.single_member_view"/>
+
+                                </t>
+                            </div>
+                        
+                        </div>   
+
+                        <div class="col-md-12 mt16 mb32">
+                            <t t-if="page &gt; 1">
+                                <a t-att-href="prev_url" class="btn text-center btn-primary pull-left">Previous page</a>
+                            </t>
+                            <t t-if="page &lt; page_count">
+                               <a t-att-href="next_url" class="btn text-center btn-primary pull-right">Next page</a>
+                            </t>
+                        </div>         
+
+                    </div>
+                </section>
+                <!-- /members listing -->
+            </t>
+        </template>
+    </data>
+</openerp>

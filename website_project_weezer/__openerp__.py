@@ -59,6 +59,8 @@ Website Marketplace
         'views/templates/profile_edit_template.xml',
         'views/templates/profile_view_template.xml',
         'views/templates/register_template.xml',
+        'views/templates/member_list_view.xml',
+        'views/templates/single_member_view.xml',
         'security/ir.model.access.csv'
     ],
     'installable': True
