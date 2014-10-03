@@ -84,7 +84,7 @@ class profile_controller(http.Controller):
                 'existing': [
                     {
                         'id': balance.id,
-                        'amount': balance.limit_positive_value,
+                        'amount': balance.available,
                         'currency': balance.currency_id.id,
                     } for balance in partner.centralbank_balance_ids
                 ],
@@ -313,6 +313,8 @@ class profile_controller(http.Controller):
         balance_pool = registry.get('res.partner.centralbank.balance')
         data_pool = registry.get('ir.model.data')
         product_pool = registry.get('product.product')
+        invoice_pool = registry.get('account.invoice')
+        balance_pool = registry.get('res.partner.centralbank.balance')
 
         partner_data = data['partner'].copy()
         if partner_data['birthdate']:
@@ -393,7 +395,25 @@ class profile_controller(http.Controller):
         # Assign membership
         if 'membership' in data:
             membership_product = product_pool.browse(cr, uid, int(data['membership']), context=context)
-            partner.create_membership_invoice(int(data['membership']), {'amount': membership_product.lst_price})
+            inv_ids = partner.create_membership_invoice(int(data['membership']), {'amount': membership_product.lst_price})
+            if inv_ids:
+                invoice = invoice_pool.browse(cr, uid, inv_ids[0], context=context)
+                balance_found = False
+                for balance in partner.centralbank_balance_ids:
+                    if balance.currency_id.id == invoice.currency_id.id:
+                        balance.write({
+                            'available': balance.available-membership_product.lst_price
+                        })
+                        balance_found = True
+                        break
+                if not balance_found:
+                    balance_pool.create(cr, uid, {
+                        'partner_id': partner.id,
+                        'available': -membership_product.lst_price,
+                        'currency_id': invoice.currency_id.id
+                    }, context=context)
+
+
 
     @http.route('/marketplace/profile/edit/<model("res.partner"):partner>', type='http', auth="user", website=True)
     def profile_edit(self, partner, **kw):
