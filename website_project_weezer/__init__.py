@@ -19,6 +19,7 @@
 #
 ##############################################################################
 
+from controllers import main
 from controllers import announcement_detail
 from controllers import member_list
 from controllers import profile

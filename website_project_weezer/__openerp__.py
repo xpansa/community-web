@@ -63,6 +63,7 @@ Website Marketplace
         'views/templates/register_template.xml',
         'views/templates/member_list_view.xml',
         'views/templates/single_member_view.xml',
+        'views/templates/home.xml',
         'security/ir.model.access.csv'
     ],
     'installable': True

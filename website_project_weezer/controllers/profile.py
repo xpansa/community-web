@@ -24,7 +24,6 @@ from openerp import SUPERUSER_ID
 from openerp.addons.web import http
 from openerp.addons.web.http import request
 from openerp.addons.website.controllers.main import Website as controllers
-import openerp.addons.auth_signup.controllers.main as auth_main
 from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
 from openerp.tools.translate import _
 
@@ -34,7 +33,6 @@ import re
 from search import get_date_format
 from search import format_text
 import time
-import werkzeug
 
 
 class profile_controller(http.Controller):
@@ -550,22 +548,3 @@ class profile_controller(http.Controller):
         else:
             values['profile'] = self.profile_parse_partner(partner)
         return request.website.render("website_project_weezer.register_part_2", values)
-
-
-class MarketPlaceHome(auth_main.AuthSignupHome):
-
-    @http.route('/web/signup', type='http', auth='public', website=True)
-    def web_auth_signup(self, *args, **kw):
-        qcontext = self.get_auth_signup_qcontext()
-
-        if not qcontext.get('token') and not qcontext.get('signup_enabled'):
-            raise werkzeug.exceptions.NotFound()
-
-        if 'error' not in qcontext and request.httprequest.method == 'POST':
-            try:
-                self.do_signup(qcontext)
-                return super(AuthSignupHome, self).web_login(redirect='/marketplace/register-part2', **kw)
-            except (SignupError, AssertionError), e:
-                qcontext['error'] = _(e.message)
-
-        return request.render('auth_signup.signup', qcontext)
