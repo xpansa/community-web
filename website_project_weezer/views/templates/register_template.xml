@@ -15,7 +15,7 @@
                 <t t-set="mship_counter" t-value="1"/>
                 <t t-foreach="memberships" t-as="mship">
                     <div t-att-class="'col-md-2 col-md-offset-%s' % mship_counter">
-                        <button t-att-name="'membership[%s]' % mship[0]" type="submit" class="btn-nolink btn btn-success btn-block">Become a <t t-esc="mship[1]"/></button>
+                        <button t-att-name="'membership[%s]' % mship[0]" type="submit" class="btn-nolink btn btn-success">Become a <t t-esc="mship[1]"/></button>
                     </div>
                     <t t-set="mship_counter" t-value="2"/>
                 </t>
@@ -40,16 +40,16 @@
                     <section class="bg-success pt64 pb64">
                         <div class="container">
                             <div class="col-md-12">
+                                <t t-if="'agreement' in errors">
+                                    <div class="alert alert-danger mt16" t-esc="errors['agreement']"/>
+                                </t>
+                            </div>
+                            <div class="col-md-12">
                                 <button class="btn btn-success btn-lg pull-right" type="submit">Register</button>
                                 <div class="checkbox">
                                     <label>
                                         <input type="checkbox" name="agreement" value="1"/> I agree with the <a href="#" class="btn-nolink">terms and conditions</a>.
                                     </label>
-                                    <t t-if="'agreement' in errors">
-                                        <p class="bg-danger">
-                                            <t t-esc="errors['agreement']"/>
-                                        </p>
-                                    </t>
                                 </div>
                             </div>
                         </div>

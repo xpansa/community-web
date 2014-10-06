@@ -54,8 +54,22 @@
                                 </t>
                             </div>
                         </section>
+
                     </div>
                     <div class="oe_structure"/>
+                </div>
+                
+                <div class="oe_structure">
+                    <section class="bg-success">
+                        <div class="container">
+                            <div class="row">
+                                <h3 class="text-center mt32">Found nothing?</h3>
+                                <div class="col-md-4 col-md-offset-4 mb32">
+                                    <a class="btn btn-lg btn-success btn-block" href="/marketplace/announcement_detail/new">Create your Announcement</a>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
                 </div>
             </t>
         </template>

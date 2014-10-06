@@ -97,34 +97,27 @@
                               </div>
                             </div>
 
-                            <div class="row">
-                                <div class="col-md-8 text-right">
-                                    <div class="text-left col-md-9 m16 mb16">
-                                        <t t-if="attachment_dict">
-                                            <t t-foreach="attachment_dict.keys()" t-as="attach">
-                                                <!-- TODO: FIX DELETE -->
-                                                <span class="label label-primary"><t t-esc='attachment_dict[attach]'/><a class="remove-attachment" t-att-href="attach"><i class="margin-left-10 glyphicon glyphicon-remove"/></a></span>
-                                            </t>
-                                        </t>
-                                        <div class="row mt16">
-                                            <div class="col-md-12">
-
-                                                <!-- TODO: make multiple upload possible-->
-                                                <span class="btn btn-primary btn-file">
-                                                    Upload new document 
-                                                    <input type="file" name="document" multiple="multiple"/>
-                                                </span>  
-                                                <div class="files-to-upload mt8 mb8"/>
-
-                                            </div>
+                            <div class="row mb16">
+                                <div class="col-md-8">
+                                    <div class="form-group">
+                
+                                        <label class="col-md-offset-3 col-md-2 control-label" for="documents">Documents</label>
+                                        <div class="col-md-3">
+                                            <!-- TODO: make multiple upload possible-->
+                                            <span class="btn btn-primary btn-file">
+                                                Upload new document 
+                                                <input type="file" name="document"/>
+                                            </span>  
+                                            <div class="files-to-upload mt8 mb8"/> 
                                         </div>
-                                    </div>
-                                    <div class="text-right col-md-3 m16 mb16">
-                                        <div class="row">
+                                    
+                                        <label class="col-md-1 control-label" for="link">Link</label>
+                                        <div class="col-md-3">
                                             <input placeholder="Website" type="text" name="link" t-att-value="announcement.link" class="form-control"/>
-                                        </div>  
-                                    </div>  
-                                </div>  
+                                        </div>
+                
+                                    </div>
+                                </div> 
                             </div>
                 
                             <div class="row">

@@ -77,10 +77,23 @@ openerp.website.theme.views['layout'] = openerp.Class.extend({
 	    $(document).on('fileselect', 'input[type="file"]', function(e, files){
 	        var allFiles = '';
 	        $.each(files,function(k,v){
-	            allFiles += '<span class="label label-warning margin-right-10">'+v+'</span>';
+	            allFiles += '<div class="label label-warning margin-right-10">'+v+'</div>';
 	        });
 	        $(e.target).parent().next('.files-to-upload').append(allFiles);
 	    });
+
+	    // DYNAMIC ELEMENT POSSITIONS ON APPEAR
+	    $('[data-appear-element]').each(function(){
+			var element = $(this);
+
+			$(element.attr('data-appear-element')).on('appear', function() {
+		    	element.addClass('appeared');
+		    }).appear();
+
+		    $(element.attr('data-disappear-element')).on('disappear', function() {
+		    	element.removeClass('appeared');
+		    }).appear();
+		});
 
     },
     
