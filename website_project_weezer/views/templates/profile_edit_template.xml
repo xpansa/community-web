@@ -13,7 +13,10 @@
                     <div class="mb32">
                         <img t-att-src="images['image_small']" class="img img-circle" width="40" height="40"/>
                         <div class="clearfix"></div>
-                        <span class="badge badge-success mt4"><t t-esc="partner.name"/></span>
+                        <t t-if="membership">
+                            <span class="badge badge-success mt4"><t t-esc="membership.name"/></span>
+                        </t>
+                        
                     </div>
                 </div>
                 <div class="col-md-8">

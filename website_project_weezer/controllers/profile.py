@@ -257,6 +257,7 @@ class profile_controller(http.Controller):
             'last_exchanges': self.profile_last_exchanges(partner.id),
             'wants': self.profile_announcements(partner.id, 'want'),
             'offers': self.profile_announcements(partner.id, 'offer'),
+            'membership': self.get_partner_membership(partner),
         }
         if data:
             values['profile'] = self.profile_parse_data(data)
@@ -393,9 +394,12 @@ class profile_controller(http.Controller):
         # Assign membership
         if 'membership' in data:
             membership_product = product_pool.browse(cr, uid, int(data['membership']), context=context)
-            inv_ids = partner.create_membership_invoice(int(data['membership']), {'amount': membership_product.lst_price})
+            inv_ids = partner_pool.create_membership_invoice(cr, SUPERUSER_ID, [partner.id], \
+                                                             int(data['membership']), 
+                                                             {'amount': membership_product.lst_price},
+                                                             context=context)
             if inv_ids:
-                invoice = invoice_pool.browse(cr, uid, inv_ids[0], context=context)
+                invoice = invoice_pool.browse(cr, SUPERUSER_ID, inv_ids[0], context=context)
                 balance_found = False
                 for balance in partner.centralbank_balance_ids:
                     if balance.currency_id.id == invoice.currency_id.id:
@@ -468,6 +472,7 @@ class profile_controller(http.Controller):
             'last_exchanges': self.profile_last_exchanges(partner.id),
             'birthdate': datetime.strptime(partner.birthdate, DEFAULT_SERVER_DATETIME_FORMAT).strftime(date_format) \
                         if partner.birthdate else '',
+            'membership': self.get_partner_membership(partner),
             'profile_saved': request.session.pop('profile_saved') if 'profile_saved' in request.session else False
         })
 
@@ -505,8 +510,11 @@ class profile_controller(http.Controller):
     def get_partner_membership(self, partner):
         today = datetime.today()
         for line in partner.member_lines:
-            if line.state == 'paid' and line.date_from <= today and line.date_to >= today:
-                return line.product_id
+            date_from = datetime.strptime(line.date_from, DEFAULT_SERVER_DATE_FORMAT)
+            date_to = datetime.strptime(line.date_to, DEFAULT_SERVER_DATE_FORMAT)
+            #TODO Add check on invoice paid state
+            if date_from <= today and date_to >= today:
+                return line.membership_id
         return False
 
     @http.route('/marketplace/register-part2', type='http', auth="public", website=True)
@@ -541,6 +549,8 @@ class profile_controller(http.Controller):
         if kw:
             values['profile'] = self.profile_parse_data(kw)
             values['errors'] = self.profile_form_validate(values['profile'])
+            if not kw.get('agreement', False):
+                values['errors']['agreement'] = _('Please read terms and make decision')
             if not values['errors']:
                 self.profile_save(partner, values['profile'])
                 request.session['profile_saved'] = True

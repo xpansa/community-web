@@ -20,8 +20,10 @@
 ##############################################################################
 
 import openerp
-import openerp.addons.auth_signup.controllers.main as auth_main
+from openerp.addons.auth_signup.controllers.main import AuthSignupHome
+from openerp.addons.auth_signup.res_users import SignupError
 from openerp.addons.web import http
+from openerp.tools.translate import _
 from openerp.http import request
 
 import werkzeug
@@ -38,19 +40,18 @@ class Website(http.Controller):
         return request.render('website_project_weezer.homepage', values)
 
 
-class MarketPlaceHome(auth_main.AuthSignupHome):
+class MarketPlaceHome(AuthSignupHome):
 
     @http.route('/web/signup', type='http', auth='public', website=True)
     def web_auth_signup(self, *args, **kw):
         qcontext = self.get_auth_signup_qcontext()
-
         if not qcontext.get('token') and not qcontext.get('signup_enabled'):
             raise werkzeug.exceptions.NotFound()
 
         if 'error' not in qcontext and request.httprequest.method == 'POST':
             try:
                 self.do_signup(qcontext)
-                return super(AuthSignupHome, self).web_login(redirect='/marketplace/register-part2', **kw)
+                return super(AuthSignupHome, self).web_login(redirect='/marketplace/register-part2')
             except (SignupError, AssertionError), e:
                 qcontext['error'] = _(e.message)
 

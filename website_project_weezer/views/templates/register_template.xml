@@ -43,8 +43,13 @@
                                 <button class="btn btn-success btn-lg pull-right" type="submit">Register</button>
                                 <div class="checkbox">
                                     <label>
-                                        <input type="checkbox"/> I agree with the <a href="#" class="btn-nolink">terms and conditions</a>.
+                                        <input type="checkbox" name="agreement" value="1"/> I agree with the <a href="#" class="btn-nolink">terms and conditions</a>.
                                     </label>
+                                    <t t-if="'agreement' in errors">
+                                        <p class="bg-danger">
+                                            <t t-esc="errors['agreement']"/>
+                                        </p>
+                                    </t>
                                 </div>
                             </div>
                         </div>

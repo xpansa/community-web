@@ -41,6 +41,7 @@ Website Marketplace
     'data': [
         'data/menu.xml',
         'data/marketplace_announcement_category.xml',
+        'data/users.xml',
         'views/assets.xml',
         'views/snippets.xml',
         'views/templates.xml',
