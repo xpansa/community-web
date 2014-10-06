@@ -25,34 +25,7 @@ from openerp.addons.website.controllers.main import Website as controllers
 from openerp.tools import DEFAULT_SERVER_DATE_FORMAT
 
 from datetime import datetime
-
-def get_date_format(cr, uid, context):
-    """ Returns date_from from locale of current user 
-    to parse dates from forms. 
-    """
-    if context is None:
-        context = {}
-    lang = context.get('lang')
-    if lang:
-        res_lang = request.registry.get('res.lang')
-        ids = res_lang.search(cr, uid, [('code', '=', lang)])
-        if ids:
-            lang_params = res_lang.read(cr, uid, ids[0], ['date_format'])
-            return lang_params['date_format']
-    return DEFAULT_SERVER_DATE_FORMAT
-
-def format_text(text):
-        """ Cut long descriptions 
-        """
-        if not text:
-            return ''
-        text = text[0:300]
-        dot_pos = text.rfind('.')
-        if dot_pos:
-            text = text[0:dot_pos]
-        else:
-            text = text[0:text.rfind(' ')]
-        return text + ' '*(300 - len(text))
+from main import get_date_format, format_text
 
 class search_controller(http.Controller):
 

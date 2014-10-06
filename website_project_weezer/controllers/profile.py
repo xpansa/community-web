@@ -30,8 +30,7 @@ from openerp.tools.translate import _
 import base64
 from datetime import datetime, timedelta
 import re
-from search import get_date_format
-from search import format_text
+from main import get_date_format, format_text
 import time
 
 

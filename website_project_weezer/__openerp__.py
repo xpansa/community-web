@@ -32,6 +32,7 @@ Website Marketplace
     'author': 'Author Name • WebByBrains <author@webbybrains.com>, Igor Krivonos <igor.krivonos@xpansa.com>',
     'depends': [
         'auth_signup',
+        'event',
         'website',
         'marketplace',
         'association',

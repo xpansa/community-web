@@ -29,13 +29,67 @@ from openerp.http import request
 import werkzeug
 
 
+def get_date_format(cr, uid, context):
+    """ Returns date_from from locale of current user 
+    to parse dates from forms. 
+    """
+    if context is None:
+        context = {}
+    lang = context.get('lang')
+    if lang:
+        res_lang = request.registry.get('res.lang')
+        ids = res_lang.search(cr, uid, [('code', '=', lang)])
+        if ids:
+            lang_params = res_lang.read(cr, uid, ids[0], ['date_format'])
+            return lang_params['date_format']
+    return DEFAULT_SERVER_DATE_FORMAT
+
+def format_text(text):
+        """ Cut long descriptions 
+        """
+        if not text:
+            return ''
+        text = text[0:300]
+        dot_pos = text.rfind('.')
+        if dot_pos:
+            text = text[0:dot_pos]
+        else:
+            text = text[0:text.rfind(' ')]
+        return text + ' '*(300 - len(text))
+
 
 class Website(http.Controller):
 
+    ANNOUNCEMENT_LIMIT = 3
+
+    def get_last_announcements(self, ttype):
+        cr, uid, context, registry = request.cr, request.uid, request.context, request.registry
+        announcement_pool = registry.get('marketplace.announcement')
+        announcement_ids = announcement_pool.search(cr, uid, [('state','=', 'open'), ('type', '=', ttype)],
+             limit=self.ANNOUNCEMENT_LIMIT, order="delivery_date DESC", context=context)
+        return announcement_pool.browse(cr, uid, announcement_ids, context=context)
+
+    def get_last_event(self):
+        """
+        Get one last event
+        return: browse_record
+        """
+        cr, uid, context, registry = request.cr, request.uid, request.context, request.registry
+        event_pool = registry.get('event.event')
+        event_id = event_pool.search(cr, uid, [('state','=','confirm')], order="date_begin DESC", 
+                                     limit=1, context=context)
+        return event_pool.browse(cr, uid, event_id, context=context)[0] if event_id else False
+
     @http.route('/page/homepage', type='http', auth="public", website=True)
     def page(self):
+        """
+        Homepage
+        """
         values = {
-            # 'path': page,
+            'wants': self.get_last_announcements('want'),
+            'offers': self.get_last_announcements('offer'),
+            'format_text': format_text,
+            'event': self.get_last_event(),
         }
         return request.render('website_project_weezer.homepage', values)
 
@@ -44,6 +98,9 @@ class MarketPlaceHome(AuthSignupHome):
 
     @http.route('/web/signup', type='http', auth='public', website=True)
     def web_auth_signup(self, *args, **kw):
+        """
+        Extend signup page to redirect user to step 2 of registration
+        """
         qcontext = self.get_auth_signup_qcontext()
         if not qcontext.get('token') and not qcontext.get('signup_enabled'):
             raise werkzeug.exceptions.NotFound()
