@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+
+        <!-- Default template user for new users signing in -->
+        <record id="marketplace_template_user" model="res.users">
+            <field name="name">Marketplace Template User</field>
+            <field name="login">marketplacetemplate</field>
+            <!-- No password: this template user doesn't need to log in -->
+            <field name="password"></field>
+            <field name="active" eval="False"/>
+            <!-- Avoid auto-including this user in any default group, just like a typical portal member -->
+            <field name="groups_id" eval="[(6, 0, [ref('base.group_portal'), ref('account_centralbank.group_account_centralbank_user')])]"/>
+            <!-- allow signuped users to have a alias -->
+            <field name="alias_name">_marketplace_usertemplate</field>
+        </record>
+
+        <record id="auth_signup.default_template_user_config" model="ir.config_parameter">
+            <field name="key">auth_signup.template_user_id</field>
+            <field name="value" ref="marketplace_template_user"/>
+        </record>
+
+    </data>
+</openerp>
