@@ -40,6 +40,7 @@ class profile_controller(http.Controller):
                       'country_id', 'birthdate', 'email', 'phone', 'mobile', 'image']
     LAST_EXCHANGES_LIMIT = 3
     ANNOUNCEMENT_LIMIT = 3
+    PARTNER_GROUP_LIMIT = 3
     date_format = '%Y-%m-%d'
 
     def profile_parse_partner(self, partner):
@@ -227,6 +228,22 @@ class profile_controller(http.Controller):
             ('type', '=', ttype), ('state', '=', 'open')], limit=self.ANNOUNCEMENT_LIMIT, context=context)
         return announcement_pool.browse(cr, uid, announcement_ids, context=context)
 
+    def profile_last_groups(self, partner_id):
+        """
+        Last mail groups user has subscribed
+        :param int partner_id
+        :return: browse_record mail_groups
+        """
+        cr, uid, context, registry = request.cr, request.uid, request.context, request.registry
+        follower_pool = registry.get('mail.followers')
+        group_pool = registry.get('mail.group')
+        follower_ids = follower_pool.search(cr, uid, [('partner_id','=',partner_id), \
+            ('res_model','=','mail.group')], limit=self.PARTNER_GROUP_LIMIT, order='id DESC')
+        group_ids = [
+            x['res_id'] for x in follower_pool.read(cr, uid, follower_ids, ['res_id'], context=context)
+        ]
+        return group_pool.browse(cr, uid, group_ids, context=context)
+
     def profile_values(self, partner, data=None):
         """
         Collect data to render in profile view
@@ -257,6 +274,7 @@ class profile_controller(http.Controller):
             'wants': self.profile_announcements(partner.id, 'want'),
             'offers': self.profile_announcements(partner.id, 'offer'),
             'membership': self.get_partner_membership(partner),
+            'groups': self.profile_last_groups(partner.id),
         }
         if data:
             values['profile'] = self.profile_parse_data(data)
@@ -472,6 +490,7 @@ class profile_controller(http.Controller):
             'birthdate': datetime.strptime(partner.birthdate, DEFAULT_SERVER_DATETIME_FORMAT).strftime(date_format) \
                         if partner.birthdate else '',
             'membership': self.get_partner_membership(partner),
+            'groups': self.profile_last_groups(partner.id),
             'profile_saved': request.session.pop('profile_saved') if 'profile_saved' in request.session else False
         })
 

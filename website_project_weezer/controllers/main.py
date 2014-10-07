@@ -88,7 +88,7 @@ class Website(http.Controller):
     def get_last_event(self):
         """
         Get one last event
-        return: browse_record
+        :return: browse_record
         """
         cr, uid, context, registry = request.cr, request.uid, request.context, request.registry
         event_pool = registry.get('event.event')
@@ -99,7 +99,7 @@ class Website(http.Controller):
     def get_last_blog_post(self):
         """
         Get one last blog post
-        return: browse_record
+        :return: browse_record
         """
         cr, uid, context, registry = request.cr, request.uid, request.context, request.registry
         post_pool = registry.get('blog.post')
