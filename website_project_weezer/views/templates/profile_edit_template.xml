@@ -405,6 +405,31 @@
             <!-- /activity -->
         </template>
 
+        <template id="profile_edit_groups">
+            <section class="bg-gray-darker pt32 pb32">
+                <div class="container">
+                    <div class="col-md-12 mt32">
+                        <h3 class="mb32">My Groups</h3>
+                    </div>
+                </div>
+                <div class="container">
+                    <div class="col-md-12">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <t t-foreach="groups" t-as="group">
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label class="col-md-4 control-label"><t t-esc="group.name"/></label>
+                                        </div>
+                                    </div>
+                                </t>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </template>
+
         <!-- Profile Edit Page -->
         <template id="profile_edit">
             <t t-call="website.layout">
@@ -416,6 +441,7 @@
                 <form class="form-horizontal" method="post" enctype="multipart/form-data">
                     <t t-call="website_project_weezer.profile_edit_general"/>
                     <t t-call="website_project_weezer.profile_edit_resources"/>
+                    <t t-call="website_project_weezer.profile_edit_groups"/>
                     <t t-call="website_project_weezer.profile_edit_wants_and_offers"/>
                     <t t-call="website_project_weezer.profile_edit_activity"/>
                     <section class="pb32">
