@@ -3,9 +3,14 @@
     <data>
         <template id="homepage">
             <t t-call="website.layout">
+                <!-- START SEARCH FORM -->
+                <t t-call="website_project_weezer.mp_minisearch_form"/>
+                <!-- END SEARCH FORM -->
+
                 <section class="bg-primary pt64 pb64 text-center">
                     <h1>A title homepage</h1>
                 </section>
+
                 
                 <div class="bg-info">
                 
@@ -57,35 +62,26 @@
                             <div id="chart_div"></div>
                         </div>
                         <div class="col-md-4">
-                            <h4 class="text-center">Our reference</h4>
-                            <img src="http://lorempixel.com/220/110/" class="center-block img img-responsive thumbnail" />
-                            <p>Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Proin vel ante a orci tempus eleifend ut et magna. Lorem ipsum dolor sit amet.</p>
-                            <div class="col-md-6 col-md-offset-3">
+                            <t t-if="event">
+                                <h4 class="text-center">Our reference</h4>
+                                <t t-if="blog_post.background_image">
+                                    <img t-att-src="blog_post.background_image" class="center-block img img-responsive thumbnail" style="height: 110px;"/>
+                                </t>
+                                <p t-esc="format_text(strip_tags(blog_post.content),400)"></p>
+                                </t>
+                            <!-- <div class="col-md-6 col-md-offset-3">
                                 <a href="#" class="btn btn-primary btn-nolink btn-block">See more</a>
-                            </div>
+                            </div> -->
                         </div>
                         <div class="col-md-4">
                             <t t-if="event">
                                 <h4 class="text-center">Last events</h4>
-                                <p class="text-danger" t-field="event.description"></p>
-                                <!-- <div class="col-md-6 col-md-offset-3">
-                                    <a href="#" class="btn btn-primary btn-nolink btn-block">See more</a>
-                                </div> -->
+                                <p class="text-danger" t-esc="format_text(strip_tags(event.description),400)"></p>
                             </t>
                         </div>
                     </div>
                 </section>
 
-                <section class="bg-success pb32 pt32" data-appear-element="footer" data-disappear-element="#footer_container">
-                    <div class="container">
-                        <div class="row">
-                            <div class="col-md-4 col-md-offset-4">
-                                <h3 class="text-center">Not a member yet?</h3>
-                                <a class="btn btn-lg btn-success btn-block" href="/web/signup">Sign up</a>
-                            </div>
-                        </div>
-                    </div>
-                </section>
             </t>
         </template>
     </data>

@@ -3,6 +3,7 @@
     <data noupdate="0">
         <record model="marketplace.announcement.category" id="user_tags_category">
             <field name="name">User Tags</field>
+            <field name="active">False</field>
         </record>
     </data>
 </openerp>

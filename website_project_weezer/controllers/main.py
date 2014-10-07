@@ -26,8 +26,24 @@ from openerp.addons.web import http
 from openerp.tools.translate import _
 from openerp.http import request
 
+from HTMLParser import HTMLParser
 import werkzeug
 
+
+class MLStripper(HTMLParser):
+    def __init__(self):
+        self.reset()
+        self.fed = []
+    def handle_data(self, d):
+        self.fed.append(d)
+    def get_data(self):
+        return ''.join(self.fed)
+
+
+def strip_tags(html):
+    s = MLStripper()
+    s.feed(html)
+    return s.get_data()
 
 def get_date_format(cr, uid, context):
     """ Returns date_from from locale of current user 
@@ -44,18 +60,18 @@ def get_date_format(cr, uid, context):
             return lang_params['date_format']
     return DEFAULT_SERVER_DATE_FORMAT
 
-def format_text(text):
+def format_text(text, length=300):
         """ Cut long descriptions 
         """
         if not text:
             return ''
-        text = text[0:300]
+        text = text[0:length]
         dot_pos = text.rfind('.')
         if dot_pos:
             text = text[0:dot_pos]
         else:
             text = text[0:text.rfind(' ')]
-        return text + ' '*(300 - len(text))
+        return text + ' '*(length - len(text))
 
 
 class Website(http.Controller):
@@ -80,6 +96,17 @@ class Website(http.Controller):
                                      limit=1, context=context)
         return event_pool.browse(cr, uid, event_id, context=context)[0] if event_id else False
 
+    def get_last_blog_post(self):
+        """
+        Get one last blog post
+        return: browse_record
+        """
+        cr, uid, context, registry = request.cr, request.uid, request.context, request.registry
+        post_pool = registry.get('blog.post')
+        post_id = post_pool.search(cr, uid, [('website_published','=',True)], order="id DESC", 
+                                     limit=1, context=context)
+        return post_pool.browse(cr, uid, post_id, context=context)[0] if post_id else False
+
     @http.route('/page/homepage', type='http', auth="public", website=True)
     def page(self):
         """
@@ -90,6 +117,8 @@ class Website(http.Controller):
             'offers': self.get_last_announcements('offer'),
             'format_text': format_text,
             'event': self.get_last_event(),
+            'strip_tags': strip_tags,
+            'blog_post': self.get_last_blog_post(),
         }
         return request.render('website_project_weezer.homepage', values)
 

@@ -114,5 +114,59 @@
                 </form>
             </section>
         </template>
+
+        <!-- Minified Block (Form) can be called on any page -->
+        <template id="mp_minisearch_form" name="Marketplace Minified Search">
+            <!-- START: Search Jumbotron -->
+            <form id="searchform" class="form" method="GET" action="/marketplace/search">
+                <section class="jumbotron pt32 pb16 mb0">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-md-2 pt8">
+                                <img src="/website_project_weezer/static/src/assets/logo-l-exchange.png" class="img img-responsive"/>
+                            </div>
+                            <div class="col-md-2 pt32">
+                                <h4 class="pull-right">I'm searching</h4>
+                            </div>
+                            <div class="col-md-8 pt32">
+                                
+                                <div class="form-group">
+                                    <div class="col-md-3">
+                                        <select class="selectpicker form-control" name="type" style="display: none;">
+                                            <option value="to_get" t-att-selected="'selected' if request.httprequest.args.get('type') == 'to_get' else None">To get</option>
+                                            <option value="to_offer" t-att-selected="'selected' if request.httprequest.args.get('type') == 'to_offer' else None">To offer</option>
+                                            <option value="to_find" t-att-selected="'selected' if request.httprequest.args.get('type') == 'to_find' else None">To find</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="col-md-5">
+                                        <input type="search" class="form-control" placeholder="Search"/>
+                                    </div>
+
+                                    <div class="col-md-3">
+                                        <!-- python code to get categories -->
+                                        <t t-set="ann_categories_obj" t-value="request.registry['marketplace.announcement.category']"/>
+                                        <t t-set="ann_categories" t-value="ann_categories_obj.name_search(request.cr, request.uid, '', [], context=request.context)"/>
+                                        <select name="category" class="selectpicker form-control" placeholder="Category" style="display: none;">
+                                            <option value="0" t-att-selected="'selected' if not int(request.httprequest.args.get('category',0)) else None">All</option>
+                                            <t t-foreach="ann_categories or []" t-as="c">
+                                                <option t-att-value="c[0]" t-att-selected="'selected' if int(request.httprequest.args.get('category',0)) == c[0] else None"><t t-esc="c[1]"/></option>
+                                            </t>
+                                        </select>
+                                    </div>
+                                    
+                                    <div class="col-md-1">
+                                        <button class="btn btn-primary" type="submit"><span class="fa fa-search" type="submit"></span></button>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </section>
+            </form>
+            <!-- END: Search Jumbotron -->
+        </template>
     </data>
 </openerp>

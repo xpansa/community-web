@@ -38,6 +38,7 @@ Website Marketplace
         'association',
         'marketplace_groups',
         'membership',
+        'website_blog',
         ],
     'data': [
         'data/menu.xml',
