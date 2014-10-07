@@ -8,9 +8,11 @@
                     <div class="col-md-3 mt16">
                         <div class="col-md-12">
                             <div class="row" t-field="item.picture" t-field-options='{"widget": "image", "class": "img img-responsive thumbnail" }'/>
-                            <div class="row">
-                                <p class="text-muted mt8"><span t-esc="item.partner_id.name"/></p>
-                            </div>
+                            <t t-if="request.session.uid">
+                                <div class="row">
+                                    <p class="text-muted mt8"><span t-esc="item.partner_id.name"/></p>
+                                </div>
+                            </t>
                         </div>
                     </div>
                     <div class="col-md-6 col-sm-9 mt16 clearfix">
