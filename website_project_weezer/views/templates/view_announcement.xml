@@ -187,14 +187,14 @@
                                     <!-- TODO: WHERE THIS COMES FROM? -->
                                     <label class="col-md-3 control-label" for="date-picker-1">From</label>
                                     <div class="col-md-9">
-                                        <input type="text" class="form-control" t-att-value="announcement.date_from" placeholder="DD/MM/YYYY" readonly="readonly"/>
+                                        <input type="text" class="form-control" t-att-value="date_from" placeholder="DD/MM/YYYY" readonly="readonly"/>
                                     </div>
                                 </div>
                                 
                                 <div class="form-group">
                                     <label class="col-md-3 control-label" for="date-picker-2">To</label>
                                     <div class="col-md-9">
-                                        <input id="date-picker-2" type="text" class="form-control" t-att-value="announcement.date_to" placeholder="DD/MM/YYYY" readonly="readonly"/>
+                                        <input id="date-picker-2" type="text" class="form-control" t-att-value="date_to" placeholder="DD/MM/YYYY" readonly="readonly"/>
                                     </div>
                                 </div>
                                 

@@ -232,14 +232,14 @@
                                         <div class="form-group">
                                             <label class="col-md-3 control-label" for="date-picker-1">From</label>
                                             <div class="col-md-9">
-                                                <input name="date_from" type="text" class="date-picker form-control" t-att-value="announcement.date_from" placeholder="DD-MM-YYYY" readonly="readonly"/>
+                                                <input name="date_from" type="text" class="date-picker form-control" t-att-value="date_from" t-att-placeholder="date_placeholder" readonly="readonly"/>
                                             </div>
                                         </div>
                                         
                                         <div class="form-group">
                                             <label class="col-md-3 control-label" for="date-picker-2">To</label>
                                             <div class="col-md-9">
-                                                <input name="date_to" id="date-picker-2" type="text" class="date-picker form-control" t-att-value="announcement.date_to" placeholder="DD-MM-YYYY" readonly="readonly"/>
+                                                <input name="date_to" id="date-picker-2" type="text" class="date-picker form-control" t-att-value="date_to" t-att-placeholder="date_placeholder" readonly="readonly"/>
                                             </div>
                                         </div>
                                         

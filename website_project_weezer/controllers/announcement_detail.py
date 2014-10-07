@@ -20,7 +20,7 @@
 #
 
 import base64
-import datetime
+from datetime import datetime
 import logging
 
 from openerp import SUPERUSER_ID
@@ -28,8 +28,9 @@ from openerp.addons.web import http
 from openerp.addons.web.controllers.main import content_disposition
 from openerp.addons.web.http import request
 from openerp.addons.website.controllers.main import Website as controllers
-
+from openerp.tools import DEFAULT_SERVER_DATE_FORMAT
 from openerp.tools.translate import _
+from main import get_date_format
 
 _logger = logging.getLogger(__name__)
 
@@ -69,7 +70,8 @@ class announcement_controller(http.Controller):
             """
             if post.get(param):
                 try:
-                    date_val = datetime.datetime.strptime(post.get(param), '%Y-%m-%d')
+                    date_val = datetime.strptime(post.get(param), \
+                        get_date_format(self.cr, self.uid, self.context))
                 except ValueError:
                     self.error_message_list.append(_(error_msg))
                     self.error_param_list.append(param)
@@ -478,13 +480,17 @@ class announcement_controller(http.Controller):
         """ Return dict of values needed to view announcement template
         """
         user = registry.get('res.users').browse(cr, uid, uid, context=context)
+        date_format = get_date_format(cr, uid, context)
         return {
             'announcement':announcement,
             'author': announcement.partner_id,
             'replied_list': announcement.proposition_ids,
             'state_status_dict': self.get_state_status_dict(cr, uid, request.registry, context=context),
             'attachment_dict': self.get_attachment_dict(cr, uid, request.registry, announcement, context=context),
-            'current_user': user or None,
+            'date_from': '' if not announcement.date_from else \
+                datetime.strptime(announcement.date_from, DEFAULT_SERVER_DATE_FORMAT).strftime(date_format),
+            'date_to': '' if not announcement.date_to else \
+                datetime.strptime(announcement.date_to, DEFAULT_SERVER_DATE_FORMAT).strftime(date_format),
         }
 
     @http.route('/marketplace/announcement_detail/<model("marketplace.announcement"):announcement>', type='http', auth="public", website=True)
@@ -498,6 +504,7 @@ class announcement_controller(http.Controller):
     def _get_edit_announcement_dict(self, cr, uid, registry, announcement, context=None):
         """ Return dict of values needed to edit announcement template
         """
+        date_format = get_date_format(cr, uid, context)
         return {
                 'announcement':announcement,
                 'author': announcement.partner_id,
@@ -511,6 +518,11 @@ class announcement_controller(http.Controller):
                 'attachment_dict': self.get_attachment_dict(cr, uid, request.registry, announcement, context=context),
                 'tag_dict': self.get_tag_dict_by_category(cr, uid, request.registry, announcement.category_id.id, context=context),
                 'uom_dict': self.get_all_records(cr, uid, registry, 'product.uom', context=context),
+                'date_from': '' if not announcement.date_from else \
+                    datetime.strptime(announcement.date_from, DEFAULT_SERVER_DATE_FORMAT).strftime(date_format),
+                'date_to': '' if not announcement.date_to else \
+                    datetime.strptime(announcement.date_to, DEFAULT_SERVER_DATE_FORMAT).strftime(date_format),
+                'date_placeholder': date_format.replace('%d','DD').replace('%m','MM').replace('%Y','YYYY'),
             }
 
     @http.route('/marketplace/announcement_detail/<model("marketplace.announcement"):announcement>/edit', type='http', auth="public", website=True)
@@ -519,8 +531,7 @@ class announcement_controller(http.Controller):
         """
         cr, uid, context, registry = request.cr, request.uid, request.context, request.registry
         user = registry.get('res.users').browse(cr, uid, uid, context=context)
-
-        if user and announcement.partner_id == user.partner_id or uid == SUPERUSER_ID: 
+        if user and announcement.partner_id.id == user.partner_id.id or uid == SUPERUSER_ID: 
             responce = http.request.website.render('website_project_weezer.edit_announcement', 
                 self._get_edit_announcement_dict(cr, uid, registry, announcement, context=context))
         else:
@@ -593,6 +604,8 @@ class announcement_controller(http.Controller):
             'currency_dict': self.get_all_records(cr, uid, registry, 'res.currency', context=context),
             'group_dict': self.get_all_records(cr, uid, registry, 'mail.group', context=context),
             'uom_dict': self.get_all_records(cr, uid, registry, 'product.uom', context=context),
+            'date_placeholder': get_date_format(cr, uid, context) \
+                .replace('%d','DD').replace('%m','MM').replace('%Y','YYYY'),
         }
 
     @http.route('/marketplace/announcement_detail/new', type='http', auth="public", website=True)
@@ -614,8 +627,9 @@ class announcement_controller(http.Controller):
         """ Route to process save new announcement request
         """
         cr, uid, context, registry = request.cr, request.uid, request.context, request.registry
+        user = registry.get('res.users').browse(cr, uid, uid, context=context)
         self._prepare_save_announcemet_param(cr, uid, request, post)
-        announcement = registry.get('marketplace.announcement').create(cr, uid, {'name': '', 'partner_id': uid}, context=context)
+        announcement = registry.get('marketplace.announcement').create(cr, uid, {'name': '', 'partner_id': user.partner_id.id}, context=context)
         announcement = registry.get('marketplace.announcement').browse(cr, uid, announcement, context=context)
         if not context:
             context = dict()
