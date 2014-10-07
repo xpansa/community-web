@@ -22,6 +22,7 @@
                 <script src="/website_project_weezer/static/src/js/jquery.dynamiclist.min.js"></script>
                 <script src="/website_project_weezer/static/src/js/jquery.mousewheel.min.js"></script>
                 <script src="/website_project_weezer/static/src/js/jquery.appear.js"></script>
+                <script src="/website_project_weezer/static/src/js/jsapi.js"></script>
                 <!-- jQuery ui -->
                 <t t-call="web.jqueryui_conflict">
                     <script type="text/javascript" src="/web/static/lib/jquery.ui/js/jquery-ui-1.9.1.custom.js"></script>
@@ -34,6 +35,7 @@
                 <script src="/website_project_weezer/static/src/js/views/website_project_weezer.edit_announcement.js"></script>
                 <script src="/website_project_weezer/static/src/js/views/website_project_weezer.view_announcement.js"></script>
                 <script src="/website_project_weezer/static/src/js/views/website_project_weezer.member_list_view.js"></script>
+                <script src="/website_project_weezer/static/src/js/views/website_project_weezer.homepage.js"></script>
                 <script src="/website_project_weezer/static/src/js/main.js"></script>
     		</xpath>
     	</template>

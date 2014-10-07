@@ -3,85 +3,120 @@
     <data>
         <template id="homepage">
             <t t-call="website.layout">
+
+                <script type="text/javascript">
+                      // Load the Visualization API and the piechart package.
+                      google.load('visualization', '1.0', {'packages':['corechart']});
+                </script>
                 <!-- START SEARCH FORM -->
                 <t t-call="website_project_weezer.mp_minisearch_form"/>
                 <!-- END SEARCH FORM -->
 
-                <section class="bg-primary pt64 pb64 text-center">
-                    <h1>A title homepage</h1>
-                </section>
+                <div id="wrap">
+                    <div class="oe_structure"/>
+                    <div class="oe_structure">
+                        <section class="bg-primary pt64 pb64 text-center">
+                            <h1>A title homepage</h1>
+                        </section>
 
-                
-                <div class="bg-info">
-                
-                    <!-- marketplace listing -->
-                    <section class="container">
-
-                        <h3 class="text-center col-md-6 page-header mb8">Our Wants</h3>
-                        <h3 class="text-center col-md-6 page-header mb8">Our Offers</h3>
+                        <div class="oe_structure"/>
                         
-                        <!-- START: Scrollable -->
-                        <div class="col-md-12 scrollable page-header pb8">
-                            <!-- <div class="scrollbar"><div class="track"><div class="thumb"></div></div></div> -->
+                        <div class="bg-info">
+                        
+                            <section class="clearfix container">
+                                    
+                                <!-- START: Scrollable -->
+                                <div class="col-md-12 page-header pb8">
 
-                                <div class="viewport" style="height: 690px; overflow: hidden;">
-                                    <div class="overview">
+                                    <div class="row">
 
                                         <!-- START: Our wants -->
-                                        <div class="col-md-6">
+                                        <div class="col-md-6 clearfix">
+                                            <div class="row">
+                                                <h3 class="text-center page-header mb8">Our Wants</h3>
+                                            </div>
                                             <div class="col-md-12">
                                                 <t t-foreach="wants" t-as="item">
-                                                    <t t-call="website_project_weezer.mp_single_item" />
+                                                    <t t-call="website_project_weezer.mp_single_item"/>
                                                 </t>
                                             </div> 
                                         </div> 
                                         <!-- END: Our wants -->
                                          
                                         <!-- START: Our offers -->
-                                        <div class="col-md-6">
+                                        <div class="col-md-6 clearfix">
+                                            <div class="row">
+                                                <h3 class="text-center page-header mb8">Our Offers</h3>
+                                            </div>
                                             <div class="col-md-12">
                                                 <t t-foreach="offers" t-as="item">
-                                                    <t t-call="website_project_weezer.mp_single_item" />
+                                                    <t t-call="website_project_weezer.mp_single_item"/>
                                                 </t>
                                             </div> 
                                         </div> 
                                         <!-- END: Our offers -->   
-                            
+
                                     </div>
+                                    
+                                </div>
+                                <!-- END: Scrollable -->
+                                <div class="col-md-12 mt16 mb32">
+                                    <t t-if="page &gt; 1">
+                                        <a t-att-href="prev_url" class="btn text-center btn-primary pull-left">Previous page</a>
+                                    </t>
+                                    <t t-if="page &lt; page_count">
+                                       <a t-att-href="next_url" class="btn text-center btn-primary pull-right">Next page</a>
+                                    </t>
+                                </div>
+                            </section>
+                        </div>
+
+                        <div class="oe_structure"/>
+                        
+                        <section class="container pb32 pt32">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <h4 class="text-center">Diagram</h4>
+                                    <div id="chart_div"></div>
+                                </div>
+                                <div class="col-md-4">
+                                    <t t-if="event">
+                                        <h4 class="text-center">Our reference</h4>
+                                        <t t-if="blog_post.background_image">
+                                            <img t-att-src="blog_post.background_image" class="center-block img img-responsive thumbnail" style="height: 110px;"/>
+                                        </t>
+                                        <p t-esc="format_text(strip_tags(blog_post.content),400)"></p>
+                                        </t>
+                                    <!-- <div class="col-md-6 col-md-offset-3">
+                                        <a href="#" class="btn btn-primary btn-nolink btn-block">See more</a>
+                                    </div> -->
+                                </div>
+                                <div class="col-md-4">
+                                    <t t-if="event">
+                                        <h4 class="text-center">Last events</h4>
+                                        <p class="text-danger" t-esc="format_text(strip_tags(event.description),400)"></p>
+                                    </t>
                                 </div>
                             </div>
-                        <!-- END: Scrollable -->
-                    </section>
-                    <!-- /marketplace listing -->
-                </div>
-                
-                <section class="container pb32 pt32">
-                    <div class="row">
-                        <div class="col-md-4">
-                            <h4 class="text-center">Diagram</h4>
-                            <div id="chart_div"></div>
-                        </div>
-                        <div class="col-md-4">
-                            <t t-if="event">
-                                <h4 class="text-center">Our reference</h4>
-                                <t t-if="blog_post.background_image">
-                                    <img t-att-src="blog_post.background_image" class="center-block img img-responsive thumbnail" style="height: 110px;"/>
-                                </t>
-                                <p t-esc="format_text(strip_tags(blog_post.content),400)"></p>
-                                </t>
-                            <!-- <div class="col-md-6 col-md-offset-3">
-                                <a href="#" class="btn btn-primary btn-nolink btn-block">See more</a>
-                            </div> -->
-                        </div>
-                        <div class="col-md-4">
-                            <t t-if="event">
-                                <h4 class="text-center">Last events</h4>
-                                <p class="text-danger" t-esc="format_text(strip_tags(event.description),400)"></p>
-                            </t>
-                        </div>
-                    </div>
-                </section>
+                        </section>
 
+                        <div class="oe_structure"/>
+
+                    </div>
+                    <div class="oe_structure"/>
+
+                    <section t-if="website.user_id == user_id" class="bg-success pb32 pt32" data-appear-element="footer" data-disappear-element="#footer_container">
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-md-4 col-md-offset-4">
+                                    <h3 class="text-center">Not a member yet?</h3>
+                                    <a class="btn btn-lg btn-success btn-block" href="/web/signup">Sign up</a>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                </div>
             </t>
         </template>
     </data>
