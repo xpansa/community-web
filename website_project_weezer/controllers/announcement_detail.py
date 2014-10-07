@@ -54,10 +54,9 @@ class announcement_controller(http.Controller):
             """ Process bool value from post params and save it to vals dict
             """
             if post.get(param):
-                if post.get(param) == 'on':
-                    self.vals.update({attr: True})
-                else:
-                    self.vals.update({attr: False})
+                self.vals.update({attr: True})
+            else:
+                self.vals.update({attr: False})
 
         def __parse_text_param(self, post, param, attr):
             """ Process text value from post params and save it to vals dict
@@ -478,12 +477,14 @@ class announcement_controller(http.Controller):
     def _get_view_announcement_dict(self, cr, uid, registry, announcement, context=None):
         """ Return dict of values needed to view announcement template
         """
+        user = registry.get('res.users').browse(cr, uid, uid, context=context)
         return {
             'announcement':announcement,
             'author': announcement.partner_id,
             'replied_list': announcement.proposition_ids,
             'state_status_dict': self.get_state_status_dict(cr, uid, request.registry, context=context),
             'attachment_dict': self.get_attachment_dict(cr, uid, request.registry, announcement, context=context),
+            'current_user': user or None,
         }
 
     @http.route('/marketplace/announcement_detail/<model("marketplace.announcement"):announcement>', type='http', auth="public", website=True)
@@ -538,7 +539,6 @@ class announcement_controller(http.Controller):
         parser.parse(announcement, post)
 
         if len(parser.error_param_list) > 0:
-            cr.rollback()
             if context.get('from_new_announcement') == True:
                 responce = self._get_new_announcement_dict(cr, uid, registry, announcement.partner_id, context=context)
                 template_id = 'website_project_weezer.new_announcement'
@@ -546,6 +546,7 @@ class announcement_controller(http.Controller):
                 responce = self._get_edit_announcement_dict(cr, uid, registry, announcement, context=context)
                 template_id = 'website_project_weezer.edit_announcement'
             responce.update({'error_param_list': parser.error_param_list, 'error_message_list': parser.error_message_list})
+            cr.rollback()
         else:
             res_id = registry.get('marketplace.announcement').write(cr, uid, announcement.id, parser.vals, context=context)
             announcement = registry.get('marketplace.announcement').browse(cr, uid, announcement.id, context=context)
