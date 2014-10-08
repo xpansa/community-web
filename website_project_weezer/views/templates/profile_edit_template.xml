@@ -317,7 +317,7 @@
                 <!-- Our Wants column -->
                 <div class="col-md-6">
                     <div class="col-md-12 mb16">
-                        <button class="btn btn-success pull-right mt16 btn-nolink">Add new Want</button>
+                        <a href="/marketplace/announcement_detail/new" class="btn btn-success pull-right mt16 btn-nolink">Add new Want</a>
                         <h3 class="pull-left">My Wants</h3>
                     </div>
                     <t t-foreach="wants" t-as="item">
@@ -333,7 +333,7 @@
                 <!-- Our Offers column -->
                 <div class="col-md-6">
                     <div class="col-md-12 mb16">
-                        <button class="btn btn-success pull-right mt16 btn-nolink">Add new Offer</button>
+                        <a href="/marketplace/announcement_detail/new" class="btn btn-success pull-right mt16 btn-nolink">Add new Offer</a>
                         <h3 class="pull-left">My Offers</h3>
                     </div>
                     <t t-foreach="offers" t-as="item">

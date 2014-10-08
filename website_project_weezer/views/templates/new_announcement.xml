@@ -173,14 +173,14 @@
                                         <div class="form-group">
                                             <label class="col-md-3 control-label" for="date-picker-1">From</label>
                                             <div class="col-md-9">
-                                                <input name="date_from" type="text" class="date-picker form-control" t-att-placeholder="date_placeholder" readonly="readonly"/>
+                                                <input name="date_from" type="text" class="date-picker form-control" t-att-placeholder="date_placeholder"/>
                                             </div>
                                         </div>
                                         
                                         <div class="form-group">
                                             <label class="col-md-3 control-label" for="date-picker-2">To</label>
                                             <div class="col-md-9">
-                                                <input name="date_to" id="date-picker-2" type="text" class="date-picker form-control" t-att-placeholder="date_placeholder" readonly="readonly"/>
+                                                <input name="date_to" id="date-picker-2" type="text" class="date-picker form-control" t-att-placeholder="date_placeholder"/>
                                             </div>
                                         </div>
                                         
