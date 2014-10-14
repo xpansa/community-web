@@ -32,6 +32,8 @@ from openerp.tools import DEFAULT_SERVER_DATE_FORMAT
 from openerp.tools.translate import _
 from main import get_date_format
 
+from attrdict import AttrDict
+
 _logger = logging.getLogger(__name__)
 
 DEFAULT_COUNTRY = 'US'
@@ -507,6 +509,8 @@ class announcement_controller(http.Controller):
         date_format = get_date_format(cr, uid, context)
         return {
                 'announcement':announcement,
+                'announcement_picture': ('data:image/jpeg;base64,%s' % announcement.picture)
+                                                                if announcement.picture else '/web/static/src/img/placeholder.png',
                 'author': announcement.partner_id,
                 'us_state_dict': self.get_default_country_state(cr, uid, request.registry, context=context),
                 'country_dict': self.get_all_records(cr, uid, request.registry, 'res.country', context=context),
@@ -538,6 +542,76 @@ class announcement_controller(http.Controller):
             responce = request.not_found()
         return responce
 
+    def _get_announcement_from_post(self, post, announcement):
+        res = dict()
+        simple = [
+            ('link', 'link'),
+            ('emergency', 'emergency'),
+            ('name', 'title'),
+            ('description', 'description'),
+            ('street', 'street'),
+            ('street2', 'street2'),
+            ('zip', 'zip'),
+            ('city', 'city'),
+            ('quantity', 'qty'),
+            ('infinite_qty', 'unlimited'),
+            ('new_tags', 'new_tags'),
+            ('date_from', 'date_from'),
+            ('date_to', 'date_to'),
+        ]
+        for param_val in simple:
+            val, param = param_val
+            res.update({val: post.get(param)})
+
+        m2o = [
+            ('category_id', 'category_id'),
+            ('state_id', 'state_id'),
+            ('country_id', 'country_id'),
+            ('uom_id', 'uom_id'),
+        ]
+        for param_val in m2o:
+            val, param = param_val
+            value = post.get(param)
+            if value:
+                if value != 'None':
+                    int_id = int(value)
+                else:
+                    int_id = False
+                value = AttrDict({'id': int_id})
+            res.update({val: value})
+
+        o2m = [
+            ('tag_ids', 'tag_ids'),
+            ('context_group_ids', 'groups'),
+        ]
+        for param_val in o2m:    
+            val, param = param_val    
+            list_ids = None
+            if post.get(param):
+                list_ids = list()
+                id_list = post.get(param)
+                for id_value in id_list:
+                    if id_value != 'None':
+                        int_id = int(id_value)
+                    else:
+                        int_id = False
+                    list_ids.append(AttrDict({'id': int_id}))
+            res.update({val: list_ids})
+        currency_ids = list()
+        for i in range(1,4):
+            amount = post.get('currency_amount%s' % i)
+            currency = post.get('currency_id%s' % i)
+            if amount:
+                currency_ids.append(AttrDict({'price_unit': amount, 'currency_id': AttrDict({'id': int(currency)})}))
+        res.update({
+            'id': announcement.id,
+            'currency_ids': currency_ids,
+            'partner_id': announcement.partner_id,
+            'picture': announcement.picture,
+            'quantity_available': announcement.quantity_available,
+        })
+        return AttrDict(res)
+
     def _parse_and_save_announcement(self, cr, uid, registry, announcement, post, context=None):
         """ Parse all post params and render to the appropriate page
 
@@ -550,12 +624,9 @@ class announcement_controller(http.Controller):
         parser.parse(announcement, post)
 
         if len(parser.error_param_list) > 0:
-            if context.get('from_new_announcement') == True:
-                responce = self._get_new_announcement_dict(cr, uid, registry, announcement.partner_id, context=context)
-                template_id = 'website_project_weezer.new_announcement'
-            else:
-                responce = self._get_edit_announcement_dict(cr, uid, registry, announcement, context=context)
-                template_id = 'website_project_weezer.edit_announcement'
+            edited_announcement = self._get_announcement_from_post(post, announcement)
+            responce = self._get_edit_announcement_dict(cr, uid, registry, edited_announcement, context=context)
+            template_id = 'website_project_weezer.edit_announcement'
             responce.update({'error_param_list': parser.error_param_list, 'error_message_list': parser.error_message_list})
             cr.rollback()
         else:

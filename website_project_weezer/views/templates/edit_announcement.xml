@@ -86,7 +86,7 @@
                                                     </t>
                                                     <t t-if="bool(announcement.context_group_ids) != False">
                                                         <t t-foreach="announcement.context_group_ids" t-as="group">
-                                                            <option selected="selected"><t t-esc='group.name'/></option>
+                                                            <option selected="selected" t-att-value="group.id"><t t-esc='group_dict[group.id]'/></option>
                                                         </t>
                                                     </t>
                                                 </select>
@@ -132,8 +132,9 @@
                                         <label for="emergency">Emergency</label>
                                     </div>
                                     <div class="col-md-12">
-                                        <span t-field="announcement.picture" t-field-options='{"widget": "image"}'/>
-                                        
+                                        <span>
+                                            <img class="img img-responsive" t-att-src="announcement_picture"/>
+                                        </span>
                                         <span class="btn btn-primary btn-file mt16">
                                             Upload new picture 
                                             <input type="file" name="picture"/>
@@ -146,7 +147,7 @@
                                 <div class="col-md-5">
                                     <input placeholder="Title" name="title" class="form-control" t-att-value="announcement.name"/> 
                                     <h5>Description</h5>
-                                    <textarea class="form-control" rows="6" cols="20" name="description" t-field="announcement.description"/>
+                                    <textarea class="form-control" rows="6" cols="20" name="description"><t t-esc="announcement.description"/></textarea>
                                 </div>
                 
                                 <div class="col-md-4">
