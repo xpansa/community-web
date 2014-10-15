@@ -106,6 +106,7 @@
                                 </div>
                                 
                                 <div class="col-md-5">
+                                    <input type="hidden" name='state' value='open'/>
                                     <input placeholder="Title" name="title" class="form-control"/> 
                                     <h5>Description</h5>
                                     <textarea class="form-control" rows="6" cols="20" name="description"/>

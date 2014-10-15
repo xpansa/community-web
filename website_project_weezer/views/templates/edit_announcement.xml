@@ -145,6 +145,7 @@
                                 </div>
                                 
                                 <div class="col-md-5">
+                                    <input type="hidden" name='state' t-att-value="announcement.state"/>
                                     <input placeholder="Title" name="title" class="form-control" t-att-value="announcement.name"/> 
                                     <h5>Description</h5>
                                     <textarea class="form-control" rows="6" cols="20" name="description"><t t-esc="announcement.description"/></textarea>

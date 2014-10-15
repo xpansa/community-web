@@ -153,6 +153,7 @@ class announcement_controller(http.Controller):
                 ('street2', 'street2'),
                 ('zip', 'zip'),
                 ('city', 'city'),
+                ('state', 'state'),
             ]
             date_param_list = [
                 ('date_to', 'date_to', 'Wrong date format for date to'),
@@ -558,6 +559,7 @@ class announcement_controller(http.Controller):
             ('new_tags', 'new_tags'),
             ('date_from', 'date_from'),
             ('date_to', 'date_to'),
+            ('state', 'state'),
         ]
         for param_val in simple:
             val, param = param_val
@@ -592,10 +594,7 @@ class announcement_controller(http.Controller):
                 id_list = post.get(param)
                 for id_value in id_list:
                     if id_value != 'None':
-                        int_id = int(id_value)
-                    else:
-                        int_id = False
-                    list_ids.append(AttrDict({'id': int_id}))
+                        list_ids.append(AttrDict({'id': int(id_value)}))
             res.update({val: list_ids})
         currency_ids = list()
         for i in range(1,4):
