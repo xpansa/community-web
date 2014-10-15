@@ -480,6 +480,24 @@ class announcement_controller(http.Controller):
             responce = {'status': 'error', 'error': 'This attachment is not belong to this announcement'}
         return responce
 
+    def _get_my_reply(self, cr, uid, registry, announcement, context=None):
+        res = False
+        for prop in announcement.proposition_ids:
+            if prop.create_uid == uid:
+                res = prop
+        if not res:
+            res = AttrDict({
+                'quantity': 0.0,
+                'description': '',
+                'write_date': '',
+                'vote_comment': '',
+                'currency_ids': [AttrDict({
+                    'price_unit': 0.0,
+                    'currency_id': AttrDict({'id': None})    
+                })]
+            })
+        return res
+
     def _get_view_announcement_dict(self, cr, uid, registry, announcement, context=None):
         """ Return dict of values needed to view announcement template
         """
@@ -488,7 +506,8 @@ class announcement_controller(http.Controller):
         return {
             'announcement':announcement,
             'author': announcement.partner_id,
-            'replied_list': announcement.proposition_ids,
+            'replied_list': [p for p in announcement.proposition_ids if p.create_uid != user.id],
+            'my_reply': self._get_my_reply(cr, uid, request.registry, announcement, context=context),
             'state_status_dict': self.get_state_status_dict(cr, uid, request.registry, context=context),
             'type_dict': self.get_type_dict(cr, uid, request.registry, context=context),
             'attachment_dict': self.get_attachment_dict(cr, uid, request.registry, announcement, context=context),
