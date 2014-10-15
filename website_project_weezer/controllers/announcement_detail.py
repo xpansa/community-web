@@ -154,6 +154,7 @@ class announcement_controller(http.Controller):
                 ('zip', 'zip'),
                 ('city', 'city'),
                 ('state', 'state'),
+                ('type', 'type'),
             ]
             date_param_list = [
                 ('date_to', 'date_to', 'Wrong date format for date to'),
@@ -404,6 +405,14 @@ class announcement_controller(http.Controller):
             'cancel': 'Cancelled',
         }
 
+    def get_type_dict(self, cr, uid, registry, context=None):
+        """ Return all state statuses
+        """
+        return {
+            'offer': 'Offer',
+            'want': 'Want',
+        }
+
     def get_attachment_dict(self, cr, uid, registry, announcement, context=None):
         """ Return all attachment of specified announcement
         """
@@ -481,6 +490,7 @@ class announcement_controller(http.Controller):
             'author': announcement.partner_id,
             'replied_list': announcement.proposition_ids,
             'state_status_dict': self.get_state_status_dict(cr, uid, request.registry, context=context),
+            'type_dict': self.get_type_dict(cr, uid, request.registry, context=context),
             'attachment_dict': self.get_attachment_dict(cr, uid, request.registry, announcement, context=context),
             'date_from': '' if not announcement.date_from else \
                 datetime.strptime(announcement.date_from, DEFAULT_SERVER_DATE_FORMAT).strftime(date_format),
@@ -514,6 +524,7 @@ class announcement_controller(http.Controller):
                 'us_state_dict': self.get_default_country_state(cr, uid, request.registry, context=context),
                 'country_dict': self.get_all_records(cr, uid, request.registry, 'res.country', context=context),
                 'state_status_dict': self.get_state_status_dict(cr, uid, request.registry, context=context),
+                'type_dict': self.get_type_dict(cr, uid, request.registry, context=context),
                 'category_dict': self.get_all_records(cr, uid, request.registry, \
                                                             'marketplace.announcement.category', context=context),
                 'currency_dict': self.get_all_records(cr, uid, request.registry, 'res.currency', context=context),
@@ -558,6 +569,7 @@ class announcement_controller(http.Controller):
             ('date_from', 'date_from'),
             ('date_to', 'date_to'),
             ('state', 'state'),
+            ('type', 'type'),
         ]
         for param_val in simple:
             val, param = param_val
@@ -667,6 +679,7 @@ class announcement_controller(http.Controller):
             'us_state_dict': self.get_default_country_state(cr, uid, registry, context=context),
             'country_dict': self.get_all_records(cr, uid, registry, 'res.country', context=context),
             'state_status_dict': self.get_state_status_dict(cr, uid, registry, context=context),
+            'type_dict': self.get_type_dict(cr, uid, request.registry, context=context),
             'category_dict': self.get_all_records(cr, uid, registry, \
                                                             'marketplace.announcement.category', context=context),
             'currency_dict': self.get_all_records(cr, uid, registry, 'res.currency', context=context),
