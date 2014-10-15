@@ -67,26 +67,34 @@
                                                    <!--  TODO: ERROR: File "/opt/openerp/odoo/openerp/models.py", line 5348, in __contains__
         raise except_orm("ValueError", "Mixing apples and oranges: %s in %s" % (item, self))
     QWebException: ('ValueError', 'Mixing apples and oranges: 1 in marketplace.tag()') -->
-                                                    <!-- <t t-foreach="tag_dict.keys()" t-as="tag_id">
-                                                        <t t-if="tag_id in announcement.tag_ids">
-                                                            <option selected="selected" t-att-value='tag_id'><span t-esc='tag_dict[tag_id]'/></option>
-                                                        </t>
-                                                        <t t-if="tag_id not in announcement.tag_ids">
-                                                            <option t-att-value='tag_id'><span t-esc='tag_dict[tag_id]'/></option>
+                                                    <t t-foreach="announcement.tag_ids" t-as="tag">
+                                                        <t t-if="tag.id in tag_dict.keys()">
+                                                            <option selected="selected" t-att-value='tag.id'><span t-esc='tag_dict[tag.id]'/></option>
                                                         </t>
                                                     </t>
- -->                                                </select>
+                                                    <!-- need to append with json request to get tag by category by js-->
+                                                    </select>
                                             </div>
                                         
                                             <label class="col-md-1 control-label" for="groups">Groups</label>
                                             <div class="col-md-3">
                                                 <select id="groups" class="selectpicker form-control" name="groups" multiple="multiple">
-                                                    <t t-if="bool(announcement.context_group_ids) == False">
-                                                        <option selected="selected"></option>                      
+                                                    <t t-if="len(announcement.context_group_ids) == 0">
+                                                        <option selected="selected" value="None"></option>                      
                                                     </t>
-                                                    <t t-if="bool(announcement.context_group_ids) != False">
-                                                        <t t-foreach="announcement.context_group_ids" t-as="group">
-                                                            <option selected="selected" t-att-value="group.id"><t t-esc='group_dict[group.id]'/></option>
+                                                    <t t-if="len(announcement.context_group_ids) > 0">
+                                                        <option value="None"></option>                      
+                                                    </t>
+                                                    <t t-foreach="group_dict.keys()" t-as="group_id">
+                                                        <t t-if="group_id in announcement_group_ids">
+                                                            <option selected="selected" t-att-value="group_id">
+                                                                <t t-esc='group_dict[group_id]'/>
+                                                            </option>
+                                                        </t>
+                                                        <t t-if="group_id not in announcement_group_ids">
+                                                            <option t-att-value="group_id">
+                                                                <t t-esc='group_dict[group_id]'/>
+                                                            </option>
                                                         </t>
                                                     </t>
                                                 </select>

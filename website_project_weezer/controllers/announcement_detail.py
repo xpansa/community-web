@@ -509,6 +509,7 @@ class announcement_controller(http.Controller):
                 'announcement':announcement,
                 'announcement_picture': ('data:image/jpeg;base64,%s' % announcement.picture)
                                                                 if announcement.picture else '/web/static/src/img/placeholder.png',
+                'announcement_group_ids': [group.id for group in announcement.context_group_ids],
                 'author': announcement.partner_id,
                 'us_state_dict': self.get_default_country_state(cr, uid, request.registry, context=context),
                 'country_dict': self.get_all_records(cr, uid, request.registry, 'res.country', context=context),
@@ -518,7 +519,7 @@ class announcement_controller(http.Controller):
                 'currency_dict': self.get_all_records(cr, uid, request.registry, 'res.currency', context=context),
                 'group_dict': self.get_all_records(cr, uid, request.registry, 'mail.group', context=context),
                 'attachment_dict': self.get_attachment_dict(cr, uid, request.registry, announcement, context=context),
-                'tag_dict': self.get_tag_dict_by_category(cr, uid, request.registry, announcement.category_id.id, context=context),
+                'tag_dict': self.get_all_records(cr, uid, request.registry, 'marketplace.tag', context=context),
                 'uom_dict': self.get_all_records(cr, uid, registry, 'product.uom', context=context),
                 'date_from': '' if not announcement.date_from else \
                     datetime.strptime(announcement.date_from, DEFAULT_SERVER_DATE_FORMAT).strftime(date_format),
