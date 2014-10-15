@@ -94,6 +94,10 @@ openerp.website.theme.views['layout'] = openerp.Class.extend({
                 element.removeClass('appeared');
             }).appear();
         });
+
+        $('.date-picker').keypress(function(e){
+            e.preventDefault();
+        });
         
     },
     

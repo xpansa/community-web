@@ -32,6 +32,8 @@ from openerp.tools import DEFAULT_SERVER_DATE_FORMAT
 from openerp.tools.translate import _
 from main import get_date_format
 
+from attrdict import AttrDict
+
 _logger = logging.getLogger(__name__)
 
 DEFAULT_COUNTRY = 'US'
@@ -151,6 +153,8 @@ class announcement_controller(http.Controller):
                 ('street2', 'street2'),
                 ('zip', 'zip'),
                 ('city', 'city'),
+                ('state', 'state'),
+                ('type', 'type'),
             ]
             date_param_list = [
                 ('date_to', 'date_to', 'Wrong date format for date to'),
@@ -281,11 +285,9 @@ class announcement_controller(http.Controller):
             """
             currency_dict = dict()
 
-            null_amount = False
             currency_pool = self.registry.get('res.currency')
             amount_fromat_error = False
             currency_exist_error = False
-            null_amount_error = False
             same_currency_error = False
             for index in range(1,4): 
                 amount_key = 'currency_amount%s' % index
@@ -296,7 +298,7 @@ class announcement_controller(http.Controller):
                         amount = float(post.get(amount_key))
                     except ValueError:
                         amount_fromat_error = True
-                        error_param_list.append(amount_key)
+                        self.error_param_list.append(amount_key)
                     currency_id = post.get(id_key)
                     currency_id = currency_pool.search(self.cr, self.uid, [('id', '=', currency_id)], limit=1, context=self.context)
                     currency_id = (currency_id[0] if len(currency_id) else False) if type(currency_id) is list else currency_id
@@ -304,14 +306,8 @@ class announcement_controller(http.Controller):
                         currency_exist_error = True
                         error_param_list.append(id_key)
 
-                    if null_amount:
-                        null_amount_error = True
-                        error_param_list.append(amount_key)
-
                     if amount and currency_id:
                         currency_dict.update({currency_id: amount})
-                else:
-                    null_amount = True
         
             for index in [(1,2),(1,3),(2,3)]:
                 amount_key_1 = 'currency_amount%s' % index[0]
@@ -327,13 +323,13 @@ class announcement_controller(http.Controller):
             error_tuple = [
                 (amount_fromat_error, 'Amount must be in a float format'),
                 (currency_exist_error, 'There is no such currency'),
-                (null_amount_error, 'First fill in previous amount'),
                 (same_currency_error, 'Announcement can\'t have 2 amount with the same currency'),
             ]
 
             for error in error_tuple:
                 if error[0]:
                     self.error_message_list.append(_(error[1]))
+
             if len(self.error_message_list) == 0:
                 currency_line_value = dict()
                 new_currency_line_value = list()
@@ -407,6 +403,14 @@ class announcement_controller(http.Controller):
             'open': 'Published',
             'done': 'Closed',
             'cancel': 'Cancelled',
+        }
+
+    def get_type_dict(self, cr, uid, registry, context=None):
+        """ Return all state statuses
+        """
+        return {
+            'offer': 'Offer',
+            'want': 'Want',
         }
 
     def get_attachment_dict(self, cr, uid, registry, announcement, context=None):
@@ -486,6 +490,7 @@ class announcement_controller(http.Controller):
             'author': announcement.partner_id,
             'replied_list': announcement.proposition_ids,
             'state_status_dict': self.get_state_status_dict(cr, uid, request.registry, context=context),
+            'type_dict': self.get_type_dict(cr, uid, request.registry, context=context),
             'attachment_dict': self.get_attachment_dict(cr, uid, request.registry, announcement, context=context),
             'date_from': '' if not announcement.date_from else \
                 datetime.strptime(announcement.date_from, DEFAULT_SERVER_DATE_FORMAT).strftime(date_format),
@@ -498,8 +503,13 @@ class announcement_controller(http.Controller):
         """ Route for process view announcement request
         """
         cr, uid, context, registry = request.cr, request.uid, request.context, request.registry
-        return http.request.website.render('website_project_weezer.view_announcement', 
-            self._get_view_announcement_dict(cr, uid, registry, announcement, context=context))
+        user = registry.get('res.users').browse(cr, uid, uid, context=context)
+        if user and announcement.partner_id.id == user.partner_id.id or uid == SUPERUSER_ID:  
+            web_page = request.redirect('%s/edit' % announcement.id)
+        else:
+            web_page = http.request.website.render('website_project_weezer.view_announcement', 
+                self._get_view_announcement_dict(cr, uid, registry, announcement, context=context))
+        return web_page
 
     def _get_edit_announcement_dict(self, cr, uid, registry, announcement, context=None):
         """ Return dict of values needed to edit announcement template
@@ -507,16 +517,20 @@ class announcement_controller(http.Controller):
         date_format = get_date_format(cr, uid, context)
         return {
                 'announcement':announcement,
+                'announcement_picture': ('data:image/jpeg;base64,%s' % announcement.picture)
+                                                                if announcement.picture else '/web/static/src/img/placeholder.png',
+                'announcement_group_ids': [group.id for group in announcement.context_group_ids],
                 'author': announcement.partner_id,
                 'us_state_dict': self.get_default_country_state(cr, uid, request.registry, context=context),
                 'country_dict': self.get_all_records(cr, uid, request.registry, 'res.country', context=context),
                 'state_status_dict': self.get_state_status_dict(cr, uid, request.registry, context=context),
+                'type_dict': self.get_type_dict(cr, uid, request.registry, context=context),
                 'category_dict': self.get_all_records(cr, uid, request.registry, \
                                                             'marketplace.announcement.category', context=context),
                 'currency_dict': self.get_all_records(cr, uid, request.registry, 'res.currency', context=context),
                 'group_dict': self.get_all_records(cr, uid, request.registry, 'mail.group', context=context),
                 'attachment_dict': self.get_attachment_dict(cr, uid, request.registry, announcement, context=context),
-                'tag_dict': self.get_tag_dict_by_category(cr, uid, request.registry, announcement.category_id.id, context=context),
+                'tag_dict': self.get_all_records(cr, uid, request.registry, 'marketplace.tag', context=context),
                 'uom_dict': self.get_all_records(cr, uid, registry, 'product.uom', context=context),
                 'date_from': '' if not announcement.date_from else \
                     datetime.strptime(announcement.date_from, DEFAULT_SERVER_DATE_FORMAT).strftime(date_format),
@@ -538,6 +552,75 @@ class announcement_controller(http.Controller):
             responce = request.not_found()
         return responce
 
+    def _get_announcement_from_post(self, post, announcement):
+        res = dict()
+        simple = [
+            ('link', 'link'),
+            ('emergency', 'emergency'),
+            ('name', 'title'),
+            ('description', 'description'),
+            ('street', 'street'),
+            ('street2', 'street2'),
+            ('zip', 'zip'),
+            ('city', 'city'),
+            ('quantity', 'qty'),
+            ('infinite_qty', 'unlimited'),
+            ('new_tags', 'new_tags'),
+            ('date_from', 'date_from'),
+            ('date_to', 'date_to'),
+            ('state', 'state'),
+            ('type', 'type'),
+        ]
+        for param_val in simple:
+            val, param = param_val
+            res.update({val: post.get(param)})
+
+        m2o = [
+            ('category_id', 'category_id'),
+            ('state_id', 'state_id'),
+            ('country_id', 'country_id'),
+            ('uom_id', 'uom_id'),
+        ]
+        for param_val in m2o:
+            val, param = param_val
+            value = post.get(param)
+            if value:
+                if value != 'None':
+                    int_id = int(value)
+                else:
+                    int_id = False
+                value = AttrDict({'id': int_id})
+            res.update({val: value})
+
+        o2m = [
+            ('tag_ids', 'tag_ids'),
+            ('context_group_ids', 'groups'),
+        ]
+        for param_val in o2m:    
+            val, param = param_val    
+            list_ids = None
+            if post.get(param):
+                list_ids = list()
+                id_list = post.get(param)
+                for id_value in id_list:
+                    if id_value != 'None':
+                        list_ids.append(AttrDict({'id': int(id_value)}))
+            res.update({val: list_ids})
+        currency_ids = list()
+        for i in range(1,4):
+            amount = post.get('currency_amount%s' % i)
+            currency = post.get('currency_id%s' % i)
+            if amount:
+                currency_ids.append(AttrDict({'price_unit': amount, 'currency_id': AttrDict({'id': int(currency)})}))
+        res.update({
+            'id': announcement.id,
+            'currency_ids': currency_ids,
+            'partner_id': announcement.partner_id,
+            'picture': announcement.picture,
+            'quantity_available': announcement.quantity_available,
+        })
+        return AttrDict(res)
+
     def _parse_and_save_announcement(self, cr, uid, registry, announcement, post, context=None):
         """ Parse all post params and render to the appropriate page
 
@@ -550,12 +633,9 @@ class announcement_controller(http.Controller):
         parser.parse(announcement, post)
 
         if len(parser.error_param_list) > 0:
-            if context.get('from_new_announcement') == True:
-                responce = self._get_new_announcement_dict(cr, uid, registry, announcement.partner_id, context=context)
-                template_id = 'website_project_weezer.new_announcement'
-            else:
-                responce = self._get_edit_announcement_dict(cr, uid, registry, announcement, context=context)
-                template_id = 'website_project_weezer.edit_announcement'
+            edited_announcement = self._get_announcement_from_post(post, announcement)
+            responce = self._get_edit_announcement_dict(cr, uid, registry, edited_announcement, context=context)
+            template_id = 'website_project_weezer.edit_announcement'
             responce.update({'error_param_list': parser.error_param_list, 'error_message_list': parser.error_message_list})
             cr.rollback()
         else:
@@ -599,6 +679,7 @@ class announcement_controller(http.Controller):
             'us_state_dict': self.get_default_country_state(cr, uid, registry, context=context),
             'country_dict': self.get_all_records(cr, uid, registry, 'res.country', context=context),
             'state_status_dict': self.get_state_status_dict(cr, uid, registry, context=context),
+            'type_dict': self.get_type_dict(cr, uid, request.registry, context=context),
             'category_dict': self.get_all_records(cr, uid, registry, \
                                                             'marketplace.announcement.category', context=context),
             'currency_dict': self.get_all_records(cr, uid, registry, 'res.currency', context=context),

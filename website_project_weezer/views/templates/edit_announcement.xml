@@ -67,26 +67,34 @@
                                                    <!--  TODO: ERROR: File "/opt/openerp/odoo/openerp/models.py", line 5348, in __contains__
         raise except_orm("ValueError", "Mixing apples and oranges: %s in %s" % (item, self))
     QWebException: ('ValueError', 'Mixing apples and oranges: 1 in marketplace.tag()') -->
-                                                    <!-- <t t-foreach="tag_dict.keys()" t-as="tag_id">
-                                                        <t t-if="tag_id in announcement.tag_ids">
-                                                            <option selected="selected" t-att-value='tag_id'><span t-esc='tag_dict[tag_id]'/></option>
-                                                        </t>
-                                                        <t t-if="tag_id not in announcement.tag_ids">
-                                                            <option t-att-value='tag_id'><span t-esc='tag_dict[tag_id]'/></option>
+                                                    <t t-foreach="announcement.tag_ids" t-as="tag">
+                                                        <t t-if="tag.id in tag_dict.keys()">
+                                                            <option selected="selected" t-att-value='tag.id'><span t-esc='tag_dict[tag.id]'/></option>
                                                         </t>
                                                     </t>
- -->                                                </select>
+                                                    <!-- need to append with json request to get tag by category by js-->
+                                                    </select>
                                             </div>
                                         
                                             <label class="col-md-1 control-label" for="groups">Groups</label>
                                             <div class="col-md-3">
                                                 <select id="groups" class="selectpicker form-control" name="groups" multiple="multiple">
-                                                    <t t-if="bool(announcement.context_group_ids) == False">
-                                                        <option selected="selected"></option>                      
+                                                    <t t-if="len(announcement.context_group_ids) == 0">
+                                                        <option selected="selected" value="None"></option>                      
                                                     </t>
-                                                    <t t-if="bool(announcement.context_group_ids) != False">
-                                                        <t t-foreach="announcement.context_group_ids" t-as="group">
-                                                            <option selected="selected"><t t-esc='group.name'/></option>
+                                                    <t t-if="len(announcement.context_group_ids) > 0">
+                                                        <option value="None"></option>                      
+                                                    </t>
+                                                    <t t-foreach="group_dict.keys()" t-as="group_id">
+                                                        <t t-if="group_id in announcement_group_ids">
+                                                            <option selected="selected" t-att-value="group_id">
+                                                                <t t-esc='group_dict[group_id]'/>
+                                                            </option>
+                                                        </t>
+                                                        <t t-if="group_id not in announcement_group_ids">
+                                                            <option t-att-value="group_id">
+                                                                <t t-esc='group_dict[group_id]'/>
+                                                            </option>
                                                         </t>
                                                     </t>
                                                 </select>
@@ -132,8 +140,9 @@
                                         <label for="emergency">Emergency</label>
                                     </div>
                                     <div class="col-md-12">
-                                        <span t-field="announcement.picture" t-field-options='{"widget": "image"}'/>
-                                        
+                                        <span>
+                                            <img class="img img-responsive" t-att-src="announcement_picture"/>
+                                        </span>
                                         <span class="btn btn-primary btn-file mt16">
                                             Upload new picture 
                                             <input type="file" name="picture"/>
@@ -144,9 +153,10 @@
                                 </div>
                                 
                                 <div class="col-md-5">
+                                    <input type="hidden" name='state' t-att-value="announcement.state"/>
                                     <input placeholder="Title" name="title" class="form-control" t-att-value="announcement.name"/> 
                                     <h5>Description</h5>
-                                    <textarea class="form-control" rows="6" cols="20" name="description" t-field="announcement.description"/>
+                                    <textarea class="form-control" rows="6" cols="20" name="description"><t t-esc="announcement.description"/></textarea>
                                 </div>
                 
                                 <div class="col-md-4">
@@ -232,14 +242,14 @@
                                         <div class="form-group">
                                             <label class="col-md-3 control-label" for="date-picker-1">From</label>
                                             <div class="col-md-9">
-                                                <input name="date_from" type="text" class="date-picker form-control" t-att-value="date_from" t-att-placeholder="date_placeholder" readonly="readonly"/>
+                                                <input name="date_from" type="text" class="date-picker form-control" t-att-value="date_from" t-att-placeholder="date_placeholder"/>
                                             </div>
                                         </div>
                                         
                                         <div class="form-group">
                                             <label class="col-md-3 control-label" for="date-picker-2">To</label>
                                             <div class="col-md-9">
-                                                <input name="date_to" id="date-picker-2" type="text" class="date-picker form-control" t-att-value="date_to" t-att-placeholder="date_placeholder" readonly="readonly"/>
+                                                <input name="date_to" id="date-picker-2" type="text" class="date-picker form-control" t-att-value="date_to" t-att-placeholder="date_placeholder"/>
                                             </div>
                                         </div>
                                         

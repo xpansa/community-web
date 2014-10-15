@@ -251,6 +251,7 @@
                     <div class="col-md-6">
                         <div class="col-md-12 mb16">
                             <h3 class="pull-left">My Wants</h3>
+                            <a href="/marketplace/announcement_detail/new" class="btn btn-success pull-right mt16 btn-nolink">Add new Want</a>
                         </div>
                         <t t-foreach="wants" t-as="item">
                             <!-- single item -->
@@ -266,6 +267,7 @@
                     <div class="col-md-6">
                         <div class="col-md-12 mb16">
                             <h3 class="pull-left">My Offers</h3>
+                            <a href="/marketplace/announcement_detail/new" class="btn btn-success pull-right mt16 btn-nolink">Add new Offer</a>
                         </div>
                         <t t-foreach="offers" t-as="item">
                             <!-- single item -->
