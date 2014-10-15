@@ -501,8 +501,13 @@ class announcement_controller(http.Controller):
         """ Route for process view announcement request
         """
         cr, uid, context, registry = request.cr, request.uid, request.context, request.registry
-        return http.request.website.render('website_project_weezer.view_announcement', 
-            self._get_view_announcement_dict(cr, uid, registry, announcement, context=context))
+        user = registry.get('res.users').browse(cr, uid, uid, context=context)
+        if user and announcement.partner_id.id == user.partner_id.id or uid == SUPERUSER_ID:  
+            web_page = request.redirect('%s/edit' % announcement.id)
+        else:
+            web_page = http.request.website.render('website_project_weezer.view_announcement', 
+                self._get_view_announcement_dict(cr, uid, registry, announcement, context=context))
+        return web_page
 
     def _get_edit_announcement_dict(self, cr, uid, registry, announcement, context=None):
         """ Return dict of values needed to edit announcement template
