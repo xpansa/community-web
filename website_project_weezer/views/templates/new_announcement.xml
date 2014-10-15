@@ -32,7 +32,7 @@
                                     <div class="form-horizontal col-md-12">
                                         <div class="form-group">
                 
-                                            <label class="col-md-2 control-label" for="category">Category</label>
+                                            <label class="col-md-1 control-label" for="category">Category</label>
                                             <div class="col-md-2">
                                                 <select id="category" name="category_id" class="selectpicker form-control">
                                                     <t t-foreach="category_dict.keys()" t-as="category_id">
@@ -42,7 +42,7 @@
                                             </div>
                                   
                                             <label class="col-md-1 control-label" for="tags">Tags</label>
-                                            <div class="col-md-3">
+                                            <div class="col-md-2">
                                                 <select name="tag_ids" multiple="multiple" class="selectpicker form-control">
                                                     <option value="None" selected="selected"></option>                      
                                                     <!-- Must be added with tags from get tag request -->
@@ -50,7 +50,7 @@
                                             </div>
                                         
                                             <label class="col-md-1 control-label" for="groups">Groups</label>
-                                            <div class="col-md-3">
+                                            <div class="col-md-2">
                                                 <select name="groups" multiple="multiple" class="selectpicker form-control">
                                                     <option value="None" selected="selected"></option>                      
                                                     <t t-foreach="group_dict.keys()" t-as="group_id">
@@ -58,7 +58,17 @@
                                                     </t>
                                                 </select>
                                             </div>
-                
+                                            
+                                            <label class="col-md-1 control-label" for="groups">Type</label>
+                                            <div class="col-md-2">
+                                                <select id="type" class="selectpicker form-control" name="type">
+                                                    <t t-foreach="type_dict.keys()" t-as="type">
+                                                        <option t-att-value="type">
+                                                            <t t-esc='type_dict[type]'/>
+                                                        </option>
+                                                    </t>
+                                                </select>
+                                            </div>
                                         </div>
                                     </div>
                               </div>

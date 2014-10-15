@@ -28,11 +28,11 @@
                     <section class="container mt32">
                         <form action="save" method="POST" enctype="multipart/form-data">
                             <div class="row">
-                                <div class="col-md-8">
+                                <div class="col-md-12">
                                     <div class="form-horizontal col-md-12">
                                         <div class="form-group">
                 
-                                            <label class="col-md-2 control-label" for="category">Category</label>
+                                            <label class="col-md-1 control-label" for="category">Category</label>
                                             <div class="col-md-2">
                                                 <select id="category" name="category_id" class="selectpicker form-control">
                                                     <t t-if="bool(announcement.category_id) == False">
@@ -54,7 +54,7 @@
                                             </div>
                                   
                                             <label class="col-md-1 control-label" for="tags">Tags</label>
-                                            <div class="col-md-3">
+                                            <div class="col-md-2">
                                                 <!-- TODO AUTOCOMPLETE WIDGET + CREATE NEW -->
                                                 <select id="tags" name="tag_ids" multiple="multiple" class="selectpicker form-control">
                                                     <t t-if="bool(announcement.tag_ids) == False">
@@ -64,9 +64,6 @@
                                                         <option value="None"></option>                      
                                                     </t>
                                                     
-                                                   <!--  TODO: ERROR: File "/opt/openerp/odoo/openerp/models.py", line 5348, in __contains__
-        raise except_orm("ValueError", "Mixing apples and oranges: %s in %s" % (item, self))
-    QWebException: ('ValueError', 'Mixing apples and oranges: 1 in marketplace.tag()') -->
                                                     <t t-foreach="announcement.tag_ids" t-as="tag">
                                                         <t t-if="tag.id in tag_dict.keys()">
                                                             <option selected="selected" t-att-value='tag.id'><span t-esc='tag_dict[tag.id]'/></option>
@@ -77,7 +74,7 @@
                                             </div>
                                         
                                             <label class="col-md-1 control-label" for="groups">Groups</label>
-                                            <div class="col-md-3">
+                                            <div class="col-md-2">
                                                 <select id="groups" class="selectpicker form-control" name="groups" multiple="multiple">
                                                     <t t-if="len(announcement.context_group_ids) == 0">
                                                         <option selected="selected" value="None"></option>                      
@@ -94,6 +91,23 @@
                                                         <t t-if="group_id not in announcement_group_ids">
                                                             <option t-att-value="group_id">
                                                                 <t t-esc='group_dict[group_id]'/>
+                                                            </option>
+                                                        </t>
+                                                    </t>
+                                                </select>
+                                            </div>
+                                            <label class="col-md-1 control-label" for="groups">Type</label>
+                                            <div class="col-md-2">
+                                                <select id="type" class="selectpicker form-control" name="type">
+                                                    <t t-foreach="type_dict.keys()" t-as="type">
+                                                        <t t-if="type == announcement.type">
+                                                            <option selected="selected" t-att-value="type">
+                                                                <t t-esc='type_dict[type]'/>
+                                                            </option>
+                                                        </t>
+                                                        <t t-if="type != announcement.type">
+                                                            <option t-att-value="type">
+                                                                <t t-esc='type_dict[type]'/>
                                                             </option>
                                                         </t>
                                                     </t>
