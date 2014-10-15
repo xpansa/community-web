@@ -284,11 +284,9 @@ class announcement_controller(http.Controller):
             """
             currency_dict = dict()
 
-            null_amount = False
             currency_pool = self.registry.get('res.currency')
             amount_fromat_error = False
             currency_exist_error = False
-            null_amount_error = False
             same_currency_error = False
             for index in range(1,4): 
                 amount_key = 'currency_amount%s' % index
@@ -299,7 +297,7 @@ class announcement_controller(http.Controller):
                         amount = float(post.get(amount_key))
                     except ValueError:
                         amount_fromat_error = True
-                        error_param_list.append(amount_key)
+                        self.error_param_list.append(amount_key)
                     currency_id = post.get(id_key)
                     currency_id = currency_pool.search(self.cr, self.uid, [('id', '=', currency_id)], limit=1, context=self.context)
                     currency_id = (currency_id[0] if len(currency_id) else False) if type(currency_id) is list else currency_id
@@ -307,14 +305,8 @@ class announcement_controller(http.Controller):
                         currency_exist_error = True
                         error_param_list.append(id_key)
 
-                    if null_amount:
-                        null_amount_error = True
-                        error_param_list.append(amount_key)
-
                     if amount and currency_id:
                         currency_dict.update({currency_id: amount})
-                else:
-                    null_amount = True
         
             for index in [(1,2),(1,3),(2,3)]:
                 amount_key_1 = 'currency_amount%s' % index[0]
@@ -330,13 +322,13 @@ class announcement_controller(http.Controller):
             error_tuple = [
                 (amount_fromat_error, 'Amount must be in a float format'),
                 (currency_exist_error, 'There is no such currency'),
-                (null_amount_error, 'First fill in previous amount'),
                 (same_currency_error, 'Announcement can\'t have 2 amount with the same currency'),
             ]
 
             for error in error_tuple:
                 if error[0]:
                     self.error_message_list.append(_(error[1]))
+
             if len(self.error_message_list) == 0:
                 currency_line_value = dict()
                 new_currency_line_value = list()
