@@ -140,8 +140,6 @@ class profile_controller(http.Controller):
                     values['partner'].update({k: val})
             elif k.startswith('skills'):
                 for key in ['new', 'existing']:
-                    if key == 'new' and not val:
-                        continue
                     skill_number = re.search('skills\[%s\]\[(\d+)\]' % key, k)
                     if skill_number:
                         skill_number = int(skill_number.group(1))
@@ -151,8 +149,6 @@ class profile_controller(http.Controller):
                         })
             elif k.startswith('tags'):
                 for key in ['new', 'existing']:
-                    if key == 'new' and not val:
-                        continue
                     tag_number = re.search('tags\[%s\]\[(\d+)\]' % key, k)
                     if tag_number:
                         tag_number = int(tag_number.group(1))
@@ -339,6 +335,8 @@ class profile_controller(http.Controller):
         
         # Create new skills (marketplace.announcement.category)
         for skill in data['skills']['new']:
+            if not skill['name']:
+                continue
             skill_id = skill_category_pool.search(cr, uid, [('name','=',skill['name'])], context=context)
             if not skill_id:
                 skill_id = skill_category_pool.create(cr, uid, {'name': skill['name']}, context=context)
@@ -347,6 +345,8 @@ class profile_controller(http.Controller):
         tag_category_id = data_pool.get_object_reference(cr, uid, 'website_project_weezer', 'user_tags_category')[1]
         # Create new interests (marketplace.tag)
         for tag in data['interests']['new']:
+            if not tag['name']:
+                continue
             tag_id = tag_pool.search(cr, uid, [('name','=',tag['name'])], context=context)
             if not tag_id:
                 tag_id = tag_pool.create(cr, uid, {

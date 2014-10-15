@@ -345,9 +345,7 @@
                                                         
                                                         <div class="col-md-12">
                                                             <h5>Description</h5>
-                                                            <!-- TODO CURRENT USER DESCRIPTION -->
-                                                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed sed tellus lectus. Vivamus placerat elit in pulvinar sagittis. Integer at egestas purus, dictum ultricies nisl.</p>
-                                                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed sed tellus lectus. Vivamus placerat elit in pulvinar sagittis. Integer at egestas purus, dictum ultricies nisl.</p>
+                                                            <textarea name="description"><t t-esc="my_reply.description"/></textarea>
                                                         </div>
                                                     </div>
                                                     <!-- END: Reply Left side -->
@@ -362,7 +360,7 @@
                                                                             <label>Quantity</label>
                                                                         </div>
                                                                         <div class="col-md-8">
-                                                                            <input type="text" class="form-control" placeholder="" />
+                                                                            <input name="quantity" type="text" class="form-control" placeholder="" t-att-value="my_reply.quantity"/>
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -372,20 +370,10 @@
                                                                             <label>When?</label>
                                                                         </div>
                                                                         <div class="col-md-8">
-                                                                            <input type="text" placeholder="DD/MM/YYYY" class="date-picker form-control" />
+                                                                            <input type="text" placeholder="DD/MM/YYYY" class="date-picker form-control" name="write_date" t-att-value="my_reply.write_date"/>
                                                                         </div>
                                                                     </div>
                                                                 </div>
-                                                                <div class="form-group">
-                                                                        <div class="col-md-12">
-                                                                            <div class="col-md-4 control-label">
-                                                                                <label>Where?</label>
-                                                                            </div>
-                                                                            <div class="col-md-8">
-                                                                                <input type="text" class="form-control" placeholder="" />
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
                                                             </div>
                                                             
                                                             <div class="col-md-8">
@@ -400,18 +388,14 @@
                                                                             </tr>
                                                                         </thead>
                                                                         <tbody>
+                                                                            <t t-foreach="my_reply.currency_ids" t-as="line">
                                                                             <tr class="list-item">
-                                                                                <td><input type="text" class="form-control"/></td>
+                                                                                <td><input type="text" class="form-control" t-att-value="line.price_unit"/></td>
                                                                                 <td>
-                                                                                    <!-- python code to get currencies -->
-                                                                                    <t t-set="currencies_obj" t-value="request.registry['account.centralbank.config.currency']"/>
-                                                                                    <t t-set="currency_info_ids" t-value="currencies_obj.search(request.cr, request.uid, [], context=request.context)"/>
-                                                                                    <t t-set="currencies" t-value="currencies_obj.read(request.cr, request.uid, currency_info_ids, ['currency_id'], context=request.context)"/>
-
-                                                                                    <select name="currency" class="selectpicker form-control mb16" style="display: none;">
-                                                                                        <option value="0" t-att-selected="'selected' if not int(request.httprequest.args.get('currency',0)) else None">All</option>
+                                                                                    <select name="currency_id" class="selectpicker form-control mb16" style="display: none;">
+                                                                                        <option value="0" t-att-selected="'selected' if not line.currency_id else None">All</option>
                                                                                         <t t-foreach="currencies or []" t-as="c">
-                                                                                            <option t-att-value="c['currency_id'][0]" t-att-selected="'selected' if int(request.httprequest.args.get('currency',0)) == c['currency_id'][0] else None"><t t-esc="c['currency_id'][1]"/></option>
+                                                                                            <option t-att-value="c.id" t-att-selected="'selected' if line.currency_id.id == c.id else None"><t t-esc="c.name"/></option>
                                                                                         </t>
                                                                                     </select>
                                                     
@@ -419,34 +403,16 @@
                                                                                 <td><input type="text" class="form-control"/></td>
                                                                                 <td><button class="list-remove btn btn-danger"><i class="fa fa-minus"></i></button></td>
                                                                             </tr>
+                                                                            </t>
                                                                         </tbody>
                                                                     </table>
                                                                     <a class="list-add btn btn-small btn-primary mb16 margin-left-10"><i class="fa fa-plus"></i></a>
                                                                 </div> 
-                                                                <div class="dynamic-list">                                                       
-                                                                    <table class="table">
-                                                                        <thead>
-                                                                            <tr>
-                                                                                <th>Rat.</th>
-                                                                                <th>Indicat.</th>
-                                                                                <th></th>
-                                                                            </tr>
-                                                                        </thead>
-                                                                        <tbody>
-                                                                            <tr class="list-item">
-                                                                                <td><input type="text" class="form-control"/></td>
-                                                                                <td><input type="text" class="form-control"/></td>
-                                                                                <td><button class="list-remove btn btn-danger"><i class="fa fa-minus"></i></button></td>
-                                                                            </tr>
-                                                                        </tbody>
-                                                                    </table>
-                                                                    <a class="list-add btn btn-small btn-primary mb16 margin-left-10"><i class="fa fa-plus"></i></a>
-                                                                </div>
                                                             </div>
                                                             <div class="row mt32">
                                                                 <div class="col-md-12">
                                                                     <label>Feedback</label>
-                                                                    <textarea class="form-control" rows="3"></textarea>
+                                                                    <textarea class="form-control" rows="3" name="vote_comment"><t t-esc="my_reply.vote_comment"/></textarea>
                                                                     <a href="#" class="btn col-md-2 pull-right btn-success mt8 btn-simulateload">Add reply</a>
                                                                 </div>
                                                             </div>
