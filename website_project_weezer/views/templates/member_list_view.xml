@@ -3,6 +3,81 @@
     <data>
         <template id="member_list_view" name="Mamber list">
             <t t-call="website.layout">
+                <section>
+                    <form action="/marketplace/member_list/search" method='post'>
+                        <t t-if='bool(search_param)'>
+                            <div>
+                                Name: 
+                                <input name="search_name" t-att-value="search_param.get('search_name')"/>
+                            </div>
+                            <div>
+                                <input name="location" t-att-value="search_param.get('location')"/>
+                                <input name="group" t-att-value="search_param.get('group')"/>
+                                <input name="tag" t-att-value="search_param.get('tag')"/>
+                                <t t-foreach='membership_dict.keys()' t-as='membership'>
+                                    <t t-esc='membership_dict[membership]'/>
+                                    <t t-if="search_param.get('membership_%s' % membership)">
+                                        <input type='checkbox' checked="checked" t-att-name="'membership_%s' % membership"/>
+                                    </t>
+                                    <t t-if="not search_param.get('membership_%s' % membership)">
+                                        <input type='checkbox' t-att-name="'membership_%s' % membership"/>
+                                    </t>
+                                </t>
+                                <br/>
+                            </div>
+
+                            <div>
+                                <input name='amount_from' t-att-value="search_param.get('amount_from')"/>
+                                <input name='amount_to' t-att-value="search_param.get('amount_to')"/>
+                                <select name='currency_id'>
+                                    <option value='None'></option>
+                                    <t t-foreach="currency_dict.keys()" t-as='currency_id'>
+                                        <t t-if="search_param.get('currency_id')">
+                                            <option t-att-value='currency_id' selected='selected'>
+                                                <t t-esc="currency_dict[currency_id]"/>
+                                            </option>
+                                        </t>
+                                        <t t-if="not search_param.get('currency_id')">
+                                            <option t-att-value='currency_id'>
+                                                <t t-esc="currency_dict[currency_id]"/>
+                                            </option>
+                                        </t>
+                                    </t>
+                                </select>
+                            </div>
+                        </t>
+                        <t t-if='bool(search_param) == False'>
+                            <div>
+                                Name: 
+                                <input name="search_name"/>
+                            </div>
+                            <div>
+                                <input name="location"/>
+                                <input name="group"/>
+                                <input name="tag"/>
+                                <t t-foreach='membership_dict.keys()' t-as='membership'>
+                                    <t t-esc='membership_dict[membership]'/><input type='checkbox' t-att-name="'membership_%s' % membership"/>
+                                </t>
+                                <br/>
+                            </div>
+
+                            <div>
+                                <input name='amount_from'/>
+                                <input name='amount_to'/>
+                                <select name='currency_id'>
+                                    <option value='None'></option>
+                                    <t t-foreach="currency_dict.keys()" t-as='currency_id'>
+                                        <option t-att-value='currency_id'>
+                                            <t t-esc="currency_dict[currency_id]"/>
+                                        </option>
+                                    </t>
+                                </select>
+                            </div>
+                        </t>
+
+                        <input type="submit"/>
+                    </form>
+                </section>
                 <!-- members listing -->
                 <section class="bg-info">
                     <div class="container pt32 pb32">
