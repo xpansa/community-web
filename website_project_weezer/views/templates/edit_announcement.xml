@@ -118,29 +118,6 @@
                                     </div>
                               </div>
                             </div>
-
-                            <div class="row mb16">
-                                <div class="col-md-8">
-                                    <div class="form-group">
-                
-                                        <label class="col-md-offset-3 col-md-2 control-label" for="documents">Documents</label>
-                                        <div class="col-md-3">
-                                            <!-- TODO: make multiple upload possible-->
-                                            <span class="btn btn-primary btn-file">
-                                                Upload new document 
-                                                <input type="file" name="document"/>
-                                            </span>  
-                                            <div class="files-to-upload mt8 mb8"/> 
-                                        </div>
-                                    
-                                        <label class="col-md-1 control-label" for="link">Link</label>
-                                        <div class="col-md-3">
-                                            <input placeholder="Website" type="text" name="link" t-att-value="announcement.link" class="form-control"/>
-                                        </div>
-                
-                                    </div>
-                                </div> 
-                            </div>
                 
                             <div class="row">
                                 <div class="col-md-3">
@@ -164,6 +141,18 @@
                                         <div class="files-to-upload mt8 mb8"/>
 
                                     </div>
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                
+                                            <span class="mt16 btn btn-primary btn-file">
+                                                Upload new document 
+                                                <input type="file" name="document" multiple="multiple"/>
+                                            </span>  
+                                            <div class="files-to-upload mt8 mb8"/> 
+                    
+                                        </div>
+
+                                    </div>
                                 </div>
                                 
                                 <div class="col-md-5">
@@ -180,7 +169,7 @@
                                           <input placeholder="Author" type="text" class="form-control" t-att-value="author.name" readonly="readonly"/>
                                         </div>
                                         <div class="col-md-9 pull-right mt16">
-                                          <span t-field="author.image" t-field-options='{"widget": "image", "class": "thumbnail mb16"}'/>
+                                          <span t-field="author.image" t-field-options='{"widget": "image", "class": "thumbnail mb16 announcement-author"}'/>
                                         </div>
                                     </div>
                                 </div>

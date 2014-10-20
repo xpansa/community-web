@@ -1,0 +1,23 @@
+{
+  "name": "Weezer",
+  "version": "1.0.0",
+  "description": "Weezer",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@bitbucket.org:webbybrains/project-weezer.git"
+  },
+  "keywords": [
+    "Weezer"
+  ],
+  "author": "WebByBrains, Expansa",
+  "devDependencies": {
+    "grunt": "^0.4.5",
+    "grunt-contrib-sass": "^0.8.1",
+    "grunt-contrib-watch": "^0.6.1",
+    "load-grunt-tasks": "^0.6.0",
+    "time-grunt": "^1.0.0"
+  }
+}

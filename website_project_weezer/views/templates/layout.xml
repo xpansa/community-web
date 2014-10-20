@@ -29,20 +29,20 @@
                                                 <t t-foreach="website.menu_id.child_id" t-as="submenu">
                                                     <t t-call="website.submenu"/>
                                                 </t>
-                                                <li><a href="/marketplace/announcement_detail/new"><span class="fa fa-pencil"></span></a></li>
-                                                <li><a href="#" class="btn-nolink"><span class="fa fa-usd"></span></a></li>
+                                                <li><a href="/marketplace/announcement_detail/new"><span class="weezer-icon weezer-pencil"></span></a></li>
+                                                <li><a href="#" class="btn-nolink"><span class="weezer-icon weezer-dollar"></span></a></li>
                                             </ul>
                                             <ul class="nav navbar-nav pull-right">
-                                                <li><a href="/marketplace/member_list"><span class="fa fa-users"></span></a></li>
-                                                <li><a href="/page/website.contactus" class="btn-nolink"><span class="fa fa-envelope"></span></a></li>
+                                                <li><a href="/marketplace/member_list"><span class="weezer-icon weezer-group"></span></a></li>
+                                                <li><a href="/page/website.contactus" class="btn-nolink"><span class="weezer-icon weezer-envelope"></span></a></li>
                                                 <li t-ignore="true" t-if="website.user_id == user_id">
                                                     <a href="/web/login">
-                                                        <span class="fa fa-user"></span>
+                                                        <span class="weezer-icon weezer-profile"></span>
                                                     </a>
                                                 </li>
                                                 <li class="dropdown" t-ignore="true" t-if="website.user_id != user_id">
                                                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                                        <span class="fa fa-user"></span>
+                                                        <span class="weezer-icon weezer-profile"></span>
                                                     </a>
                                                     <ul class="dropdown-menu js_usermenu" role="menu">
                                                         <li><a href="/marketplace/profile" role="menuitem">My Profile</a></li>

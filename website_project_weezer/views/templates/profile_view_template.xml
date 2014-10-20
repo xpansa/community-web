@@ -25,7 +25,6 @@
                     <div class="col-md-4">
                         <img t-att-src="images['image_big']" class="img img-responsive thumbnail"/>
                         <div class="mb32">
-                            <img t-att-src="images['image_small']" class="img img-circle" width="40" height="40"/>
                             <div class="clearfix"></div>
                             <t t-if="membership">
                                 <span class="badge badge-success mt4"><t t-esc="membership.name"/></span>

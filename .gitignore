@@ -7,3 +7,7 @@
 /website_project_weezer/sftp-config.json
 
 /HTML/
+
+/website_project_weezer/static/src/node_modules/
+
+/website_project_weezer/static/src/npm-debug.log

@@ -37,65 +37,47 @@
                             <div class="col-md-8">
                                 <form class="form-horizontal col-md-12">
                                     <div class="form-group">
-            
-                                        <label class="col-md-1 control-label" for="category">Category</label>
+                                        <label class="col-md-1 no-padding-top control-label" for="category">Category</label>
                                         <div class="col-md-2">
-                                            <select id="category" name="category_id" class="selectpicker form-control" disabled="disabled">
-                                                <t t-if="bool(announcement.category_id) == False">
-                                                    <option selected="selected"></option>                      
-                                                </t>
-                                                <t t-if="bool(announcement.category_id) != False">
-                                                    <option><t t-esc="announcement.category_id.name"/></option>                      
-                                                </t>
-                                            </select>
+                                            <t t-if="bool(announcement.category_id) == False">
+                                                <p>none</p>
+                                            </t>
+                                            <t t-if="bool(announcement.category_id) != False">
+                                                <span class="badge badge-primary" t-esc="announcement.category_id.name"/>
+                                            </t>
                                         </div>
-                              
-                                        <label class="col-md-1 control-label" for="tags">Tags</label>
+                                        <label class="col-md-1 no-padding-top control-label" for="tags">Tags</label>
                                         <div class="col-md-2">
-                                            <select id="tags" class="selectpicker form-control" name="tag_ids" multiple="multiple" disabled="disabled">
-                                                <t t-if="bool(announcement.tag_ids) == False">
-                                                    <option selected="selected"></option>                      
+                                            <t t-if="bool(announcement.tag_ids) == False">
+                                                <p>none</p>
+                                            </t>
+                                            <t t-if="bool(announcement.tag_ids) != False">
+                                                <t t-foreach="announcement.tag_ids" t-as="tag">
+                                                    <span class="badge badge-primary" t-esc='tag.name'/>
                                                 </t>
-                                                <t t-if="bool(announcement.tag_ids) != False">
-                                                    <t t-foreach="announcement.tag_ids" t-as="tag">
-                                                        <option selected="selected"><t t-esc='tag.name'/></option>
-                                                    </t>
-                                                </t>
-                                            </select>
+                                            </t>
                                         </div>
                                     
-                                        <label class="col-md-1 control-label" for="groups">Groups</label>
+                                        <label class="col-md-1 no-padding-top control-label" for="groups">Groups</label>
                                         <div class="col-md-2">
-                                            <select id="groups" class="selectpicker form-control" name="groups" multiple="multiple" disabled="disabled">
-                                                <t t-if="bool(announcement.context_group_ids) == False">
-                                                    <option selected="selected"></option>                      
+                                            <t t-if="bool(announcement.context_group_ids) == False">
+                                                <p>none</p>
+                                            </t>
+                                            <t t-if="bool(announcement.context_group_ids) != False">
+                                                <t t-foreach="announcement.context_group_ids" t-as="group">
+                                                    <span class="badge badge-primary" t-esc='group.name'/>
                                                 </t>
-                                                <t t-if="bool(announcement.context_group_ids) != False">
-                                                    <t t-foreach="announcement.context_group_ids" t-as="group">
-                                                        <option selected="selected"><t t-esc='group.name'/></option>
-                                                    </t>
-                                                </t>
-                                            </select>
+                                            </t>
                                         </div>
 
-                                        <label class="col-md-1 control-label" for="groups">Type</label>
-                                            <div class="col-md-2">
-                                                <select id="type" class="selectpicker form-control" name="type" disabled="disabled">
-                                                    <t t-foreach="type_dict.keys()" t-as="type">
-                                                        <t t-if="type == announcement.type">
-                                                            <option selected="selected" t-att-value="type">
-                                                                <t t-esc='type_dict[type]'/>
-                                                            </option>
-                                                        </t>
-                                                        <t t-if="type != announcement.type">
-                                                            <option t-att-value="type">
-                                                                <t t-esc='type_dict[type]'/>
-                                                            </option>
-                                                        </t>
-                                                    </t>
-                                                </select>
-                                            </div>
-            
+                                        <label class="col-md-1 no-padding-top control-label" for="groups">Type</label>
+                                        <div class="col-md-2">
+                                            <t t-foreach="type_dict.keys()" t-as="type">
+                                                <t t-if="type == announcement.type">
+                                                    <span class="badge badge-primary" t-esc='type_dict[type]'/>
+                                                </t>
+                                            </t>
+                                        </div>
                                     </div>
                                 </form>
                           </div>
@@ -109,10 +91,7 @@
                                             <a class="label label-primary" t-att-href="attach"><t t-esc='attachment_dict[attach]'/></a>
                                         </t>
                                     </t>
-                                </div>
-                                <div class="text-right col-md-3 m16 mb16">
-                                    <a t-if="announcement.link" t-att-href="announcement.link" class="btn btn-link btn-nolink">Link to a web page</a>
-                                </div>  
+                                </div> 
                             </div>  
                         </div>
             
@@ -135,7 +114,7 @@
                             <div class="col-md-5">
                                 <h3 class="mt0" t-field="announcement.name"/>
                                 <h5>Description</h5>
-                                <span t-field="announcement.description"/>
+                                <p class="text-justify" t-field="announcement.description"/>
                             </div>
             
                             <div class="col-md-4">
@@ -145,7 +124,7 @@
                                       <input type="text" class="form-control" disabled="disabled" t-att-value="author.name"/>
                                     </div>
                                     <div class="col-md-9 pull-right mt16">
-                                      <span t-field="author.image" t-field-options='{"widget": "image", "class": "thumbnail mb16"}'/>
+                                      <span t-field="author.image" t-field-options='{"widget": "image", "class": "thumbnail mb16 announcement-author"}'/>
                                     </div>
                                 </div>
                             </div>

@@ -13,7 +13,8 @@
                     
                     <div class="col-md-9 col-sm-9 mt16">
                         <div class="col-md-8">
-                            <h3 class="mt0" t-field="member.name"/>
+                            <h3 class="mt0"><a t-attf-href="/marketplace/profile/#{member.id}" t-field="member.name"/></h3>
+                            <p><span class="badge badge-info" t-field="member.city"/></p>
                             <h5 t-field="member.comment"/>
                         </div>
                         <div class="col-md-4">
@@ -22,7 +23,7 @@
                             </t>
                         </div>
                         
-                        <div class="col-md-6">
+                        <div class="col-md-6 two-line">
                             <t t-foreach="member.skill_tag_ids" t-as="tag">
                                 <span class="label label-primary" t-field="tag.name"/>
                             </t>

@@ -4,6 +4,7 @@
 @import "ui/buttons";
 @import "ui/badges";
 @import "ui/scrollable";
+@import "ui/icons";
 @import "helpers/padding";
 @import "helpers/margin";
 
@@ -14,6 +15,7 @@
 	@include project-ui-badges;
 	@include project-ui-jumbotron;
 	@include project-ui-scrollable;
+	@include project-ui-icons;
 	@include project-helpers-padding;
 	@include project-helpers-margin;
 
@@ -128,5 +130,16 @@
 			text-decoration: none;
 		}
 		color: rgb(51, 51, 51);
+	}
+
+	.announcement-author
+	{
+		margin: 0 auto;
+	}
+
+	.two-line
+	{
+		overflow: hidden;
+		height: 42px;
 	}
 }
