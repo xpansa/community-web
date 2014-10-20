@@ -4,7 +4,7 @@
         <template id="member_list_view" name="Mamber list">
             <t t-call="website.layout">
                 <section>
-                    <form action="/marketplace/member_list/search" method='post'>
+                    <form action="/marketplace/member_list/search" method='get'>
                         <t t-if='bool(search_param)'>
                             <div>
                                 Name: 
