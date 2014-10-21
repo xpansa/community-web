@@ -29,9 +29,9 @@ from openerp.addons.web import http
 from openerp.addons.web.controllers.main import content_disposition
 from openerp.addons.web.http import request
 from openerp.addons.website.controllers.main import Website as controllers
-from openerp.tools import DEFAULT_SERVER_DATE_FORMAT
+from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
 from openerp.tools.translate import _
-from main import get_date_format
+from main import get_date_format, format_date
 
 from attrdict import AttrDict
 
@@ -392,10 +392,10 @@ class announcement_controller(http.Controller):
     def get_all_records(self, cr, uid, registry, model_name, context=None):
         """ Return all records of specified model
         """
+        pool = registry.get(model_name)
         args = []
         if model_name == 'res.currency':
-            args = [('centralbank_currency', '=', True)]
-        pool = registry.get(model_name)
+            args = [('centralbank_currency','=',True)]
         res = pool.name_search(cr, uid, '', args, context=context)
         return self.convert_tuple_to_dict(cr, uid, res, context=context)
 
@@ -491,9 +491,10 @@ class announcement_controller(http.Controller):
                 res = prop
         if not res:
             res = AttrDict({
+                'errors': {},
                 'quantity': 0.0,
                 'description': '',
-                'write_date': '',
+                'write_date': datetime.today().strftime(DEFAULT_SERVER_DATETIME_FORMAT),
                 'vote_comment': '',
                 'currency_ids': [AttrDict({
                     'id': 0,
@@ -509,36 +510,51 @@ class announcement_controller(http.Controller):
         res = {
                 'quantity': data.get('quantity'),
                 'description': data.get('description'),
-                'write_date': data.get('write_date'),
+                'write_date': datetime.today().strftime(DEFAULT_SERVER_DATETIME_FORMAT),
                 'vote_comment': data.get('vote_comment'),
                 'currency_ids': [],
             }
         currency_ids = {'existing': {}, 'new': {}}
+        currencies_uniq = []
+        errors = {}
         for key, val in data.iteritems():
             if key.startswith('currency_ids'):
                 for f in ['currency_id', 'price_unit']:
                     for t in ['new', 'existing']:
+
                         curr_number = re.search('currency_ids\[%s\]\[(\d+)\]\[%s\]' % (t, f), key)
                         if curr_number:
                             curr_number = int(curr_number.group(1))
+                            if f == 'currency_id':
+                                if val in currencies_uniq:
+                                    errors['currency_ids'] = _('Currency cannot have multiple unit prices')
+                                else:
+                                    currencies_uniq.append(val)
                             if not curr_number in currency_ids[t]:
                                 currency_ids[t][curr_number] = {
                                     'id': curr_number,
                                     f: AttrDict({'id': val}) if f == 'currency_id' else val,
                                     'is_new': True if t == 'new' else False,
+                                    'subtotal': '',
                                 }
                             else:
                                 currency_ids[t][curr_number].update({f: AttrDict({'id': val}) if f == 'currency_id' else val})
         res['currency_ids'] = [AttrDict(line) for key in ['existing', 'new'] for line in currency_ids[key].values()]
-        errors = {}
         if not data['quantity']:
             errors.update({'quantity': _('Please input quantity')})
         else:
             try:
                 float(data['quantity'])
             except:
-                errors.update({'quantity': _('Quanitty should be a float number e.g. 12.05')})
-        res['errors'] = AttrDict(errors)
+                errors.update({'quantity': _('Quantity should be a float number e.g. 12.99')})
+        if not 'currency_ids' in errors:
+            for line in res['currency_ids']:
+                try:
+                    float(line.price_unit)
+                except:
+                    errors.update({'currency_ids': _('Unit price should be a float number e.g. 12.99')})
+                    break
+        res['errors'] = errors
         return AttrDict(res)
 
     def _save_reply(self, cr, uid, registry, announcement, reply, context=None):
@@ -555,6 +571,10 @@ class announcement_controller(http.Controller):
         }
         if id:
             proposition_pool.write(cr, uid, id[0], vals, context=context)
+            currency_ids = currency_line_pool.search(cr, uid, [('proposition_id', '=', id[0])], context=context)
+            currency_to_del_ids = list(set(currency_ids) - \
+                                set([c.id for c in reply.currency_ids if not getattr(c, 'is_new', False)]))
+            currency_line_pool.unlink(cr, uid, currency_to_del_ids, context=context)
         else:
             id = [proposition_pool.create(cr, uid, vals, context=context)]
         for line in reply.currency_ids:
@@ -577,7 +597,7 @@ class announcement_controller(http.Controller):
         return {
             'announcement':announcement,
             'author': announcement.partner_id,
-            'replied_list': [p for p in announcement.proposition_ids if p.create_uid.id != uid],
+            'replied_list': [p for p in announcement.proposition_ids if p.create_uid.id != user.id],
             'my_reply': my_reply or self._get_my_reply(cr, uid, request.registry, announcement, context=context),
             'state_status_dict': self.get_state_status_dict(cr, uid, request.registry, context=context),
             'type_dict': self.get_type_dict(cr, uid, request.registry, context=context),
@@ -586,9 +606,9 @@ class announcement_controller(http.Controller):
                 datetime.strptime(announcement.date_from, DEFAULT_SERVER_DATE_FORMAT).strftime(date_format),
             'date_to': '' if not announcement.date_to else \
                 datetime.strptime(announcement.date_to, DEFAULT_SERVER_DATE_FORMAT).strftime(date_format),
-            'currency_dict': self.get_all_records(cr, uid, request.registry, 'res.currency', context=context),
-            'date_placeholder': date_format.replace('%d','DD').replace('%m','MM').replace('%Y','YYYY'),
             'getattr': getattr,
+            'currency_dict': self.get_all_records(cr, uid, registry, 'res.currency', context=context),
+            'format_date': format_date,
         }
 
     @http.route('/marketplace/announcement_detail/<model("marketplace.announcement"):announcement>', type='http', auth="public", website=True)

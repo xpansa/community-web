@@ -47,7 +47,7 @@
                                                 <label>When?</label>
                                             </div>
                                             <div class="col-md-8">
-                                            <input type="text" t-att-value="reply.write_date" class="form-control" readonly="readonly" />
+                                            <input type="text" class="form-control" readonly="readonly" t-att-value="format_date(reply.write_date, True)"/>
                                             </div>
                                         </div>
                                     </div>

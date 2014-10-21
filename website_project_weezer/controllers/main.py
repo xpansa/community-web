@@ -23,9 +23,11 @@ import openerp
 from openerp.addons.auth_signup.controllers.main import AuthSignupHome
 from openerp.addons.auth_signup.res_users import SignupError
 from openerp.addons.web import http
+from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT, DEFAULT_SERVER_DATE_FORMAT
 from openerp.tools.translate import _
 from openerp.http import request
 
+from datetime import datetime
 from HTMLParser import HTMLParser
 import werkzeug
 
@@ -46,7 +48,7 @@ def strip_tags(html):
     return s.get_data()
 
 def get_date_format(cr, uid, context):
-    """ Returns date_from from locale of current user 
+    """ Return date format from locale of current user 
     to parse dates from forms. 
     """
     if context is None:
@@ -60,18 +62,40 @@ def get_date_format(cr, uid, context):
             return lang_params['date_format']
     return DEFAULT_SERVER_DATE_FORMAT
 
+def format_date(value, with_time=False):
+    """ Convert UTC date to user locale format
+    """
+    cr, uid, context, registry = request.cr, request.uid, request.context, request.registry
+    if context is None:
+        context = {}
+    user_date = datetime.strptime(value, with_time and DEFAULT_SERVER_DATETIME_FORMAT \
+        or DEFAULT_SERVER_DATE_FORMAT)
+    if context and context.get('tz'):
+        tz_name = context['tz']
+    else:
+        tz_name = registry.get('res.users').read(cr, uid, uid, ['tz'])['tz']
+        if tz_name:
+            utc = pytz.timezone('UTC')
+            context_tz = pytz.timezone(tz_name)
+            user_datetime = user_date + datetime.timedelta(hours=12.0)
+            local_timestamp = context_tz.localize(user_datetime, is_dst=False)
+            user_datetime = local_timestamp.astimezone(utc)
+            return user_datetime.strftime(get_date_format(cr, uid, context))
+    return user_date.strftime(get_date_format(cr, uid, context))
+
+
 def format_text(text, length=300):
-        """ Cut long descriptions 
-        """
-        if not text:
-            return ''
-        text = text[0:length]
-        dot_pos = text.rfind('.')
-        if dot_pos:
-            text = text[0:dot_pos]
-        else:
-            text = text[0:text.rfind(' ')]
-        return text + ' '*(length - len(text))
+    """ Cut long descriptions 
+    """
+    if not text:
+        return ''
+    text = text[0:length]
+    dot_pos = text.rfind('.')
+    if dot_pos:
+        text = text[0:dot_pos]
+    else:
+        text = text[0:text.rfind(' ')]
+    return text + ' '*(length - len(text))
 
 
 class Website(http.Controller):

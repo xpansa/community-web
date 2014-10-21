@@ -30,7 +30,7 @@ from openerp.tools.translate import _
 import base64
 from datetime import datetime, timedelta
 import re
-from main import get_date_format, format_text
+from main import get_date_format, format_text, format_date
 import time
 
 
@@ -63,8 +63,7 @@ class profile_controller(http.Controller):
                 'email': partner.email,
                 'phone': partner.phone,
                 'mobile': partner.mobile,
-                'birthdate': '' if not partner.birthdate else \
-                    datetime.strptime(partner.birthdate, DEFAULT_SERVER_DATETIME_FORMAT).strftime(self.date_format),
+                'birthdate': '' if not partner.birthdate else format_date(partner.birthdate, True),
             },
             'limits': {
                 'new': [],
@@ -484,8 +483,7 @@ class profile_controller(http.Controller):
             'offers': self.profile_announcements(partner.id, 'offer'),
             'format_text': format_text,
             'last_exchanges': self.profile_last_exchanges(partner.id),
-            'birthdate': datetime.strptime(partner.birthdate, DEFAULT_SERVER_DATETIME_FORMAT).strftime(date_format) \
-                        if partner.birthdate else '',
+            'birthdate': format_date(partner.birthdate, True) if partner.birthdate else '',
             'membership': self.get_partner_membership(partner),
             'groups': self.profile_last_groups(partner.id),
             'profile_saved': request.session.pop('profile_saved') if 'profile_saved' in request.session else False

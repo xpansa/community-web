@@ -340,6 +340,11 @@
                                                                         </div>
                                                                         <div class="col-md-8">
                                                                             <input name="quantity" type="text" class="form-control" placeholder="" t-att-value="my_reply.quantity"/>
+                                                                            <t t-if="getattr(my_reply, 'errors', False) and 'quantity' in my_reply.errors">
+                                                                                <p class="bg-danger">
+                                                                                    <t t-esc="my_reply.errors['quantity']"/>
+                                                                                </p>
+                                                                            </t>
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -349,7 +354,7 @@
                                                                             <label>When?</label>
                                                                         </div>
                                                                         <div class="col-md-8">
-                                                                            <input type="text" t-att-placeholder="date_placeholder" class="date-picker form-control" name="write_date" t-att-value="my_reply.write_date"/>
+                                                                            <input type="text" disabled="disabled" class="form-control" t-att-value="format_date(my_reply.write_date,True)"/>
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -385,6 +390,11 @@
                                                                         </tbody>
                                                                     </table>
                                                                     <a class="list-add btn btn-small btn-primary mb16 margin-left-10"><i class="fa fa-plus"></i></a>
+                                                                    <t t-if="getattr(my_reply, 'errors', False) and my_reply.errors.currency_ids">
+                                                                        <p class="bg-danger">
+                                                                            <t t-esc="my_reply.errors.currency_ids"/>
+                                                                        </p>
+                                                                    </t>
                                                                 </div> 
                                                             </div>
                                                             <div class="row mt32">
