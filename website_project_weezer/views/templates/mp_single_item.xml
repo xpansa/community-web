@@ -19,10 +19,9 @@
                         <div class="col-md-12">
                             <div class="row">
                                 <h3 class="mt0"><a t-attf-href="/marketplace/announcement_detail/#{item.id}"><span t-field="item.name"/></a></h3>
-                                <h5>Description</h5>
                             </div>
                             <div class="row">
-                                <p><span t-field="item.description"/></p>
+                                <p class="text-justify" t-field="item.description"/>
                             </div>
                         </div>
                     </div>

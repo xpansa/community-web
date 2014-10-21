@@ -1,0 +1,59 @@
+@mixin project-ui-icons
+{
+ 	.weezer-icon
+	{
+		display: block;
+		background-position: center center;
+		background-repeat: no-repeat;
+ 		@include background-size(cover);
+
+		&.weezer-pencil
+		{
+			width: 16px;
+			height: 16px;
+			background-image: url('img/icons/icone_wezer-01.png');
+		}
+
+		&.weezer-envelope
+		{
+			width: 24px;
+			height: 16px;
+			background-image: url('img/icons/icone_wezer-02.png');
+		}
+
+		&.weezer-dollar
+		{
+			width: 19px;
+			height: 16px;
+			background-image: url('img/icons/icone_wezer-03.png');
+		}
+
+		&.weezer-profile
+		{
+			width: 13px;
+			height: 16px;
+			background-image: url('img/icons/icone_wezer-04.png');
+		}
+
+		&.weezer-group
+		{
+			width: 27px;
+			height: 16px;
+			background-image: url('img/icons/icone_wezer-05.png');
+		}
+
+		&.weezer-chat
+		{
+			width: 16px;
+			height: 16px;
+			background-image: url('img/icons/icone_wezer-06.png');
+		}
+
+		&.weezer-alert
+		{
+			width: 16px;
+			height: 16px;
+			background-image: url('img/icons/icone_wezer-08.png');
+		}
+	}
+}

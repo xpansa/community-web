@@ -5,16 +5,13 @@
         <template id="mp_search_form" name="Marketplace Search">
             <section>
                 <form id="searchform" class="form" method="GET" action="/marketplace/search">
-                    <section class="jumbotron mb32 pt32 pb16">
+                    <section class="jumbotron mb32 pt8 mt0 pb8">
                         <div class="container">
                             <div class="row">
-                                <div class="col-md-2 pt8">
-                                    <img src="/website_project_weezer/static/src/assets/logo-l-exchange.png" class="img img-responsive"/>
-                                </div>
-                                <div class="col-md-2 pt32">
+                                <div class="col-md-2 mt8 col-md-offset-1">
                                     <h4 class="pull-right">I'm searching</h4>
                                 </div>
-                                <div class="col-md-8 pt32">
+                                <div class="col-md-8 mt8">
                                     <div class="form-group">
                                         <div class="col-md-3">
                                             <select class="selectpicker form-control" name="type" style="display: none;">
@@ -47,24 +44,24 @@
                         <!-- filters -->
                         <div class="container">
                             <div class="row">
-                                <div class="col-md-12 text-center pt8 pb16">
-                                    <div class="subtitle-search">
-                                        <div class="border"></div>
-                                        <h2 class="text-center">In</h2>
-                                    </div>
-                                </div>
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <div class="col-md-2 col-md-offset-1">
-                                            <label class="control-label"> </label>
-                                            <label class="sr-only">From Who?</label>
-                                            <input name="from_who" id="filter-who" type="text" placeholder="From who?" class="form-control mb16" autocomplete="on" t-att-value="request.httprequest.args.get('from_who','')"/>
-        
+
+                                        <div class="col-md-2">
+                                            <t t-if="request.session.uid">
+                                                <label class="control-label">From Who?</label>
+                                                <label class="sr-only">From Who?</label>
+                                                <input name="from_who" id="filter-who" type="text" placeholder="From who?" class="form-control mb16" autocomplete="on" t-att-value="request.httprequest.args.get('from_who','')"/>
+                                            </t>
+                                        </div>
+
+                                        <div class="col-md-2">
+                                            <label class="control-label">Where?</label>
                                             <label class="sr-only">Where?</label>
                                             <input name="city" id="filter-where" type="text" placeholder="Where?" class="form-control" autocomplete="on" t-att-value="request.httprequest.args.get('city','')"/>
                                         </div>
         
-                                        <div class="col-md-2">
+                                        <div class="col-md-3">
                                                 <label class="control-label text-center">When?</label>
                                                 <label class="sr-only">From</label>
                                                 <div class="input-group mb16">
@@ -102,7 +99,7 @@
                                         <div class="col-md-1">
                                             <label class="control-label"> </label>
                                             <div class="clearfix"></div>
-                                            <button class="btn btn-primary" type="submit"><span class="fa fa-search"></span></button>
+                                            <button class="btn btn-primary pull-right" type="submit"><span class="fa fa-search"></span></button>
                                         </div>
                                                     
                                     </div>

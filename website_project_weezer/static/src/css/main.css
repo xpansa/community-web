@@ -1,21 +1,18 @@
-@import url(http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600);
 /* 
  * Project Name : <Name of project>
  */
-/* line 14, ../sass/project/_fonts.scss */
+@import url(http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600);
 h1, h2, h3, h4, h5, h6 {
-  font-family: "Source Sans Pro", sans-serif;
+  font-family: 'Source Sans Pro', sans-serif;
   font-weight: 600 !important;
 }
-/* line 19, ../sass/project/_fonts.scss */
 h1 small, h2 small, h3 small, h4 small, h5 small, h6 small {
-  font-family: "Source Sans Pro", sans-serif;
+  font-family: 'Source Sans Pro', sans-serif;
   font-weight: 600 !important;
 }
 
-/* line 25, ../sass/project/_fonts.scss */
 p, li, span, label, input, .btn {
-  font-family: "Source Sans Pro", sans-serif;
+  font-family: 'Source Sans Pro', sans-serif;
 }
 
 @font-face {
@@ -25,8 +22,6 @@ p, li, span, label, input, .btn {
   font-weight: normal;
   font-style: normal;
 }
-
-/* line 39, ../sass/project/_fonts.scss */
 .fa {
   display: inline-block;
   font-family: FontAwesome;
@@ -37,52 +32,43 @@ p, li, span, label, input, .btn {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 49, ../sass/project/_fonts.scss */
 .fa-lg {
   font-size: 1.33333333em;
   line-height: 0.75em;
   vertical-align: -15%;
 }
 
-/* line 54, ../sass/project/_fonts.scss */
 .fa-2x {
   font-size: 2em;
 }
 
-/* line 57, ../sass/project/_fonts.scss */
 .fa-3x {
   font-size: 3em;
 }
 
-/* line 60, ../sass/project/_fonts.scss */
 .fa-4x {
   font-size: 4em;
 }
 
-/* line 63, ../sass/project/_fonts.scss */
 .fa-5x {
   font-size: 5em;
 }
 
-/* line 66, ../sass/project/_fonts.scss */
 .fa-fw {
   width: 1.28571429em;
   text-align: center;
 }
 
-/* line 70, ../sass/project/_fonts.scss */
 .fa-ul {
   padding-left: 0;
   margin-left: 2.14285714em;
   list-style-type: none;
 }
 
-/* line 75, ../sass/project/_fonts.scss */
 .fa-ul > li {
   position: relative;
 }
 
-/* line 78, ../sass/project/_fonts.scss */
 .fa-li {
   position: absolute;
   left: -2.14285714em;
@@ -91,39 +77,32 @@ p, li, span, label, input, .btn {
   text-align: center;
 }
 
-/* line 85, ../sass/project/_fonts.scss */
 .fa-li.fa-lg {
   left: -1.85714286em;
 }
 
-/* line 88, ../sass/project/_fonts.scss */
 .fa-border {
-  padding: 0.2em 0.25em 0.15em;
+  padding: .2em .25em .15em;
   border: solid 0.08em #eeeeee;
   border-radius: .1em;
 }
 
-/* line 93, ../sass/project/_fonts.scss */
 .pull-right {
   float: right;
 }
 
-/* line 96, ../sass/project/_fonts.scss */
 .pull-left {
   float: left;
 }
 
-/* line 99, ../sass/project/_fonts.scss */
 .fa.pull-left {
   margin-right: .3em;
 }
 
-/* line 102, ../sass/project/_fonts.scss */
 .fa.pull-right {
   margin-left: .3em;
 }
 
-/* line 105, ../sass/project/_fonts.scss */
 .fa-spin {
   -webkit-animation: spin 2s infinite linear;
   -moz-animation: spin 2s infinite linear;
@@ -132,56 +111,43 @@ p, li, span, label, input, .btn {
 }
 
 @-moz-keyframes spin {
-  /* line 112, ../sass/project/_fonts.scss */
   0% {
     -moz-transform: rotate(0deg);
   }
 
-  /* line 115, ../sass/project/_fonts.scss */
   100% {
     -moz-transform: rotate(359deg);
   }
 }
-
 @-webkit-keyframes spin {
-  /* line 120, ../sass/project/_fonts.scss */
   0% {
     -webkit-transform: rotate(0deg);
   }
 
-  /* line 123, ../sass/project/_fonts.scss */
   100% {
     -webkit-transform: rotate(359deg);
   }
 }
-
 @-o-keyframes spin {
-  /* line 128, ../sass/project/_fonts.scss */
   0% {
     -o-transform: rotate(0deg);
   }
 
-  /* line 131, ../sass/project/_fonts.scss */
   100% {
     -o-transform: rotate(359deg);
   }
 }
-
 @keyframes spin {
-  /* line 136, ../sass/project/_fonts.scss */
   0% {
     -webkit-transform: rotate(0deg);
     transform: rotate(0deg);
   }
 
-  /* line 140, ../sass/project/_fonts.scss */
   100% {
     -webkit-transform: rotate(359deg);
     transform: rotate(359deg);
   }
 }
-
-/* line 145, ../sass/project/_fonts.scss */
 .fa-rotate-90 {
   filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=1);
   -webkit-transform: rotate(90deg);
@@ -191,7 +157,6 @@ p, li, span, label, input, .btn {
   transform: rotate(90deg);
 }
 
-/* line 153, ../sass/project/_fonts.scss */
 .fa-rotate-180 {
   filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=2);
   -webkit-transform: rotate(180deg);
@@ -201,7 +166,6 @@ p, li, span, label, input, .btn {
   transform: rotate(180deg);
 }
 
-/* line 161, ../sass/project/_fonts.scss */
 .fa-rotate-270 {
   filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);
   -webkit-transform: rotate(270deg);
@@ -211,7 +175,6 @@ p, li, span, label, input, .btn {
   transform: rotate(270deg);
 }
 
-/* line 169, ../sass/project/_fonts.scss */
 .fa-flip-horizontal {
   filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=0, mirror=1);
   -webkit-transform: scale(-1, 1);
@@ -221,7 +184,6 @@ p, li, span, label, input, .btn {
   transform: scale(-1, 1);
 }
 
-/* line 177, ../sass/project/_fonts.scss */
 .fa-flip-vertical {
   filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=2, mirror=1);
   -webkit-transform: scale(1, -1);
@@ -231,7 +193,6 @@ p, li, span, label, input, .btn {
   transform: scale(1, -1);
 }
 
-/* line 185, ../sass/project/_fonts.scss */
 .fa-stack {
   position: relative;
   display: inline-block;
@@ -241,7 +202,6 @@ p, li, span, label, input, .btn {
   vertical-align: middle;
 }
 
-/* line 194, ../sass/project/_fonts.scss */
 .fa-stack-1x,
 .fa-stack-2x {
   position: absolute;
@@ -250,1600 +210,1288 @@ p, li, span, label, input, .btn {
   text-align: center;
 }
 
-/* line 200, ../sass/project/_fonts.scss */
 .fa-stack-1x {
   line-height: inherit;
 }
 
-/* line 203, ../sass/project/_fonts.scss */
 .fa-stack-2x {
   font-size: 2em;
 }
 
-/* line 206, ../sass/project/_fonts.scss */
 .fa-inverse {
   color: #ffffff;
 }
 
 /* Font Awesome uses the Unicode Private Use Area (PUA) to ensure screen
    readers do not read off random characters that represent icons */
-/* line 211, ../sass/project/_fonts.scss */
 .fa-glass:before {
   content: "\f000";
 }
 
-/* line 214, ../sass/project/_fonts.scss */
 .fa-music:before {
   content: "\f001";
 }
 
-/* line 217, ../sass/project/_fonts.scss */
 .fa-search:before {
   content: "\f002";
 }
 
-/* line 220, ../sass/project/_fonts.scss */
 .fa-envelope-o:before {
   content: "\f003";
 }
 
-/* line 223, ../sass/project/_fonts.scss */
 .fa-heart:before {
   content: "\f004";
 }
 
-/* line 226, ../sass/project/_fonts.scss */
 .fa-star:before {
   content: "\f005";
 }
 
-/* line 229, ../sass/project/_fonts.scss */
 .fa-star-o:before {
   content: "\f006";
 }
 
-/* line 232, ../sass/project/_fonts.scss */
 .fa-user:before {
   content: "\f007";
 }
 
-/* line 235, ../sass/project/_fonts.scss */
 .fa-film:before {
   content: "\f008";
 }
 
-/* line 238, ../sass/project/_fonts.scss */
 .fa-th-large:before {
   content: "\f009";
 }
 
-/* line 241, ../sass/project/_fonts.scss */
 .fa-th:before {
   content: "\f00a";
 }
 
-/* line 244, ../sass/project/_fonts.scss */
 .fa-th-list:before {
   content: "\f00b";
 }
 
-/* line 247, ../sass/project/_fonts.scss */
 .fa-check:before {
   content: "\f00c";
 }
 
-/* line 250, ../sass/project/_fonts.scss */
 .fa-times:before {
   content: "\f00d";
 }
 
-/* line 253, ../sass/project/_fonts.scss */
 .fa-search-plus:before {
   content: "\f00e";
 }
 
-/* line 256, ../sass/project/_fonts.scss */
 .fa-search-minus:before {
   content: "\f010";
 }
 
-/* line 259, ../sass/project/_fonts.scss */
 .fa-power-off:before {
   content: "\f011";
 }
 
-/* line 262, ../sass/project/_fonts.scss */
 .fa-signal:before {
   content: "\f012";
 }
 
-/* line 266, ../sass/project/_fonts.scss */
 .fa-gear:before,
 .fa-cog:before {
   content: "\f013";
 }
 
-/* line 269, ../sass/project/_fonts.scss */
 .fa-trash-o:before {
   content: "\f014";
 }
 
-/* line 272, ../sass/project/_fonts.scss */
 .fa-home:before {
   content: "\f015";
 }
 
-/* line 275, ../sass/project/_fonts.scss */
 .fa-file-o:before {
   content: "\f016";
 }
 
-/* line 278, ../sass/project/_fonts.scss */
 .fa-clock-o:before {
   content: "\f017";
 }
 
-/* line 281, ../sass/project/_fonts.scss */
 .fa-road:before {
   content: "\f018";
 }
 
-/* line 284, ../sass/project/_fonts.scss */
 .fa-download:before {
   content: "\f019";
 }
 
-/* line 287, ../sass/project/_fonts.scss */
 .fa-arrow-circle-o-down:before {
   content: "\f01a";
 }
 
-/* line 290, ../sass/project/_fonts.scss */
 .fa-arrow-circle-o-up:before {
   content: "\f01b";
 }
 
-/* line 293, ../sass/project/_fonts.scss */
 .fa-inbox:before {
   content: "\f01c";
 }
 
-/* line 296, ../sass/project/_fonts.scss */
 .fa-play-circle-o:before {
   content: "\f01d";
 }
 
-/* line 300, ../sass/project/_fonts.scss */
 .fa-rotate-right:before,
 .fa-repeat:before {
   content: "\f01e";
 }
 
-/* line 303, ../sass/project/_fonts.scss */
 .fa-refresh:before {
   content: "\f021";
 }
 
-/* line 306, ../sass/project/_fonts.scss */
 .fa-list-alt:before {
   content: "\f022";
 }
 
-/* line 309, ../sass/project/_fonts.scss */
 .fa-lock:before {
   content: "\f023";
 }
 
-/* line 312, ../sass/project/_fonts.scss */
 .fa-flag:before {
   content: "\f024";
 }
 
-/* line 315, ../sass/project/_fonts.scss */
 .fa-headphones:before {
   content: "\f025";
 }
 
-/* line 318, ../sass/project/_fonts.scss */
 .fa-volume-off:before {
   content: "\f026";
 }
 
-/* line 321, ../sass/project/_fonts.scss */
 .fa-volume-down:before {
   content: "\f027";
 }
 
-/* line 324, ../sass/project/_fonts.scss */
 .fa-volume-up:before {
   content: "\f028";
 }
 
-/* line 327, ../sass/project/_fonts.scss */
 .fa-qrcode:before {
   content: "\f029";
 }
 
-/* line 330, ../sass/project/_fonts.scss */
 .fa-barcode:before {
   content: "\f02a";
 }
 
-/* line 333, ../sass/project/_fonts.scss */
 .fa-tag:before {
   content: "\f02b";
 }
 
-/* line 336, ../sass/project/_fonts.scss */
 .fa-tags:before {
   content: "\f02c";
 }
 
-/* line 339, ../sass/project/_fonts.scss */
 .fa-book:before {
   content: "\f02d";
 }
 
-/* line 342, ../sass/project/_fonts.scss */
 .fa-bookmark:before {
   content: "\f02e";
 }
 
-/* line 345, ../sass/project/_fonts.scss */
 .fa-print:before {
   content: "\f02f";
 }
 
-/* line 348, ../sass/project/_fonts.scss */
 .fa-camera:before {
   content: "\f030";
 }
 
-/* line 351, ../sass/project/_fonts.scss */
 .fa-font:before {
   content: "\f031";
 }
 
-/* line 354, ../sass/project/_fonts.scss */
 .fa-bold:before {
   content: "\f032";
 }
 
-/* line 357, ../sass/project/_fonts.scss */
 .fa-italic:before {
   content: "\f033";
 }
 
-/* line 360, ../sass/project/_fonts.scss */
 .fa-text-height:before {
   content: "\f034";
 }
 
-/* line 363, ../sass/project/_fonts.scss */
 .fa-text-width:before {
   content: "\f035";
 }
 
-/* line 366, ../sass/project/_fonts.scss */
 .fa-align-left:before {
   content: "\f036";
 }
 
-/* line 369, ../sass/project/_fonts.scss */
 .fa-align-center:before {
   content: "\f037";
 }
 
-/* line 372, ../sass/project/_fonts.scss */
 .fa-align-right:before {
   content: "\f038";
 }
 
-/* line 375, ../sass/project/_fonts.scss */
 .fa-align-justify:before {
   content: "\f039";
 }
 
-/* line 378, ../sass/project/_fonts.scss */
 .fa-list:before {
   content: "\f03a";
 }
 
-/* line 382, ../sass/project/_fonts.scss */
 .fa-dedent:before,
 .fa-outdent:before {
   content: "\f03b";
 }
 
-/* line 385, ../sass/project/_fonts.scss */
 .fa-indent:before {
   content: "\f03c";
 }
 
-/* line 388, ../sass/project/_fonts.scss */
 .fa-video-camera:before {
   content: "\f03d";
 }
 
-/* line 393, ../sass/project/_fonts.scss */
 .fa-photo:before,
 .fa-image:before,
 .fa-picture-o:before {
   content: "\f03e";
 }
 
-/* line 396, ../sass/project/_fonts.scss */
 .fa-pencil:before {
   content: "\f040";
 }
 
-/* line 399, ../sass/project/_fonts.scss */
 .fa-map-marker:before {
   content: "\f041";
 }
 
-/* line 402, ../sass/project/_fonts.scss */
 .fa-adjust:before {
   content: "\f042";
 }
 
-/* line 405, ../sass/project/_fonts.scss */
 .fa-tint:before {
   content: "\f043";
 }
 
-/* line 409, ../sass/project/_fonts.scss */
 .fa-edit:before,
 .fa-pencil-square-o:before {
   content: "\f044";
 }
 
-/* line 412, ../sass/project/_fonts.scss */
 .fa-share-square-o:before {
   content: "\f045";
 }
 
-/* line 415, ../sass/project/_fonts.scss */
 .fa-check-square-o:before {
   content: "\f046";
 }
 
-/* line 418, ../sass/project/_fonts.scss */
 .fa-arrows:before {
   content: "\f047";
 }
 
-/* line 421, ../sass/project/_fonts.scss */
 .fa-step-backward:before {
   content: "\f048";
 }
 
-/* line 424, ../sass/project/_fonts.scss */
 .fa-fast-backward:before {
   content: "\f049";
 }
 
-/* line 427, ../sass/project/_fonts.scss */
 .fa-backward:before {
   content: "\f04a";
 }
 
-/* line 430, ../sass/project/_fonts.scss */
 .fa-play:before {
   content: "\f04b";
 }
 
-/* line 433, ../sass/project/_fonts.scss */
 .fa-pause:before {
   content: "\f04c";
 }
 
-/* line 436, ../sass/project/_fonts.scss */
 .fa-stop:before {
   content: "\f04d";
 }
 
-/* line 439, ../sass/project/_fonts.scss */
 .fa-forward:before {
   content: "\f04e";
 }
 
-/* line 442, ../sass/project/_fonts.scss */
 .fa-fast-forward:before {
   content: "\f050";
 }
 
-/* line 445, ../sass/project/_fonts.scss */
 .fa-step-forward:before {
   content: "\f051";
 }
 
-/* line 448, ../sass/project/_fonts.scss */
 .fa-eject:before {
   content: "\f052";
 }
 
-/* line 451, ../sass/project/_fonts.scss */
 .fa-chevron-left:before {
   content: "\f053";
 }
 
-/* line 454, ../sass/project/_fonts.scss */
 .fa-chevron-right:before {
   content: "\f054";
 }
 
-/* line 457, ../sass/project/_fonts.scss */
 .fa-plus-circle:before {
   content: "\f055";
 }
 
-/* line 460, ../sass/project/_fonts.scss */
 .fa-minus-circle:before {
   content: "\f056";
 }
 
-/* line 463, ../sass/project/_fonts.scss */
 .fa-times-circle:before {
   content: "\f057";
 }
 
-/* line 466, ../sass/project/_fonts.scss */
 .fa-check-circle:before {
   content: "\f058";
 }
 
-/* line 469, ../sass/project/_fonts.scss */
 .fa-question-circle:before {
   content: "\f059";
 }
 
-/* line 472, ../sass/project/_fonts.scss */
 .fa-info-circle:before {
   content: "\f05a";
 }
 
-/* line 475, ../sass/project/_fonts.scss */
 .fa-crosshairs:before {
   content: "\f05b";
 }
 
-/* line 478, ../sass/project/_fonts.scss */
 .fa-times-circle-o:before {
   content: "\f05c";
 }
 
-/* line 481, ../sass/project/_fonts.scss */
 .fa-check-circle-o:before {
   content: "\f05d";
 }
 
-/* line 484, ../sass/project/_fonts.scss */
 .fa-ban:before {
   content: "\f05e";
 }
 
-/* line 487, ../sass/project/_fonts.scss */
 .fa-arrow-left:before {
   content: "\f060";
 }
 
-/* line 490, ../sass/project/_fonts.scss */
 .fa-arrow-right:before {
   content: "\f061";
 }
 
-/* line 493, ../sass/project/_fonts.scss */
 .fa-arrow-up:before {
   content: "\f062";
 }
 
-/* line 496, ../sass/project/_fonts.scss */
 .fa-arrow-down:before {
   content: "\f063";
 }
 
-/* line 500, ../sass/project/_fonts.scss */
 .fa-mail-forward:before,
 .fa-share:before {
   content: "\f064";
 }
 
-/* line 503, ../sass/project/_fonts.scss */
 .fa-expand:before {
   content: "\f065";
 }
 
-/* line 506, ../sass/project/_fonts.scss */
 .fa-compress:before {
   content: "\f066";
 }
 
-/* line 509, ../sass/project/_fonts.scss */
 .fa-plus:before {
   content: "\f067";
 }
 
-/* line 512, ../sass/project/_fonts.scss */
 .fa-minus:before {
   content: "\f068";
 }
 
-/* line 515, ../sass/project/_fonts.scss */
 .fa-asterisk:before {
   content: "\f069";
 }
 
-/* line 518, ../sass/project/_fonts.scss */
 .fa-exclamation-circle:before {
   content: "\f06a";
 }
 
-/* line 521, ../sass/project/_fonts.scss */
 .fa-gift:before {
   content: "\f06b";
 }
 
-/* line 524, ../sass/project/_fonts.scss */
 .fa-leaf:before {
   content: "\f06c";
 }
 
-/* line 527, ../sass/project/_fonts.scss */
 .fa-fire:before {
   content: "\f06d";
 }
 
-/* line 530, ../sass/project/_fonts.scss */
 .fa-eye:before {
   content: "\f06e";
 }
 
-/* line 533, ../sass/project/_fonts.scss */
 .fa-eye-slash:before {
   content: "\f070";
 }
 
-/* line 537, ../sass/project/_fonts.scss */
 .fa-warning:before,
 .fa-exclamation-triangle:before {
   content: "\f071";
 }
 
-/* line 540, ../sass/project/_fonts.scss */
 .fa-plane:before {
   content: "\f072";
 }
 
-/* line 543, ../sass/project/_fonts.scss */
 .fa-calendar:before {
   content: "\f073";
 }
 
-/* line 546, ../sass/project/_fonts.scss */
 .fa-random:before {
   content: "\f074";
 }
 
-/* line 549, ../sass/project/_fonts.scss */
 .fa-comment:before {
   content: "\f075";
 }
 
-/* line 552, ../sass/project/_fonts.scss */
 .fa-magnet:before {
   content: "\f076";
 }
 
-/* line 555, ../sass/project/_fonts.scss */
 .fa-chevron-up:before {
   content: "\f077";
 }
 
-/* line 558, ../sass/project/_fonts.scss */
 .fa-chevron-down:before {
   content: "\f078";
 }
 
-/* line 561, ../sass/project/_fonts.scss */
 .fa-retweet:before {
   content: "\f079";
 }
 
-/* line 564, ../sass/project/_fonts.scss */
 .fa-shopping-cart:before {
   content: "\f07a";
 }
 
-/* line 567, ../sass/project/_fonts.scss */
 .fa-folder:before {
   content: "\f07b";
 }
 
-/* line 570, ../sass/project/_fonts.scss */
 .fa-folder-open:before {
   content: "\f07c";
 }
 
-/* line 573, ../sass/project/_fonts.scss */
 .fa-arrows-v:before {
   content: "\f07d";
 }
 
-/* line 576, ../sass/project/_fonts.scss */
 .fa-arrows-h:before {
   content: "\f07e";
 }
 
-/* line 579, ../sass/project/_fonts.scss */
 .fa-bar-chart-o:before {
   content: "\f080";
 }
 
-/* line 582, ../sass/project/_fonts.scss */
 .fa-twitter-square:before {
   content: "\f081";
 }
 
-/* line 585, ../sass/project/_fonts.scss */
 .fa-facebook-square:before {
   content: "\f082";
 }
 
-/* line 588, ../sass/project/_fonts.scss */
 .fa-camera-retro:before {
   content: "\f083";
 }
 
-/* line 591, ../sass/project/_fonts.scss */
 .fa-key:before {
   content: "\f084";
 }
 
-/* line 595, ../sass/project/_fonts.scss */
 .fa-gears:before,
 .fa-cogs:before {
   content: "\f085";
 }
 
-/* line 598, ../sass/project/_fonts.scss */
 .fa-comments:before {
   content: "\f086";
 }
 
-/* line 601, ../sass/project/_fonts.scss */
 .fa-thumbs-o-up:before {
   content: "\f087";
 }
 
-/* line 604, ../sass/project/_fonts.scss */
 .fa-thumbs-o-down:before {
   content: "\f088";
 }
 
-/* line 607, ../sass/project/_fonts.scss */
 .fa-star-half:before {
   content: "\f089";
 }
 
-/* line 610, ../sass/project/_fonts.scss */
 .fa-heart-o:before {
   content: "\f08a";
 }
 
-/* line 613, ../sass/project/_fonts.scss */
 .fa-sign-out:before {
   content: "\f08b";
 }
 
-/* line 616, ../sass/project/_fonts.scss */
 .fa-linkedin-square:before {
   content: "\f08c";
 }
 
-/* line 619, ../sass/project/_fonts.scss */
 .fa-thumb-tack:before {
   content: "\f08d";
 }
 
-/* line 622, ../sass/project/_fonts.scss */
 .fa-external-link:before {
   content: "\f08e";
 }
 
-/* line 625, ../sass/project/_fonts.scss */
 .fa-sign-in:before {
   content: "\f090";
 }
 
-/* line 628, ../sass/project/_fonts.scss */
 .fa-trophy:before {
   content: "\f091";
 }
 
-/* line 631, ../sass/project/_fonts.scss */
 .fa-github-square:before {
   content: "\f092";
 }
 
-/* line 634, ../sass/project/_fonts.scss */
 .fa-upload:before {
   content: "\f093";
 }
 
-/* line 637, ../sass/project/_fonts.scss */
 .fa-lemon-o:before {
   content: "\f094";
 }
 
-/* line 640, ../sass/project/_fonts.scss */
 .fa-phone:before {
   content: "\f095";
 }
 
-/* line 643, ../sass/project/_fonts.scss */
 .fa-square-o:before {
   content: "\f096";
 }
 
-/* line 646, ../sass/project/_fonts.scss */
 .fa-bookmark-o:before {
   content: "\f097";
 }
 
-/* line 649, ../sass/project/_fonts.scss */
 .fa-phone-square:before {
   content: "\f098";
 }
 
-/* line 652, ../sass/project/_fonts.scss */
 .fa-twitter:before {
   content: "\f099";
 }
 
-/* line 655, ../sass/project/_fonts.scss */
 .fa-facebook:before {
   content: "\f09a";
 }
 
-/* line 658, ../sass/project/_fonts.scss */
 .fa-github:before {
   content: "\f09b";
 }
 
-/* line 661, ../sass/project/_fonts.scss */
 .fa-unlock:before {
   content: "\f09c";
 }
 
-/* line 664, ../sass/project/_fonts.scss */
 .fa-credit-card:before {
   content: "\f09d";
 }
 
-/* line 667, ../sass/project/_fonts.scss */
 .fa-rss:before {
   content: "\f09e";
 }
 
-/* line 670, ../sass/project/_fonts.scss */
 .fa-hdd-o:before {
   content: "\f0a0";
 }
 
-/* line 673, ../sass/project/_fonts.scss */
 .fa-bullhorn:before {
   content: "\f0a1";
 }
 
-/* line 676, ../sass/project/_fonts.scss */
 .fa-bell:before {
   content: "\f0f3";
 }
 
-/* line 679, ../sass/project/_fonts.scss */
 .fa-certificate:before {
   content: "\f0a3";
 }
 
-/* line 682, ../sass/project/_fonts.scss */
 .fa-hand-o-right:before {
   content: "\f0a4";
 }
 
-/* line 685, ../sass/project/_fonts.scss */
 .fa-hand-o-left:before {
   content: "\f0a5";
 }
 
-/* line 688, ../sass/project/_fonts.scss */
 .fa-hand-o-up:before {
   content: "\f0a6";
 }
 
-/* line 691, ../sass/project/_fonts.scss */
 .fa-hand-o-down:before {
   content: "\f0a7";
 }
 
-/* line 694, ../sass/project/_fonts.scss */
 .fa-arrow-circle-left:before {
   content: "\f0a8";
 }
 
-/* line 697, ../sass/project/_fonts.scss */
 .fa-arrow-circle-right:before {
   content: "\f0a9";
 }
 
-/* line 700, ../sass/project/_fonts.scss */
 .fa-arrow-circle-up:before {
   content: "\f0aa";
 }
 
-/* line 703, ../sass/project/_fonts.scss */
 .fa-arrow-circle-down:before {
   content: "\f0ab";
 }
 
-/* line 706, ../sass/project/_fonts.scss */
 .fa-globe:before {
   content: "\f0ac";
 }
 
-/* line 709, ../sass/project/_fonts.scss */
 .fa-wrench:before {
   content: "\f0ad";
 }
 
-/* line 712, ../sass/project/_fonts.scss */
 .fa-tasks:before {
   content: "\f0ae";
 }
 
-/* line 715, ../sass/project/_fonts.scss */
 .fa-filter:before {
   content: "\f0b0";
 }
 
-/* line 718, ../sass/project/_fonts.scss */
 .fa-briefcase:before {
   content: "\f0b1";
 }
 
-/* line 721, ../sass/project/_fonts.scss */
 .fa-arrows-alt:before {
   content: "\f0b2";
 }
 
-/* line 725, ../sass/project/_fonts.scss */
 .fa-group:before,
 .fa-users:before {
   content: "\f0c0";
 }
 
-/* line 729, ../sass/project/_fonts.scss */
 .fa-chain:before,
 .fa-link:before {
   content: "\f0c1";
 }
 
-/* line 732, ../sass/project/_fonts.scss */
 .fa-cloud:before {
   content: "\f0c2";
 }
 
-/* line 735, ../sass/project/_fonts.scss */
 .fa-flask:before {
   content: "\f0c3";
 }
 
-/* line 739, ../sass/project/_fonts.scss */
 .fa-cut:before,
 .fa-scissors:before {
   content: "\f0c4";
 }
 
-/* line 743, ../sass/project/_fonts.scss */
 .fa-copy:before,
 .fa-files-o:before {
   content: "\f0c5";
 }
 
-/* line 746, ../sass/project/_fonts.scss */
 .fa-paperclip:before {
   content: "\f0c6";
 }
 
-/* line 750, ../sass/project/_fonts.scss */
 .fa-save:before,
 .fa-floppy-o:before {
   content: "\f0c7";
 }
 
-/* line 753, ../sass/project/_fonts.scss */
 .fa-square:before {
   content: "\f0c8";
 }
 
-/* line 758, ../sass/project/_fonts.scss */
 .fa-navicon:before,
 .fa-reorder:before,
 .fa-bars:before {
   content: "\f0c9";
 }
 
-/* line 761, ../sass/project/_fonts.scss */
 .fa-list-ul:before {
   content: "\f0ca";
 }
 
-/* line 764, ../sass/project/_fonts.scss */
 .fa-list-ol:before {
   content: "\f0cb";
 }
 
-/* line 767, ../sass/project/_fonts.scss */
 .fa-strikethrough:before {
   content: "\f0cc";
 }
 
-/* line 770, ../sass/project/_fonts.scss */
 .fa-underline:before {
   content: "\f0cd";
 }
 
-/* line 773, ../sass/project/_fonts.scss */
 .fa-table:before {
   content: "\f0ce";
 }
 
-/* line 776, ../sass/project/_fonts.scss */
 .fa-magic:before {
   content: "\f0d0";
 }
 
-/* line 779, ../sass/project/_fonts.scss */
 .fa-truck:before {
   content: "\f0d1";
 }
 
-/* line 782, ../sass/project/_fonts.scss */
 .fa-pinterest:before {
   content: "\f0d2";
 }
 
-/* line 785, ../sass/project/_fonts.scss */
 .fa-pinterest-square:before {
   content: "\f0d3";
 }
 
-/* line 788, ../sass/project/_fonts.scss */
 .fa-google-plus-square:before {
   content: "\f0d4";
 }
 
-/* line 791, ../sass/project/_fonts.scss */
 .fa-google-plus:before {
   content: "\f0d5";
 }
 
-/* line 794, ../sass/project/_fonts.scss */
 .fa-money:before {
   content: "\f0d6";
 }
 
-/* line 797, ../sass/project/_fonts.scss */
 .fa-caret-down:before {
   content: "\f0d7";
 }
 
-/* line 800, ../sass/project/_fonts.scss */
 .fa-caret-up:before {
   content: "\f0d8";
 }
 
-/* line 803, ../sass/project/_fonts.scss */
 .fa-caret-left:before {
   content: "\f0d9";
 }
 
-/* line 806, ../sass/project/_fonts.scss */
 .fa-caret-right:before {
   content: "\f0da";
 }
 
-/* line 809, ../sass/project/_fonts.scss */
 .fa-columns:before {
   content: "\f0db";
 }
 
-/* line 813, ../sass/project/_fonts.scss */
 .fa-unsorted:before,
 .fa-sort:before {
   content: "\f0dc";
 }
 
-/* line 817, ../sass/project/_fonts.scss */
 .fa-sort-down:before,
 .fa-sort-desc:before {
   content: "\f0dd";
 }
 
-/* line 821, ../sass/project/_fonts.scss */
 .fa-sort-up:before,
 .fa-sort-asc:before {
   content: "\f0de";
 }
 
-/* line 824, ../sass/project/_fonts.scss */
 .fa-envelope:before {
   content: "\f0e0";
 }
 
-/* line 827, ../sass/project/_fonts.scss */
 .fa-linkedin:before {
   content: "\f0e1";
 }
 
-/* line 831, ../sass/project/_fonts.scss */
 .fa-rotate-left:before,
 .fa-undo:before {
   content: "\f0e2";
 }
 
-/* line 835, ../sass/project/_fonts.scss */
 .fa-legal:before,
 .fa-gavel:before {
   content: "\f0e3";
 }
 
-/* line 839, ../sass/project/_fonts.scss */
 .fa-dashboard:before,
 .fa-tachometer:before {
   content: "\f0e4";
 }
 
-/* line 842, ../sass/project/_fonts.scss */
 .fa-comment-o:before {
   content: "\f0e5";
 }
 
-/* line 845, ../sass/project/_fonts.scss */
 .fa-comments-o:before {
   content: "\f0e6";
 }
 
-/* line 849, ../sass/project/_fonts.scss */
 .fa-flash:before,
 .fa-bolt:before {
   content: "\f0e7";
 }
 
-/* line 852, ../sass/project/_fonts.scss */
 .fa-sitemap:before {
   content: "\f0e8";
 }
 
-/* line 855, ../sass/project/_fonts.scss */
 .fa-umbrella:before {
   content: "\f0e9";
 }
 
-/* line 859, ../sass/project/_fonts.scss */
 .fa-paste:before,
 .fa-clipboard:before {
   content: "\f0ea";
 }
 
-/* line 862, ../sass/project/_fonts.scss */
 .fa-lightbulb-o:before {
   content: "\f0eb";
 }
 
-/* line 865, ../sass/project/_fonts.scss */
 .fa-exchange:before {
   content: "\f0ec";
 }
 
-/* line 868, ../sass/project/_fonts.scss */
 .fa-cloud-download:before {
   content: "\f0ed";
 }
 
-/* line 871, ../sass/project/_fonts.scss */
 .fa-cloud-upload:before {
   content: "\f0ee";
 }
 
-/* line 874, ../sass/project/_fonts.scss */
 .fa-user-md:before {
   content: "\f0f0";
 }
 
-/* line 877, ../sass/project/_fonts.scss */
 .fa-stethoscope:before {
   content: "\f0f1";
 }
 
-/* line 880, ../sass/project/_fonts.scss */
 .fa-suitcase:before {
   content: "\f0f2";
 }
 
-/* line 883, ../sass/project/_fonts.scss */
 .fa-bell-o:before {
   content: "\f0a2";
 }
 
-/* line 886, ../sass/project/_fonts.scss */
 .fa-coffee:before {
   content: "\f0f4";
 }
 
-/* line 889, ../sass/project/_fonts.scss */
 .fa-cutlery:before {
   content: "\f0f5";
 }
 
-/* line 892, ../sass/project/_fonts.scss */
 .fa-file-text-o:before {
   content: "\f0f6";
 }
 
-/* line 895, ../sass/project/_fonts.scss */
 .fa-building-o:before {
   content: "\f0f7";
 }
 
-/* line 898, ../sass/project/_fonts.scss */
 .fa-hospital-o:before {
   content: "\f0f8";
 }
 
-/* line 901, ../sass/project/_fonts.scss */
 .fa-ambulance:before {
   content: "\f0f9";
 }
 
-/* line 904, ../sass/project/_fonts.scss */
 .fa-medkit:before {
   content: "\f0fa";
 }
 
-/* line 907, ../sass/project/_fonts.scss */
 .fa-fighter-jet:before {
   content: "\f0fb";
 }
 
-/* line 910, ../sass/project/_fonts.scss */
 .fa-beer:before {
   content: "\f0fc";
 }
 
-/* line 913, ../sass/project/_fonts.scss */
 .fa-h-square:before {
   content: "\f0fd";
 }
 
-/* line 916, ../sass/project/_fonts.scss */
 .fa-plus-square:before {
   content: "\f0fe";
 }
 
-/* line 919, ../sass/project/_fonts.scss */
 .fa-angle-double-left:before {
   content: "\f100";
 }
 
-/* line 922, ../sass/project/_fonts.scss */
 .fa-angle-double-right:before {
   content: "\f101";
 }
 
-/* line 925, ../sass/project/_fonts.scss */
 .fa-angle-double-up:before {
   content: "\f102";
 }
 
-/* line 928, ../sass/project/_fonts.scss */
 .fa-angle-double-down:before {
   content: "\f103";
 }
 
-/* line 931, ../sass/project/_fonts.scss */
 .fa-angle-left:before {
   content: "\f104";
 }
 
-/* line 934, ../sass/project/_fonts.scss */
 .fa-angle-right:before {
   content: "\f105";
 }
 
-/* line 937, ../sass/project/_fonts.scss */
 .fa-angle-up:before {
   content: "\f106";
 }
 
-/* line 940, ../sass/project/_fonts.scss */
 .fa-angle-down:before {
   content: "\f107";
 }
 
-/* line 943, ../sass/project/_fonts.scss */
 .fa-desktop:before {
   content: "\f108";
 }
 
-/* line 946, ../sass/project/_fonts.scss */
 .fa-laptop:before {
   content: "\f109";
 }
 
-/* line 949, ../sass/project/_fonts.scss */
 .fa-tablet:before {
   content: "\f10a";
 }
 
-/* line 953, ../sass/project/_fonts.scss */
 .fa-mobile-phone:before,
 .fa-mobile:before {
   content: "\f10b";
 }
 
-/* line 956, ../sass/project/_fonts.scss */
 .fa-circle-o:before {
   content: "\f10c";
 }
 
-/* line 959, ../sass/project/_fonts.scss */
 .fa-quote-left:before {
   content: "\f10d";
 }
 
-/* line 962, ../sass/project/_fonts.scss */
 .fa-quote-right:before {
   content: "\f10e";
 }
 
-/* line 965, ../sass/project/_fonts.scss */
 .fa-spinner:before {
   content: "\f110";
 }
 
-/* line 968, ../sass/project/_fonts.scss */
 .fa-circle:before {
   content: "\f111";
 }
 
-/* line 972, ../sass/project/_fonts.scss */
 .fa-mail-reply:before,
 .fa-reply:before {
   content: "\f112";
 }
 
-/* line 975, ../sass/project/_fonts.scss */
 .fa-github-alt:before {
   content: "\f113";
 }
 
-/* line 978, ../sass/project/_fonts.scss */
 .fa-folder-o:before {
   content: "\f114";
 }
 
-/* line 981, ../sass/project/_fonts.scss */
 .fa-folder-open-o:before {
   content: "\f115";
 }
 
-/* line 984, ../sass/project/_fonts.scss */
 .fa-smile-o:before {
   content: "\f118";
 }
 
-/* line 987, ../sass/project/_fonts.scss */
 .fa-frown-o:before {
   content: "\f119";
 }
 
-/* line 990, ../sass/project/_fonts.scss */
 .fa-meh-o:before {
   content: "\f11a";
 }
 
-/* line 993, ../sass/project/_fonts.scss */
 .fa-gamepad:before {
   content: "\f11b";
 }
 
-/* line 996, ../sass/project/_fonts.scss */
 .fa-keyboard-o:before {
   content: "\f11c";
 }
 
-/* line 999, ../sass/project/_fonts.scss */
 .fa-flag-o:before {
   content: "\f11d";
 }
 
-/* line 1002, ../sass/project/_fonts.scss */
 .fa-flag-checkered:before {
   content: "\f11e";
 }
 
-/* line 1005, ../sass/project/_fonts.scss */
 .fa-terminal:before {
   content: "\f120";
 }
 
-/* line 1008, ../sass/project/_fonts.scss */
 .fa-code:before {
   content: "\f121";
 }
 
-/* line 1012, ../sass/project/_fonts.scss */
 .fa-mail-reply-all:before,
 .fa-reply-all:before {
   content: "\f122";
 }
 
-/* line 1017, ../sass/project/_fonts.scss */
 .fa-star-half-empty:before,
 .fa-star-half-full:before,
 .fa-star-half-o:before {
   content: "\f123";
 }
 
-/* line 1020, ../sass/project/_fonts.scss */
 .fa-location-arrow:before {
   content: "\f124";
 }
 
-/* line 1023, ../sass/project/_fonts.scss */
 .fa-crop:before {
   content: "\f125";
 }
 
-/* line 1026, ../sass/project/_fonts.scss */
 .fa-code-fork:before {
   content: "\f126";
 }
 
-/* line 1030, ../sass/project/_fonts.scss */
 .fa-unlink:before,
 .fa-chain-broken:before {
   content: "\f127";
 }
 
-/* line 1033, ../sass/project/_fonts.scss */
 .fa-question:before {
   content: "\f128";
 }
 
-/* line 1036, ../sass/project/_fonts.scss */
 .fa-info:before {
   content: "\f129";
 }
 
-/* line 1039, ../sass/project/_fonts.scss */
 .fa-exclamation:before {
   content: "\f12a";
 }
 
-/* line 1042, ../sass/project/_fonts.scss */
 .fa-superscript:before {
   content: "\f12b";
 }
 
-/* line 1045, ../sass/project/_fonts.scss */
 .fa-subscript:before {
   content: "\f12c";
 }
 
-/* line 1048, ../sass/project/_fonts.scss */
 .fa-eraser:before {
   content: "\f12d";
 }
 
-/* line 1051, ../sass/project/_fonts.scss */
 .fa-puzzle-piece:before {
   content: "\f12e";
 }
 
-/* line 1054, ../sass/project/_fonts.scss */
 .fa-microphone:before {
   content: "\f130";
 }
 
-/* line 1057, ../sass/project/_fonts.scss */
 .fa-microphone-slash:before {
   content: "\f131";
 }
 
-/* line 1060, ../sass/project/_fonts.scss */
 .fa-shield:before {
   content: "\f132";
 }
 
-/* line 1063, ../sass/project/_fonts.scss */
 .fa-calendar-o:before {
   content: "\f133";
 }
 
-/* line 1066, ../sass/project/_fonts.scss */
 .fa-fire-extinguisher:before {
   content: "\f134";
 }
 
-/* line 1069, ../sass/project/_fonts.scss */
 .fa-rocket:before {
   content: "\f135";
 }
 
-/* line 1072, ../sass/project/_fonts.scss */
 .fa-maxcdn:before {
   content: "\f136";
 }
 
-/* line 1075, ../sass/project/_fonts.scss */
 .fa-chevron-circle-left:before {
   content: "\f137";
 }
 
-/* line 1078, ../sass/project/_fonts.scss */
 .fa-chevron-circle-right:before {
   content: "\f138";
 }
 
-/* line 1081, ../sass/project/_fonts.scss */
 .fa-chevron-circle-up:before {
   content: "\f139";
 }
 
-/* line 1084, ../sass/project/_fonts.scss */
 .fa-chevron-circle-down:before {
   content: "\f13a";
 }
 
-/* line 1087, ../sass/project/_fonts.scss */
 .fa-html5:before {
   content: "\f13b";
 }
 
-/* line 1090, ../sass/project/_fonts.scss */
 .fa-css3:before {
   content: "\f13c";
 }
 
-/* line 1093, ../sass/project/_fonts.scss */
 .fa-anchor:before {
   content: "\f13d";
 }
 
-/* line 1096, ../sass/project/_fonts.scss */
 .fa-unlock-alt:before {
   content: "\f13e";
 }
 
-/* line 1099, ../sass/project/_fonts.scss */
 .fa-bullseye:before {
   content: "\f140";
 }
 
-/* line 1102, ../sass/project/_fonts.scss */
 .fa-ellipsis-h:before {
   content: "\f141";
 }
 
-/* line 1105, ../sass/project/_fonts.scss */
 .fa-ellipsis-v:before {
   content: "\f142";
 }
 
-/* line 1108, ../sass/project/_fonts.scss */
 .fa-rss-square:before {
   content: "\f143";
 }
 
-/* line 1111, ../sass/project/_fonts.scss */
 .fa-play-circle:before {
   content: "\f144";
 }
 
-/* line 1114, ../sass/project/_fonts.scss */
 .fa-ticket:before {
   content: "\f145";
 }
 
-/* line 1117, ../sass/project/_fonts.scss */
 .fa-minus-square:before {
   content: "\f146";
 }
 
-/* line 1120, ../sass/project/_fonts.scss */
 .fa-minus-square-o:before {
   content: "\f147";
 }
 
-/* line 1123, ../sass/project/_fonts.scss */
 .fa-level-up:before {
   content: "\f148";
 }
 
-/* line 1126, ../sass/project/_fonts.scss */
 .fa-level-down:before {
   content: "\f149";
 }
 
-/* line 1129, ../sass/project/_fonts.scss */
 .fa-check-square:before {
   content: "\f14a";
 }
 
-/* line 1132, ../sass/project/_fonts.scss */
 .fa-pencil-square:before {
   content: "\f14b";
 }
 
-/* line 1135, ../sass/project/_fonts.scss */
 .fa-external-link-square:before {
   content: "\f14c";
 }
 
-/* line 1138, ../sass/project/_fonts.scss */
 .fa-share-square:before {
   content: "\f14d";
 }
 
-/* line 1141, ../sass/project/_fonts.scss */
 .fa-compass:before {
   content: "\f14e";
 }
 
-/* line 1145, ../sass/project/_fonts.scss */
 .fa-toggle-down:before,
 .fa-caret-square-o-down:before {
   content: "\f150";
 }
 
-/* line 1149, ../sass/project/_fonts.scss */
 .fa-toggle-up:before,
 .fa-caret-square-o-up:before {
   content: "\f151";
 }
 
-/* line 1153, ../sass/project/_fonts.scss */
 .fa-toggle-right:before,
 .fa-caret-square-o-right:before {
   content: "\f152";
 }
 
-/* line 1157, ../sass/project/_fonts.scss */
 .fa-euro:before,
 .fa-eur:before {
   content: "\f153";
 }
 
-/* line 1160, ../sass/project/_fonts.scss */
 .fa-gbp:before {
   content: "\f154";
 }
 
-/* line 1164, ../sass/project/_fonts.scss */
 .fa-dollar:before,
 .fa-usd:before {
   content: "\f155";
 }
 
-/* line 1168, ../sass/project/_fonts.scss */
 .fa-rupee:before,
 .fa-inr:before {
   content: "\f156";
 }
 
-/* line 1174, ../sass/project/_fonts.scss */
 .fa-cny:before,
 .fa-rmb:before,
 .fa-yen:before,
@@ -1851,574 +1499,463 @@ p, li, span, label, input, .btn {
   content: "\f157";
 }
 
-/* line 1179, ../sass/project/_fonts.scss */
 .fa-ruble:before,
 .fa-rouble:before,
 .fa-rub:before {
   content: "\f158";
 }
 
-/* line 1183, ../sass/project/_fonts.scss */
 .fa-won:before,
 .fa-krw:before {
   content: "\f159";
 }
 
-/* line 1187, ../sass/project/_fonts.scss */
 .fa-bitcoin:before,
 .fa-btc:before {
   content: "\f15a";
 }
 
-/* line 1190, ../sass/project/_fonts.scss */
 .fa-file:before {
   content: "\f15b";
 }
 
-/* line 1193, ../sass/project/_fonts.scss */
 .fa-file-text:before {
   content: "\f15c";
 }
 
-/* line 1196, ../sass/project/_fonts.scss */
 .fa-sort-alpha-asc:before {
   content: "\f15d";
 }
 
-/* line 1199, ../sass/project/_fonts.scss */
 .fa-sort-alpha-desc:before {
   content: "\f15e";
 }
 
-/* line 1202, ../sass/project/_fonts.scss */
 .fa-sort-amount-asc:before {
   content: "\f160";
 }
 
-/* line 1205, ../sass/project/_fonts.scss */
 .fa-sort-amount-desc:before {
   content: "\f161";
 }
 
-/* line 1208, ../sass/project/_fonts.scss */
 .fa-sort-numeric-asc:before {
   content: "\f162";
 }
 
-/* line 1211, ../sass/project/_fonts.scss */
 .fa-sort-numeric-desc:before {
   content: "\f163";
 }
 
-/* line 1214, ../sass/project/_fonts.scss */
 .fa-thumbs-up:before {
   content: "\f164";
 }
 
-/* line 1217, ../sass/project/_fonts.scss */
 .fa-thumbs-down:before {
   content: "\f165";
 }
 
-/* line 1220, ../sass/project/_fonts.scss */
 .fa-youtube-square:before {
   content: "\f166";
 }
 
-/* line 1223, ../sass/project/_fonts.scss */
 .fa-youtube:before {
   content: "\f167";
 }
 
-/* line 1226, ../sass/project/_fonts.scss */
 .fa-xing:before {
   content: "\f168";
 }
 
-/* line 1229, ../sass/project/_fonts.scss */
 .fa-xing-square:before {
   content: "\f169";
 }
 
-/* line 1232, ../sass/project/_fonts.scss */
 .fa-youtube-play:before {
   content: "\f16a";
 }
 
-/* line 1235, ../sass/project/_fonts.scss */
 .fa-dropbox:before {
   content: "\f16b";
 }
 
-/* line 1238, ../sass/project/_fonts.scss */
 .fa-stack-overflow:before {
   content: "\f16c";
 }
 
-/* line 1241, ../sass/project/_fonts.scss */
 .fa-instagram:before {
   content: "\f16d";
 }
 
-/* line 1244, ../sass/project/_fonts.scss */
 .fa-flickr:before {
   content: "\f16e";
 }
 
-/* line 1247, ../sass/project/_fonts.scss */
 .fa-adn:before {
   content: "\f170";
 }
 
-/* line 1250, ../sass/project/_fonts.scss */
 .fa-bitbucket:before {
   content: "\f171";
 }
 
-/* line 1253, ../sass/project/_fonts.scss */
 .fa-bitbucket-square:before {
   content: "\f172";
 }
 
-/* line 1256, ../sass/project/_fonts.scss */
 .fa-tumblr:before {
   content: "\f173";
 }
 
-/* line 1259, ../sass/project/_fonts.scss */
 .fa-tumblr-square:before {
   content: "\f174";
 }
 
-/* line 1262, ../sass/project/_fonts.scss */
 .fa-long-arrow-down:before {
   content: "\f175";
 }
 
-/* line 1265, ../sass/project/_fonts.scss */
 .fa-long-arrow-up:before {
   content: "\f176";
 }
 
-/* line 1268, ../sass/project/_fonts.scss */
 .fa-long-arrow-left:before {
   content: "\f177";
 }
 
-/* line 1271, ../sass/project/_fonts.scss */
 .fa-long-arrow-right:before {
   content: "\f178";
 }
 
-/* line 1274, ../sass/project/_fonts.scss */
 .fa-apple:before {
   content: "\f179";
 }
 
-/* line 1277, ../sass/project/_fonts.scss */
 .fa-windows:before {
   content: "\f17a";
 }
 
-/* line 1280, ../sass/project/_fonts.scss */
 .fa-android:before {
   content: "\f17b";
 }
 
-/* line 1283, ../sass/project/_fonts.scss */
 .fa-linux:before {
   content: "\f17c";
 }
 
-/* line 1286, ../sass/project/_fonts.scss */
 .fa-dribbble:before {
   content: "\f17d";
 }
 
-/* line 1289, ../sass/project/_fonts.scss */
 .fa-skype:before {
   content: "\f17e";
 }
 
-/* line 1292, ../sass/project/_fonts.scss */
 .fa-foursquare:before {
   content: "\f180";
 }
 
-/* line 1295, ../sass/project/_fonts.scss */
 .fa-trello:before {
   content: "\f181";
 }
 
-/* line 1298, ../sass/project/_fonts.scss */
 .fa-female:before {
   content: "\f182";
 }
 
-/* line 1301, ../sass/project/_fonts.scss */
 .fa-male:before {
   content: "\f183";
 }
 
-/* line 1304, ../sass/project/_fonts.scss */
 .fa-gittip:before {
   content: "\f184";
 }
 
-/* line 1307, ../sass/project/_fonts.scss */
 .fa-sun-o:before {
   content: "\f185";
 }
 
-/* line 1310, ../sass/project/_fonts.scss */
 .fa-moon-o:before {
   content: "\f186";
 }
 
-/* line 1313, ../sass/project/_fonts.scss */
 .fa-archive:before {
   content: "\f187";
 }
 
-/* line 1316, ../sass/project/_fonts.scss */
 .fa-bug:before {
   content: "\f188";
 }
 
-/* line 1319, ../sass/project/_fonts.scss */
 .fa-vk:before {
   content: "\f189";
 }
 
-/* line 1322, ../sass/project/_fonts.scss */
 .fa-weibo:before {
   content: "\f18a";
 }
 
-/* line 1325, ../sass/project/_fonts.scss */
 .fa-renren:before {
   content: "\f18b";
 }
 
-/* line 1328, ../sass/project/_fonts.scss */
 .fa-pagelines:before {
   content: "\f18c";
 }
 
-/* line 1331, ../sass/project/_fonts.scss */
 .fa-stack-exchange:before {
   content: "\f18d";
 }
 
-/* line 1334, ../sass/project/_fonts.scss */
 .fa-arrow-circle-o-right:before {
   content: "\f18e";
 }
 
-/* line 1337, ../sass/project/_fonts.scss */
 .fa-arrow-circle-o-left:before {
   content: "\f190";
 }
 
-/* line 1341, ../sass/project/_fonts.scss */
 .fa-toggle-left:before,
 .fa-caret-square-o-left:before {
   content: "\f191";
 }
 
-/* line 1344, ../sass/project/_fonts.scss */
 .fa-dot-circle-o:before {
   content: "\f192";
 }
 
-/* line 1347, ../sass/project/_fonts.scss */
 .fa-wheelchair:before {
   content: "\f193";
 }
 
-/* line 1350, ../sass/project/_fonts.scss */
 .fa-vimeo-square:before {
   content: "\f194";
 }
 
-/* line 1354, ../sass/project/_fonts.scss */
 .fa-turkish-lira:before,
 .fa-try:before {
   content: "\f195";
 }
 
-/* line 1357, ../sass/project/_fonts.scss */
 .fa-plus-square-o:before {
   content: "\f196";
 }
 
-/* line 1360, ../sass/project/_fonts.scss */
 .fa-space-shuttle:before {
   content: "\f197";
 }
 
-/* line 1363, ../sass/project/_fonts.scss */
 .fa-slack:before {
   content: "\f198";
 }
 
-/* line 1366, ../sass/project/_fonts.scss */
 .fa-envelope-square:before {
   content: "\f199";
 }
 
-/* line 1369, ../sass/project/_fonts.scss */
 .fa-wordpress:before {
   content: "\f19a";
 }
 
-/* line 1372, ../sass/project/_fonts.scss */
 .fa-openid:before {
   content: "\f19b";
 }
 
-/* line 1377, ../sass/project/_fonts.scss */
 .fa-institution:before,
 .fa-bank:before,
 .fa-university:before {
   content: "\f19c";
 }
 
-/* line 1381, ../sass/project/_fonts.scss */
 .fa-mortar-board:before,
 .fa-graduation-cap:before {
   content: "\f19d";
 }
 
-/* line 1384, ../sass/project/_fonts.scss */
 .fa-yahoo:before {
   content: "\f19e";
 }
 
-/* line 1387, ../sass/project/_fonts.scss */
 .fa-google:before {
   content: "\f1a0";
 }
 
-/* line 1390, ../sass/project/_fonts.scss */
 .fa-reddit:before {
   content: "\f1a1";
 }
 
-/* line 1393, ../sass/project/_fonts.scss */
 .fa-reddit-square:before {
   content: "\f1a2";
 }
 
-/* line 1396, ../sass/project/_fonts.scss */
 .fa-stumbleupon-circle:before {
   content: "\f1a3";
 }
 
-/* line 1399, ../sass/project/_fonts.scss */
 .fa-stumbleupon:before {
   content: "\f1a4";
 }
 
-/* line 1402, ../sass/project/_fonts.scss */
 .fa-delicious:before {
   content: "\f1a5";
 }
 
-/* line 1405, ../sass/project/_fonts.scss */
 .fa-digg:before {
   content: "\f1a6";
 }
 
-/* line 1409, ../sass/project/_fonts.scss */
 .fa-pied-piper-square:before,
 .fa-pied-piper:before {
   content: "\f1a7";
 }
 
-/* line 1412, ../sass/project/_fonts.scss */
 .fa-pied-piper-alt:before {
   content: "\f1a8";
 }
 
-/* line 1415, ../sass/project/_fonts.scss */
 .fa-drupal:before {
   content: "\f1a9";
 }
 
-/* line 1418, ../sass/project/_fonts.scss */
 .fa-joomla:before {
   content: "\f1aa";
 }
 
-/* line 1421, ../sass/project/_fonts.scss */
 .fa-language:before {
   content: "\f1ab";
 }
 
-/* line 1424, ../sass/project/_fonts.scss */
 .fa-fax:before {
   content: "\f1ac";
 }
 
-/* line 1427, ../sass/project/_fonts.scss */
 .fa-building:before {
   content: "\f1ad";
 }
 
-/* line 1430, ../sass/project/_fonts.scss */
 .fa-child:before {
   content: "\f1ae";
 }
 
-/* line 1433, ../sass/project/_fonts.scss */
 .fa-paw:before {
   content: "\f1b0";
 }
 
-/* line 1436, ../sass/project/_fonts.scss */
 .fa-spoon:before {
   content: "\f1b1";
 }
 
-/* line 1439, ../sass/project/_fonts.scss */
 .fa-cube:before {
   content: "\f1b2";
 }
 
-/* line 1442, ../sass/project/_fonts.scss */
 .fa-cubes:before {
   content: "\f1b3";
 }
 
-/* line 1445, ../sass/project/_fonts.scss */
 .fa-behance:before {
   content: "\f1b4";
 }
 
-/* line 1448, ../sass/project/_fonts.scss */
 .fa-behance-square:before {
   content: "\f1b5";
 }
 
-/* line 1451, ../sass/project/_fonts.scss */
 .fa-steam:before {
   content: "\f1b6";
 }
 
-/* line 1454, ../sass/project/_fonts.scss */
 .fa-steam-square:before {
   content: "\f1b7";
 }
 
-/* line 1457, ../sass/project/_fonts.scss */
 .fa-recycle:before {
   content: "\f1b8";
 }
 
-/* line 1461, ../sass/project/_fonts.scss */
 .fa-automobile:before,
 .fa-car:before {
   content: "\f1b9";
 }
 
-/* line 1465, ../sass/project/_fonts.scss */
 .fa-cab:before,
 .fa-taxi:before {
   content: "\f1ba";
 }
 
-/* line 1468, ../sass/project/_fonts.scss */
 .fa-tree:before {
   content: "\f1bb";
 }
 
-/* line 1471, ../sass/project/_fonts.scss */
 .fa-spotify:before {
   content: "\f1bc";
 }
 
-/* line 1474, ../sass/project/_fonts.scss */
 .fa-deviantart:before {
   content: "\f1bd";
 }
 
-/* line 1477, ../sass/project/_fonts.scss */
 .fa-soundcloud:before {
   content: "\f1be";
 }
 
-/* line 1480, ../sass/project/_fonts.scss */
 .fa-database:before {
   content: "\f1c0";
 }
 
-/* line 1483, ../sass/project/_fonts.scss */
 .fa-file-pdf-o:before {
   content: "\f1c1";
 }
 
-/* line 1486, ../sass/project/_fonts.scss */
 .fa-file-word-o:before {
   content: "\f1c2";
 }
 
-/* line 1489, ../sass/project/_fonts.scss */
 .fa-file-excel-o:before {
   content: "\f1c3";
 }
 
-/* line 1492, ../sass/project/_fonts.scss */
 .fa-file-powerpoint-o:before {
   content: "\f1c4";
 }
 
-/* line 1497, ../sass/project/_fonts.scss */
 .fa-file-photo-o:before,
 .fa-file-picture-o:before,
 .fa-file-image-o:before {
   content: "\f1c5";
 }
 
-/* line 1501, ../sass/project/_fonts.scss */
 .fa-file-zip-o:before,
 .fa-file-archive-o:before {
   content: "\f1c6";
 }
 
-/* line 1505, ../sass/project/_fonts.scss */
 .fa-file-sound-o:before,
 .fa-file-audio-o:before {
   content: "\f1c7";
 }
 
-/* line 1509, ../sass/project/_fonts.scss */
 .fa-file-movie-o:before,
 .fa-file-video-o:before {
   content: "\f1c8";
 }
 
-/* line 1512, ../sass/project/_fonts.scss */
 .fa-file-code-o:before {
   content: "\f1c9";
 }
 
-/* line 1515, ../sass/project/_fonts.scss */
 .fa-vine:before {
   content: "\f1ca";
 }
 
-/* line 1518, ../sass/project/_fonts.scss */
 .fa-codepen:before {
   content: "\f1cb";
 }
 
-/* line 1521, ../sass/project/_fonts.scss */
 .fa-jsfiddle:before {
   content: "\f1cc";
 }
 
-/* line 1527, ../sass/project/_fonts.scss */
 .fa-life-bouy:before,
 .fa-life-saver:before,
 .fa-support:before,
@@ -2426,107 +1963,87 @@ p, li, span, label, input, .btn {
   content: "\f1cd";
 }
 
-/* line 1530, ../sass/project/_fonts.scss */
 .fa-circle-o-notch:before {
   content: "\f1ce";
 }
 
-/* line 1534, ../sass/project/_fonts.scss */
 .fa-ra:before,
 .fa-rebel:before {
   content: "\f1d0";
 }
 
-/* line 1538, ../sass/project/_fonts.scss */
 .fa-ge:before,
 .fa-empire:before {
   content: "\f1d1";
 }
 
-/* line 1541, ../sass/project/_fonts.scss */
 .fa-git-square:before {
   content: "\f1d2";
 }
 
-/* line 1544, ../sass/project/_fonts.scss */
 .fa-git:before {
   content: "\f1d3";
 }
 
-/* line 1547, ../sass/project/_fonts.scss */
 .fa-hacker-news:before {
   content: "\f1d4";
 }
 
-/* line 1550, ../sass/project/_fonts.scss */
 .fa-tencent-weibo:before {
   content: "\f1d5";
 }
 
-/* line 1553, ../sass/project/_fonts.scss */
 .fa-qq:before {
   content: "\f1d6";
 }
 
-/* line 1557, ../sass/project/_fonts.scss */
 .fa-wechat:before,
 .fa-weixin:before {
   content: "\f1d7";
 }
 
-/* line 1561, ../sass/project/_fonts.scss */
 .fa-send:before,
 .fa-paper-plane:before {
   content: "\f1d8";
 }
 
-/* line 1565, ../sass/project/_fonts.scss */
 .fa-send-o:before,
 .fa-paper-plane-o:before {
   content: "\f1d9";
 }
 
-/* line 1568, ../sass/project/_fonts.scss */
 .fa-history:before {
   content: "\f1da";
 }
 
-/* line 1571, ../sass/project/_fonts.scss */
 .fa-circle-thin:before {
   content: "\f1db";
 }
 
-/* line 1574, ../sass/project/_fonts.scss */
 .fa-header:before {
   content: "\f1dc";
 }
 
-/* line 1577, ../sass/project/_fonts.scss */
 .fa-paragraph:before {
   content: "\f1dd";
 }
 
-/* line 1580, ../sass/project/_fonts.scss */
 .fa-sliders:before {
   content: "\f1de";
 }
 
-/* line 1583, ../sass/project/_fonts.scss */
 .fa-share-alt:before {
   content: "\f1e0";
 }
 
-/* line 1586, ../sass/project/_fonts.scss */
 .fa-share-alt-square:before {
   content: "\f1e1";
 }
 
-/* line 1589, ../sass/project/_fonts.scss */
 .fa-bomb:before {
   content: "\f1e2";
 }
 
-/* line 3, ../sass/project/ui/_wizard.scss */
 ul.wizard {
   padding: 0;
   margin-top: 20px;
@@ -2539,7 +2056,6 @@ ul.wizard {
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.065);
 }
 
-/* line 3, ../sass/project/ui/_wizard.scss */
 ul.wizard li {
   border: 1px solid #d4d4d4;
   border-right-width: 0;
@@ -2551,7 +2067,6 @@ ul.wizard li {
   background: #fbfbfb;
 }
 
-/* line 3, ../sass/project/ui/_wizard.scss */
 ul.wizard li .chevron {
   position: absolute;
   top: 0;
@@ -2563,7 +2078,6 @@ ul.wizard li .chevron {
   border-left: 10px solid #d4d4d4;
 }
 
-/* line 3, ../sass/project/ui/_wizard.scss */
 ul.wizard li .chevron:before {
   position: absolute;
   top: -20px;
@@ -2575,102 +2089,81 @@ ul.wizard li .chevron:before {
   content: "";
 }
 
-/* line 3, ../sass/project/ui/_wizard.scss */
 ul.wizard li.text-success {
   background: #f3f4f5;
 }
 
-/* line 3, ../sass/project/ui/_wizard.scss */
 ul.wizard li.text-success .chevron:before {
   border-left: 10px solid whitesmoke;
 }
 
-/* line 3, ../sass/project/ui/_wizard.scss */
 ul.wizard li.text-primary {
   background: #f1f6fc;
 }
 
-/* line 3, ../sass/project/ui/_wizard.scss */
 ul.wizard li.text-primary .chevron:before {
   border-left: 10px solid #f1f6fc;
 }
 
-/* line 3, ../sass/project/ui/_wizard.scss */
 ul.wizard li:first-child {
   padding-left: 15px;
   border-radius: 4px 0 0 4px;
 }
 
-/* line 5, ../sass/project/ui/_bg.scss */
 .bg-info .table > thead > tr > th, .bg-info .table > tbody > tr > td {
   border-color: #c4e3f3;
 }
 
-/* line 10, ../sass/project/ui/_bg.scss */
 .bg-info-darker {
   background-color: #b7ddf0 !important;
 }
-/* line 13, ../sass/project/ui/_bg.scss */
 .bg-info-darker .table > thead > tr > th, .bg-info-darker .table > tbody > tr > td {
   border-color: #a2d3eb;
 }
 
-/* line 19, ../sass/project/ui/_bg.scss */
 .bg-success .table > thead > tr > th, .bg-success .table > tbody > tr > td {
   border-color: #c7e5bb;
 }
 
-/* line 24, ../sass/project/ui/_bg.scss */
 .bg-gray {
   background-color: #f2f2f2 !important;
 }
 
-/* line 27, ../sass/project/ui/_bg.scss */
 .bg-gray-darker {
   background-color: #e5e5e5 !important;
 }
 
-/* line 4, ../sass/project/ui/_buttons.scss */
 .btn {
   outline: 0 !important;
 }
-/* line 7, ../sass/project/ui/_buttons.scss */
 .btn.loading {
   background-repeat: no-repeat;
   background-position: center;
   text-indent: -9999px;
   background-image: url("img/btn/spinner.gif");
 }
-/* line 13, ../sass/project/ui/_buttons.scss */
 .btn.loading.btn-primary {
   background-image: url("img/btn/primary-spinner.gif");
 }
-/* line 16, ../sass/project/ui/_buttons.scss */
 .btn.loading.btn-info {
   background-image: url("img/btn/info-spinner.gif");
 }
-/* line 19, ../sass/project/ui/_buttons.scss */
 .btn.loading.btn-success {
   background-image: url("img/btn/success-spinner.gif");
 }
-/* line 22, ../sass/project/ui/_buttons.scss */
 .btn.loading.btn-warning {
   background-image: url("img/btn/warning-spinner.gif");
 }
-/* line 25, ../sass/project/ui/_buttons.scss */
 .btn.loading.btn-danger {
   background-image: url("img/btn/danger-spinner.gif");
 }
-/* line 28, ../sass/project/ui/_buttons.scss */
 .btn.loading.btn-link {
   background-image: url("img/btn/link-spinner.gif");
 }
-/* line 33, ../sass/project/ui/_buttons.scss */
 .btn.btn-file {
   position: relative;
   overflow: hidden;
 }
-/* line 37, ../sass/project/ui/_buttons.scss */
 .btn.btn-file input[type=file] {
   position: absolute;
   top: 0;
@@ -2687,54 +2180,43 @@ ul.wizard li:first-child {
   display: block;
 }
 
-/* line 4, ../sass/project/ui/_badges.scss */
 .badge.badge-success {
   background-color: #5cb85c !important;
 }
-/* line 7, ../sass/project/ui/_badges.scss */
 .badge.badge-info {
   background-color: #5bc0de !important;
 }
-/* line 10, ../sass/project/ui/_badges.scss */
 .badge.badge-warning {
   background-color: #f0ad4e !important;
 }
-/* line 13, ../sass/project/ui/_badges.scss */
 .badge.badge-danger {
   background-color: #d9534f !important;
 }
-/* line 16, ../sass/project/ui/_badges.scss */
 .badge.badge-primary {
   background-color: #428bca !important;
 }
 
-/* line 4, ../sass/project/ui/_jumbotron.scss */
 .jumbotron.bg-primary {
   background-color: #428bca !important;
   color: white !important;
 }
-/* line 8, ../sass/project/ui/_jumbotron.scss */
 .jumbotron.bg-primary h1, .jumbotron.bg-primary h2, .jumbotron.bg-primary h3, .jumbotron.bg-primary h4, .jumbotron.bg-primary h5, .jumbotron.bg-primary h6 {
   color: white;
 }
-/* line 11, ../sass/project/ui/_jumbotron.scss */
 .jumbotron.bg-primary h1 small, .jumbotron.bg-primary h2 small, .jumbotron.bg-primary h3 small, .jumbotron.bg-primary h4 small, .jumbotron.bg-primary h5 small, .jumbotron.bg-primary h6 small {
   color: #b9d4ec;
 }
 
-/* line 4, ../sass/project/ui/_scrollable.scss */
 .scrollable {
   padding: 0 8px 0 0;
   margin: 0;
   position: relative;
 }
-/* line 10, ../sass/project/ui/_scrollable.scss */
 .scrollable .viewport {
   height: 200px;
   overflow: hidden;
   position: relative;
 }
-/* line 16, ../sass/project/ui/_scrollable.scss */
 .scrollable .viewport .overview {
   list-style: none;
   position: absolute;
@@ -2743,30 +2225,24 @@ ul.wizard li:first-child {
   padding: 0;
   margin: 0;
 }
-/* line 27, ../sass/project/ui/_scrollable.scss */
 .scrollable .scrollbar {
   position: absolute;
   top: 0;
   right: 0;
   width: 12px;
 }
-/* line 34, ../sass/project/ui/_scrollable.scss */
 .scrollable .scrollbar.disable {
   visibility: hidden !important;
 }
-/* line 38, ../sass/project/ui/_scrollable.scss */
 .scrollable .scrollbar .track {
   background: rgba(0, 0, 0, 0.1);
   height: 100%;
   width: 12px;
   position: relative;
-  -webkit-border-radius: 6px;
   -moz-border-radius: 6px;
-  -ms-border-radius: 6px;
-  -o-border-radius: 6px;
+  -webkit-border-radius: 6px;
   border-radius: 6px;
 }
-/* line 46, ../sass/project/ui/_scrollable.scss */
 .scrollable .scrollbar .track .thumb {
   background: #777;
   height: 20px;
@@ -2776,250 +2252,244 @@ ul.wizard li:first-child {
   position: absolute;
   top: 0;
   left: 0;
-  -webkit-border-radius: 6px;
   -moz-border-radius: 6px;
-  -ms-border-radius: 6px;
-  -o-border-radius: 6px;
+  -webkit-border-radius: 6px;
   border-radius: 6px;
 }
-/* line 59, ../sass/project/ui/_scrollable.scss */
 .scrollable .scrollbar .track .thumb .end {
   overflow: hidden;
   height: 5px;
   width: 12px;
 }
-/* line 69, ../sass/project/ui/_scrollable.scss */
 .scrollable .scrollbar .disable {
   display: none;
 }
 
-/* line 76, ../sass/project/ui/_scrollable.scss */
 .bg-info .scrollable .scrollbar .track {
   background-color: #b7ddf0;
 }
-/* line 79, ../sass/project/ui/_scrollable.scss */
 .bg-info .scrollable .scrollbar .track .thumb {
   background-color: #5bb1dc;
 }
 
-/* line 4, ../sass/project/helpers/_padding.scss */
+.weezer-icon {
+  display: block;
+  background-position: center center;
+  background-repeat: no-repeat;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  -webkit-background-size: cover;
+  background-size: cover;
+}
+.weezer-icon.weezer-pencil {
+  width: 16px;
+  height: 16px;
+  background-image: url("img/icons/icone_wezer-01.png");
+}
+.weezer-icon.weezer-envelope {
+  width: 24px;
+  height: 16px;
+  background-image: url("img/icons/icone_wezer-02.png");
+}
+.weezer-icon.weezer-dollar {
+  width: 19px;
+  height: 16px;
+  background-image: url("img/icons/icone_wezer-03.png");
+}
+.weezer-icon.weezer-profile {
+  width: 13px;
+  height: 16px;
+  background-image: url("img/icons/icone_wezer-04.png");
+}
+.weezer-icon.weezer-group {
+  width: 27px;
+  height: 16px;
+  background-image: url("img/icons/icone_wezer-05.png");
+}
+.weezer-icon.weezer-chat {
+  width: 16px;
+  height: 16px;
+  background-image: url("img/icons/icone_wezer-06.png");
+}
+.weezer-icon.weezer-alert {
+  width: 16px;
+  height: 16px;
+  background-image: url("img/icons/icone_wezer-08.png");
+}
+
 .no-padding-top {
   padding-top: 0px !important;
 }
 
-/* line 9, ../sass/project/helpers/_padding.scss */
 .no-padding-right {
   padding-right: 0px !important;
 }
 
-/* line 14, ../sass/project/helpers/_padding.scss */
 .no-padding-bottom {
   padding-bottom: 0px !important;
 }
 
-/* line 19, ../sass/project/helpers/_padding.scss */
 .no-padding-left {
   padding-left: 0px !important;
 }
 
-/* line 24, ../sass/project/helpers/_padding.scss */
 .padding-top-10 {
   padding-top: 10px;
 }
 
-/* line 29, ../sass/project/helpers/_padding.scss */
 .padding-right-10 {
   padding-right: 10px;
 }
 
-/* line 34, ../sass/project/helpers/_padding.scss */
 .padding-bottom-10 {
   padding-bottom: 10px;
 }
 
-/* line 39, ../sass/project/helpers/_padding.scss */
 .padding-left-10 {
   padding-left: 10px;
 }
 
-/* line 44, ../sass/project/helpers/_padding.scss */
 .padding-top-15 {
   padding-top: 15px;
 }
 
-/* line 49, ../sass/project/helpers/_padding.scss */
 .padding-right-15 {
   padding-right: 15px;
 }
 
-/* line 54, ../sass/project/helpers/_padding.scss */
 .padding-bottom-15 {
   padding-bottom: 15px;
 }
 
-/* line 59, ../sass/project/helpers/_padding.scss */
 .padding-left-15 {
   padding-left: 15px;
 }
 
-/* line 63, ../sass/project/helpers/_padding.scss */
 .pt8 {
   padding-top: 8px;
 }
 
-/* line 66, ../sass/project/helpers/_padding.scss */
 .pt16 {
   padding-top: 16px;
 }
 
-/* line 69, ../sass/project/helpers/_padding.scss */
 .pt32 {
   padding-top: 32px;
 }
 
-/* line 72, ../sass/project/helpers/_padding.scss */
 .pt64 {
   padding-top: 64px;
 }
 
-/* line 75, ../sass/project/helpers/_padding.scss */
 .pt128 {
   padding-top: 128px;
 }
 
-/* line 78, ../sass/project/helpers/_padding.scss */
 .pb8 {
   padding-bottom: 8px;
 }
 
-/* line 81, ../sass/project/helpers/_padding.scss */
 .pb16 {
   padding-bottom: 16px;
 }
 
-/* line 84, ../sass/project/helpers/_padding.scss */
 .pb32 {
   padding-bottom: 32px;
 }
 
-/* line 87, ../sass/project/helpers/_padding.scss */
 .pb64 {
   padding-bottom: 64px;
 }
 
-/* line 90, ../sass/project/helpers/_padding.scss */
 .pb128 {
   padding-bottom: 128px;
 }
 
-/* line 3, ../sass/project/helpers/_margin.scss */
 .mr25 {
   margin-right: 25px;
 }
 
-/* line 7, ../sass/project/helpers/_margin.scss */
 .no-margin-top {
   margin-top: 0px !important;
 }
 
-/* line 12, ../sass/project/helpers/_margin.scss */
 .no-margin-right {
   margin-right: 0px !important;
 }
 
-/* line 17, ../sass/project/helpers/_margin.scss */
 .no-margin-bottom {
   margin-bottom: 0px !important;
 }
 
-/* line 22, ../sass/project/helpers/_margin.scss */
 .no-margin-left {
   margin-left: 0px !important;
 }
 
-/* line 27, ../sass/project/helpers/_margin.scss */
 .margin-top-10 {
   margin-top: 10px;
 }
 
-/* line 32, ../sass/project/helpers/_margin.scss */
 .margin-right-10 {
   margin-right: 10px;
 }
 
-/* line 37, ../sass/project/helpers/_margin.scss */
 .margin-bottom-10 {
   margin-bottom: 10px;
 }
 
-/* line 42, ../sass/project/helpers/_margin.scss */
 .margin-left-10 {
   margin-left: 10px;
 }
 
-/* line 47, ../sass/project/helpers/_margin.scss */
 .margin-top-15 {
   margin-top: 15px;
 }
 
-/* line 52, ../sass/project/helpers/_margin.scss */
 .margin-right-15 {
   margin-right: 15px;
 }
 
-/* line 57, ../sass/project/helpers/_margin.scss */
 .margin-bottom-15 {
   margin-bottom: 15px;
 }
 
-/* line 62, ../sass/project/helpers/_margin.scss */
 .margin-left-15 {
   margin-left: 15px;
 }
 
-/* line 66, ../sass/project/helpers/_margin.scss */
 .mr40 {
   margin-right: 40px;
 }
 
-/* line 70, ../sass/project/helpers/_margin.scss */
 .ml8 {
   margin-left: 8px;
 }
 
-/* line 25, ../sass/project/_core.scss */
 html main .searchfilter {
   padding-top: 0;
   padding-bottom: 0;
 }
-/* line 30, ../sass/project/_core.scss */
 html main .searchfilter .btn-group {
   margin-bottom: 0 !important;
 }
-/* line 36, ../sass/project/_core.scss */
 html .inline-label {
   line-height: 32px;
 }
-/* line 39, ../sass/project/_core.scss */
 html .banner-box {
-  border-left: 1px solid #cccccc;
+  border-left: 1px solid #CCC;
 }
-/* line 42, ../sass/project/_core.scss */
 html .banner-box h6 {
   line-height: 1.4;
 }
 
-/* line 48, ../sass/project/_core.scss */
 .navbar-brand {
   padding: 0 30px 0 15px;
 }
-/* line 51, ../sass/project/_core.scss */
 .navbar-brand img {
   width: auto;
   height: 50px;
 }
 
-/* line 56, ../sass/project/_core.scss */
 .selectpicker li {
   border: 1px solid white;
   border-top: none;
@@ -3028,7 +2498,6 @@ html .banner-box h6 {
   padding-top: 0;
   padding-bottom: 0;
 }
-/* line 63, ../sass/project/_core.scss */
 .selectpicker li a {
   background: none !important;
   outline: 0;
@@ -3039,104 +2508,94 @@ html .banner-box h6 {
   padding-top: 0;
   padding-bottom: 0;
 }
-/* line 75, ../sass/project/_core.scss */
 .selectpicker li:hover {
   background-color: #b9d4ec;
   border-color: #a5c8e6;
   border-top: none;
 }
-/* line 81, ../sass/project/_core.scss */
 .selectpicker li.selected {
   background-color: #428bca;
   border-color: #357ebd;
   border-top: none;
   color: white !important;
 }
-/* line 87, ../sass/project/_core.scss */
 .selectpicker li.selected a {
   color: white !important;
 }
-/* line 90, ../sass/project/_core.scss */
 .selectpicker li.selected a i.fa {
   color: white;
   margin-top: 11px !important;
 }
 
-/* line 98, ../sass/project/_core.scss */
 #chart_div {
   height: 250px;
   overflow: hidden;
 }
-/* line 101, ../sass/project/_core.scss */
 #chart_div > div[dir="ltr"] {
   margin-top: -32px;
 }
 
-/* line 107, ../sass/project/_core.scss */
 [data-appear-element] {
   position: fixed;
   left: 0;
   bottom: 0;
   right: 0;
 }
-/* line 113, ../sass/project/_core.scss */
 [data-appear-element].appeared {
   position: relative !important;
 }
 
-/* line 119, ../sass/project/_core.scss */
 .table-cell {
   display: table-cell !important;
 }
 
-/* line 124, ../sass/project/_core.scss */
 h3 a {
   color: #333333;
 }
-/* line 126, ../sass/project/_core.scss */
 h3 a:hover {
   color: #333333;
   text-decoration: none;
 }
 
-/* line 9, ../sass/project/_header.scss */
+.announcement-author {
+  margin: 0 auto;
+}
+
+.two-line {
+  overflow: hidden;
+  height: 42px;
+}
+
 .oe_website_login_container {
   display: table-cell;
   margin: 0 auto !important;
   padding: 10px 0 !important;
   width: 100% !important;
 }
-/* line 15, ../sass/project/_header.scss */
 .oe_website_login_container header {
   display: block;
 }
 
-/* line 20, ../sass/project/_header.scss */
 #input-search {
   width: 480px;
 }
 
-/* line 23, ../sass/project/_header.scss */
 .search-dropdown .caret {
   margin-top: 8px;
 }
 
-/* line 26, ../sass/project/_header.scss */
 #filter-search {
   width: 100px;
 }
 
-/* line 27, ../sass/project/_header.scss */
 #category-search {
   width: 200px;
 }
 
-/* line 29, ../sass/project/_header.scss */
 #search-dropdown-menu {
   right: auto;
 }
 
-/* line 31, ../sass/project/_header.scss */
 .subtitle-search {
   padding: 0;
   display: block;
@@ -3145,7 +2604,6 @@ h3 a:hover {
   height: 30px;
   margin: 0;
 }
-/* line 38, ../sass/project/_header.scss */
 .subtitle-search h2 {
   display: block;
   position: absolute;
@@ -3158,7 +2616,6 @@ h3 a:hover {
   line-height: 30px;
   font-size: 18px;
 }
-/* line 50, ../sass/project/_header.scss */
 .subtitle-search .border {
   display: block;
   position: absolute;
@@ -3169,43 +2626,36 @@ h3 a:hover {
   left: 50%;
 }
 
-/* line 8, ../sass/project/_footer.scss */
 .footer-nav {
   float: left;
   width: 18%;
   margin: 0 1%;
   padding: 0;
 }
-/* line 14, ../sass/project/_footer.scss */
 .footer-nav:first-child {
   margin-left: 0;
   width: 19%;
 }
-/* line 18, ../sass/project/_footer.scss */
 .footer-nav:last-child {
   margin-right: 0;
   width: 19%;
 }
 
-/* line 24, ../sass/project/_footer.scss */
 #footer_container .btn-contact-us {
   padding: 9px 15px;
 }
 
-/* line 29, ../sass/project/_footer.scss */
 .footer-title {
   text-align: center;
   margin-top: 9px;
 }
 
-/* line 34, ../sass/project/_footer.scss */
 h5.footer-title {
   margin-top: 30px;
   color: #777777;
   height: 70px;
   line-height: 70px;
 }
-/* line 40, ../sass/project/_footer.scss */
 h5.footer-title .footer-logo {
   display: inline-block;
   vertical-align: middle;
@@ -3215,33 +2665,29 @@ h5.footer-title .footer-logo {
   border: none;
   text-indent: -9999px;
 }
-/* line 49, ../sass/project/_footer.scss */
 h5.footer-title .footer-logo.logo-odoo {
   width: 79px;
   height: 35px;
   background-image: url("img/logo_odoo.png");
-  -webkit-background-size: 50%;
   -moz-background-size: 50%;
   -o-background-size: 50%;
+  -webkit-background-size: 50%;
   background-size: 50%;
 }
-/* line 55, ../sass/project/_footer.scss */
 h5.footer-title .footer-logo.logo-valeureux {
   width: 100px;
   height: 70px;
   background-image: url("img/logo_valeureux.png");
-  -webkit-background-size: 100px, 70px;
   -moz-background-size: 100px, 70px;
   -o-background-size: 100px, 70px;
+  -webkit-background-size: 100px, 70px;
   background-size: 100px, 70px;
 }
 
-/* line 3, ../sass/project/_login.scss */
 .bg-login {
   background: #EEE;
 }
 
-/* line 6, ../sass/project/_login.scss */
 .img-login {
   margin: 30px auto;
   display: block;
@@ -3250,22 +2696,18 @@ h5.footer-title .footer-logo.logo-valeureux {
   height: auto;
 }
 
-/* line 13, ../sass/project/_login.scss */
 .thumbnail-signin {
   width: 320px;
   margin: 0 auto 30px;
   padding-bottom: 11px;
 }
-/* line 18, ../sass/project/_login.scss */
 .thumbnail-signin .inner {
   margin: 15px;
 }
-/* line 21, ../sass/project/_login.scss */
 .thumbnail-signin h2 {
   margin: 0;
   padding: 0;
 }
-/* line 25, ../sass/project/_login.scss */
 .thumbnail-signin .subtitle-box {
   padding: 0;
   display: block;
@@ -3274,7 +2716,6 @@ h5.footer-title .footer-logo.logo-valeureux {
   height: 40px;
   margin: 0 0 5px;
 }
-/* line 31, ../sass/project/_login.scss */
 .thumbnail-signin .subtitle-box h5 {
   display: block;
   position: absolute;
@@ -3286,14 +2727,12 @@ h5.footer-title .footer-logo.logo-valeureux {
   line-height: 40px;
   color: #777;
 }
-/* line 41, ../sass/project/_login.scss */
 .thumbnail-signin .subtitle-box h2 {
   background-color: #EEE;
   margin: 0;
   width: 100%;
   font-size: 24px;
 }
-/* line 48, ../sass/project/_login.scss */
 .thumbnail-signin .subtitle-box .border {
   display: block;
   position: absolute;
@@ -3302,66 +2741,50 @@ h5.footer-title .footer-logo.logo-valeureux {
   background: #CCC;
   margin: 20px 50px;
 }
-/* line 56, ../sass/project/_login.scss */
 .thumbnail-signin p {
   line-height: 20px;
   margin: 0 0 5px;
 }
-/* line 59, ../sass/project/_login.scss */
 .thumbnail-signin p small {
   color: #777;
   font-size: 11px;
 }
-/* line 65, ../sass/project/_login.scss */
 .thumbnail-signin .social-login {
   padding: 15px 0;
 }
-/* line 69, ../sass/project/_login.scss */
 .thumbnail-signin form {
   padding: 0;
 }
-/* line 72, ../sass/project/_login.scss */
 .thumbnail-signin form .form-control {
   position: relative;
   height: auto;
-  -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
   box-sizing: border-box;
   padding: 10px;
   margin-bottom: -1px;
-  -webkit-border-radius: 0 0 0 0;
   -moz-border-radius: 0 0 0 0;
-  -ms-border-radius: 0 0 0 0;
-  -o-border-radius: 0 0 0 0;
+  -webkit-border-radius: 0;
   border-radius: 0 0 0 0;
 }
-/* line 80, ../sass/project/_login.scss */
 .thumbnail-signin form .form-control:focus {
   z-index: 2;
 }
-/* line 82, ../sass/project/_login.scss */
 .thumbnail-signin form .form-control.first {
-  -webkit-border-radius: 4px 4px 0 0;
   -moz-border-radius: 4px 4px 0 0;
-  -ms-border-radius: 4px 4px 0 0;
-  -o-border-radius: 4px 4px 0 0;
+  -webkit-border-radius: 4px;
   border-radius: 4px 4px 0 0;
 }
-/* line 86, ../sass/project/_login.scss */
 .thumbnail-signin form .form-control.last {
   margin-bottom: 10px;
-  -webkit-border-radius: 0 0 4px 4px;
   -moz-border-radius: 0 0 4px 4px;
-  -ms-border-radius: 0 0 4px 4px;
-  -o-border-radius: 0 0 4px 4px;
+  -webkit-border-radius: 0;
   border-radius: 0 0 4px 4px;
 }
-/* line 92, ../sass/project/_login.scss */
 .thumbnail-signin form label {
   height: 34px;
   line-height: 34px;
 }
-/* line 96, ../sass/project/_login.scss */
 .thumbnail-signin form label input[type="checkbox"] {
   margin-top: 11px;
 }
