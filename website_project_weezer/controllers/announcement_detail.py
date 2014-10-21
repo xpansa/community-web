@@ -22,6 +22,7 @@
 import base64
 from datetime import datetime
 import logging
+import re
 
 from openerp import SUPERUSER_ID
 from openerp.addons.web import http
@@ -391,8 +392,11 @@ class announcement_controller(http.Controller):
     def get_all_records(self, cr, uid, registry, model_name, context=None):
         """ Return all records of specified model
         """
+        args = []
+        if model_name == 'res.currency':
+            args = [('centralbank_currency', '=', True)]
         pool = registry.get(model_name)
-        res = pool.name_search(cr, uid, '', [], context=context)
+        res = pool.name_search(cr, uid, '', args, context=context)
         return self.convert_tuple_to_dict(cr, uid, res, context=context)
 
     def get_state_status_dict(self, cr, uid, registry, context=None):
@@ -483,7 +487,7 @@ class announcement_controller(http.Controller):
     def _get_my_reply(self, cr, uid, registry, announcement, context=None):
         res = False
         for prop in announcement.proposition_ids:
-            if prop.create_uid == uid:
+            if prop.create_uid.id == uid:
                 res = prop
         if not res:
             res = AttrDict({
@@ -492,13 +496,80 @@ class announcement_controller(http.Controller):
                 'write_date': '',
                 'vote_comment': '',
                 'currency_ids': [AttrDict({
+                    'id': 0,
+                    'is_new': True,
                     'price_unit': 0.0,
-                    'currency_id': AttrDict({'id': None})    
+                    'currency_id': AttrDict({'id': 0}),
+                    'subtotal': '',
                 })]
             })
         return res
 
-    def _get_view_announcement_dict(self, cr, uid, registry, announcement, context=None):
+    def _validate_reply(self, data):
+        res = {
+                'quantity': data.get('quantity'),
+                'description': data.get('description'),
+                'write_date': data.get('write_date'),
+                'vote_comment': data.get('vote_comment'),
+                'currency_ids': [],
+            }
+        currency_ids = {'existing': {}, 'new': {}}
+        for key, val in data.iteritems():
+            if key.startswith('currency_ids'):
+                for f in ['currency_id', 'price_unit']:
+                    for t in ['new', 'existing']:
+                        curr_number = re.search('currency_ids\[%s\]\[(\d+)\]\[%s\]' % (t, f), key)
+                        if curr_number:
+                            curr_number = int(curr_number.group(1))
+                            if not curr_number in currency_ids[t]:
+                                currency_ids[t][curr_number] = {
+                                    'id': curr_number,
+                                    f: AttrDict({'id': val}) if f == 'currency_id' else val,
+                                    'is_new': True if t == 'new' else False,
+                                }
+                            else:
+                                currency_ids[t][curr_number].update({f: AttrDict({'id': val}) if f == 'currency_id' else val})
+        res['currency_ids'] = [AttrDict(line) for key in ['existing', 'new'] for line in currency_ids[key].values()]
+        errors = {}
+        if not data['quantity']:
+            errors.update({'quantity': _('Please input quantity')})
+        else:
+            try:
+                float(data['quantity'])
+            except:
+                errors.update({'quantity': _('Quanitty should be a float number e.g. 12.05')})
+        res['errors'] = AttrDict(errors)
+        return AttrDict(res)
+
+    def _save_reply(self, cr, uid, registry, announcement, reply, context=None):
+        proposition_pool = registry.get('marketplace.proposition')
+        currency_line_pool = registry.get('account.centralbank.currency.line')
+        id = proposition_pool.search(cr, uid, [('create_uid','=',uid),
+            ('announcement_id','=',announcement.id)], context=context)
+        vals = {
+            'quantity': reply.quantity,
+            'write_date': reply.write_date,
+            'description': reply.description,
+            'vote_comment': reply.vote_comment,
+            'announcement_id': announcement.id,
+        }
+        if id:
+            proposition_pool.write(cr, uid, id[0], vals, context=context)
+        else:
+            id = [proposition_pool.create(cr, uid, vals, context=context)]
+        for line in reply.currency_ids:
+            vals = {
+                'proposition_id': id[0],
+                'model': 'marketplace.proposition',
+                'price_unit': line.price_unit,
+                'currency_id': line.currency_id.id,
+            }
+            if getattr(line, 'is_new', False):
+                currency_line_pool.create(cr, uid, vals, context=context)
+            else:
+                currency_line_pool.write(cr, uid, line.id, vals, context=context)
+
+    def _get_view_announcement_dict(self, cr, uid, registry, announcement, my_reply=None, context=None):
         """ Return dict of values needed to view announcement template
         """
         user = registry.get('res.users').browse(cr, uid, uid, context=context)
@@ -506,8 +577,8 @@ class announcement_controller(http.Controller):
         return {
             'announcement':announcement,
             'author': announcement.partner_id,
-            'replied_list': [p for p in announcement.proposition_ids if p.create_uid != user.id],
-            'my_reply': self._get_my_reply(cr, uid, request.registry, announcement, context=context),
+            'replied_list': [p for p in announcement.proposition_ids if p.create_uid.id != uid],
+            'my_reply': my_reply or self._get_my_reply(cr, uid, request.registry, announcement, context=context),
             'state_status_dict': self.get_state_status_dict(cr, uid, request.registry, context=context),
             'type_dict': self.get_type_dict(cr, uid, request.registry, context=context),
             'attachment_dict': self.get_attachment_dict(cr, uid, request.registry, announcement, context=context),
@@ -515,19 +586,29 @@ class announcement_controller(http.Controller):
                 datetime.strptime(announcement.date_from, DEFAULT_SERVER_DATE_FORMAT).strftime(date_format),
             'date_to': '' if not announcement.date_to else \
                 datetime.strptime(announcement.date_to, DEFAULT_SERVER_DATE_FORMAT).strftime(date_format),
+            'currency_dict': self.get_all_records(cr, uid, request.registry, 'res.currency', context=context),
+            'date_placeholder': date_format.replace('%d','DD').replace('%m','MM').replace('%Y','YYYY'),
+            'getattr': getattr,
         }
 
     @http.route('/marketplace/announcement_detail/<model("marketplace.announcement"):announcement>', type='http', auth="public", website=True)
-    def view_announcement(self, announcement):
+    def view_announcement(self, announcement, **post):
         """ Route for process view announcement request
         """
         cr, uid, context, registry = request.cr, request.uid, request.context, request.registry
         user = registry.get('res.users').browse(cr, uid, uid, context=context)
+
+        my_reply = None
+        if 'make_reply' in post:
+            my_reply = self._validate_reply(post)
+            if not my_reply.errors:
+                self._save_reply(cr, uid, registry, announcement, my_reply, context=context)
+                my_reply = None
         if user and announcement.partner_id.id == user.partner_id.id or uid == SUPERUSER_ID:  
             web_page = request.redirect('%s/edit' % announcement.id)
         else:
             web_page = http.request.website.render('website_project_weezer.view_announcement', 
-                self._get_view_announcement_dict(cr, uid, registry, announcement, context=context))
+                self._get_view_announcement_dict(cr, uid, registry, announcement, my_reply, context=context))
         return web_page
 
     def _get_edit_announcement_dict(self, cr, uid, registry, announcement, context=None):

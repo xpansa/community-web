@@ -252,10 +252,7 @@ class profile_controller(http.Controller):
         title_pool = registry.get('res.partner.title')
         country_pool = registry.get('res.country')
         state_pool = registry.get('res.country.state')
-        config_currency_pool = registry.get('account.centralbank.config.currency')
-        curr_config_ids = config_currency_pool.search(cr, uid, [], context=context)
-        curr_config_lines = config_currency_pool.read(cr, uid, curr_config_ids, 
-                                                      ['currency_id'], context=context)
+        currency_pool = registry.get('res.currency')
         self.date_format = get_date_format(cr, uid, context=context)
         values = {
             'errors': {},
@@ -264,7 +261,7 @@ class profile_controller(http.Controller):
             'countries': country_pool.name_search(cr, uid, '', [], context=context),
             'states': state_pool.name_search(cr, uid, '', [], context=context),
             'is_administrator': uid == SUPERUSER_ID,
-            'currencies': [(c['currency_id'][0], c['currency_id'][1]) for c in curr_config_lines],
+            'currencies': currency_pool.name_search(cr, uid, '', [('centralbank_currency','=',True)], context=context),
             'date_placeholder': self.date_format.replace('%d','DD').replace('%m','MM').replace('%Y','YYYY'),
             'last_exchanges': self.profile_last_exchanges(partner.id),
             'wants': self.profile_announcements(partner.id, 'want'),
@@ -543,10 +540,7 @@ class profile_controller(http.Controller):
         country_pool = registry.get('res.country')
         state_pool = registry.get('res.country.state')
         product_pool = registry.get('product.product')
-        config_currency_pool = registry.get('account.centralbank.config.currency')
-        curr_config_ids = config_currency_pool.search(cr, uid, [], context=context)
-        curr_config_lines = config_currency_pool.read(cr, uid, curr_config_ids, 
-                                                      ['currency_id'], context=context)
+        currency_pool = registry.get('res.currency')
         partner = user_pool.browse(cr, uid, uid, context=context).partner_id
         self.date_format = get_date_format(cr, uid, context=context)
         values = {
@@ -561,7 +555,7 @@ class profile_controller(http.Controller):
                 ('membership_date_from', '<=', datetime.today()),
                 ('membership_date_to', '>=', datetime.today())], context=context),
             'states': state_pool.name_search(cr, uid, '', [], context=context),
-            'currencies': [(c['currency_id'][0], c['currency_id'][1]) for c in curr_config_lines],
+            'currencies': currency_pool.name_search(cr, uid, '', [('centralbank_currency','=',True)], context=context),
             'date_placeholder': self.date_format.replace('%d','DD').replace('%m','MM').replace('%Y','YYYY'),
         }
         if kw:

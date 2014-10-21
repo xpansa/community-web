@@ -4,30 +4,37 @@ openerp.website.theme.views['layout'] = openerp.Class.extend({
 
         var self = this;
 
-        var skill_category_cache = {};
-        var skill_category_new_counter = 1;
-        $('.skill_category_block input').each(function(i, el){
-            el_number = parseInt(el.name.match(/\d+/)[0]);
-            skill_category_new_counter = el_number > skill_category_new_counter ? el_number : skill_category_new_counter;
-        });
-        var skill_tag_cache = {};
-        var skill_tag_new_counter = 1;
-        $('.skill_tag_block input').each(function(i, el){
-            el_number = parseInt(el.name.match(/\d+/)[0]);
-            skill_tag_new_counter = el_number > skill_tag_new_counter ? el_number : skill_tag_new_counter;
-        });
-        var limit_new_counter = 1;
-        $('.limit_block input').each(function(i, el){
-            el_number = parseInt(el.name.match(/\d+/)[0]);
-            limit_new_counter = el_number > limit_new_counter ? el_number : limit_new_counter;
-        });
-        var balance_new_counter = 1;
-        $('.balance_block input').each(function(i, el){
-            el_number = parseInt(el.name.match(/\d+/)[0]);
-            balance_new_counter = el_number > balance_new_counter ? el_number : balance_new_counter;
-        });
-        self.bind_autocomplete('.skill_category', '/marketplace/profile/get_skills', skill_category_cache);
-        self.bind_autocomplete('.skill_tag', '/marketplace/profile/get_interests', skill_tag_cache);
+        function dynamic_element(selector, url) {
+            this.counter = 1;
+            this.cache = {};
+            this.selector = selector; //Should be .classname
+            this.autocomplete_url = url;
+            this.init = function() {
+                // set digital part of name to te uniq valus e.g. limit[new][12][currency]
+                $(this.selector + ' input').each(function(i, el){
+                    el_number = el.name.match(/\d+/);
+                    if (el_number) {
+                        el_number = parseInt(el_number[0]);
+                        this.counter = el_number > this.counter ? el_number : this.counter;
+                    }
+                });        
+            }
+        }
+
+        dynamic_elements = {
+            'skill_category': new dynamic_element('.skill_category_block', '/marketplace/profile/get_skills'),
+            'skill_tag': new dynamic_element('.skill_tag_block', '/marketplace/profile/get_interests'),
+            'limit': new dynamic_element('.limit_block'),
+            'balance': new dynamic_element('.balance_block'),
+            'proposition_price': new dynamic_element('.proposition_price_block'),
+        }
+
+        for (prop in dynamic_elements) {
+            dynamic_elements[prop].init();
+        }
+
+        self.bind_autocomplete('.skill_category', '/marketplace/profile/get_skills', dynamic_elements.skill_category.cache);
+        self.bind_autocomplete('.skill_tag', '/marketplace/profile/get_interests', dynamic_elements.skill_tag.cache);
 
         $('.selectpicker').selectpicker();
 
@@ -37,30 +44,23 @@ openerp.website.theme.views['layout'] = openerp.Class.extend({
         $('.date-picker').datepicker({dateFormat: JQueryDateFormat});
 
         $('.dynamic-list').dynamiclist({'addCallbackFn': function(el) {
-                el = el[0]
-                if($(el).hasClass('skill_category_block')) {
-                    $(el).find('input').attr('name','skills[new][' + skill_category_new_counter + ']');
-                    self.bind_autocomplete($(el).find('input'), '/marketplace/profile/get_skills', skill_category_cache);
-                    skill_category_new_counter++;
-                }
-                else if($(el).hasClass('skill_tag_block')) {
-                    $(el).find('input').attr('name','tags[new][' + skill_tag_new_counter + ']');
-                    self.bind_autocomplete($(el).find('input'), '/marketplace/profile/get_interests', skill_tag_cache);
-                    skill_tag_new_counter++;
-                }
-                else if($(el).hasClass('limit_block')) {
-                    $(el).find('input.limit_min_input').attr('name','limits[new][' + limit_new_counter + '][min]');
-                    $(el).find('input.limit_max_input').attr('name','limits[new][' + limit_new_counter + '][max]');
-                    $(el).find('select').attr('name','limits[new][' + limit_new_counter + '][currency]');
-                    limit_new_counter++;
-                }
-                else if($(el).hasClass('balance_block')) {
-                    $(el).find('input').attr('name','balances[new][' + balance_new_counter + '][amount]');
-                    $(el).find('select').attr('name','balances[new][' + balance_new_counter + '][currency]');
-                    balance_new_counter++;
+            // User has clicked "Add new element"
+            // Apply uniq name (taken from counter property)
+            // Bind autocomplete if nedeed
+            el = el[0];
+            for (prop in dynamic_elements) {
+                if ($(el).hasClass(dynamic_elements[prop].selector.replace('.',''))) {
+                    $(el).find('input,select').each(function(i, input){
+                        var name = input.name.replace('existing', 'new');
+                        $(input).attr('name', name.replace(/\d+/, dynamic_elements[prop].counter));
+                    });        
+                    dynamic_elements[prop].counter++;
+                    if (dynamic_elements[prop].autocomplete_url) {
+                        self.bind_autocomplete($(el).find('input'), dynamic_elements[prop].autocomplete_url, dynamic_elements[prop].cache);        
+                    }
                 }
             }
-        });
+        }});
 
         // FILESELECT CUSTOM EVENT
         $(document).on('change', '.btn-file :file', function(e) {

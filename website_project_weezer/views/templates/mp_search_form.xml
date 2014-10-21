@@ -87,14 +87,13 @@
         
                                         <!-- python code to get currencies -->
                                         <t t-set="currencies_obj" t-value="request.registry['account.centralbank.config.currency']"/>
-                                        <t t-set="currency_info_ids" t-value="currencies_obj.search(request.cr, request.uid, [], context=request.context)"/>
-                                        <t t-set="currencies" t-value="currencies_obj.read(request.cr, request.uid, currency_info_ids, ['currency_id'], context=request.context)"/>
+                                        <t t-set="currencies" t-value="request.registry['res.currency'].name_search(request.cr, request.uid, '', [('centralbank_currency','=',True)], context=request.context)"/>
                                         <div class="col-md-2">
                                             <label class="control-label"> </label>
                                             <select name="currency" class="selectpicker form-control mb16" style="display: none;">
                                                 <option value="0" t-att-selected="'selected' if not int(request.httprequest.args.get('currency',0)) else None">All</option>
                                                 <t t-foreach="currencies or []" t-as="c">
-                                                    <option t-att-value="c['currency_id'][0]" t-att-selected="'selected' if int(request.httprequest.args.get('currency',0)) == c['currency_id'][0] else None"><t t-esc="c['currency_id'][1]"/></option>
+                                                    <option t-att-value="c[0]" t-att-selected="'selected' if int(request.httprequest.args.get('currency',0)) == c[0] else None"><t t-esc="c[1]"/></option>
                                                 </t>
                                             </select>
         

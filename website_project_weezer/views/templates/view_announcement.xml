@@ -326,7 +326,7 @@
                                     <h2 class="col-md-12 mt0">My Reply</h2>
                     
                                     <!-- START : Reply Form -->
-                                    <form class="form-horizontal">
+                                    <form class="form-horizontal" id="my-reply-form" name="my-reply-form" method="post">
                                         <div class="container">
                                             <div class="col-md-12 mt32 mb32">
                                                 <div class="row">
@@ -370,7 +370,7 @@
                                                                             <label>When?</label>
                                                                         </div>
                                                                         <div class="col-md-8">
-                                                                            <input type="text" placeholder="DD/MM/YYYY" class="date-picker form-control" name="write_date" t-att-value="my_reply.write_date"/>
+                                                                            <input type="text" t-att-placeholder="date_placeholder" class="date-picker form-control" name="write_date" t-att-value="my_reply.write_date"/>
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -389,18 +389,17 @@
                                                                         </thead>
                                                                         <tbody>
                                                                             <t t-foreach="my_reply.currency_ids" t-as="line">
-                                                                            <tr class="list-item">
-                                                                                <td><input type="text" class="form-control" t-att-value="line.price_unit"/></td>
+                                                                            <tr class="list-item proposition_price_block">
+                                                                                <td><input type="text" class="form-control" t-att-value="line.price_unit" t-att-name="'currency_ids[%s][%s][price_unit]' % (getattr(line, 'is_new', False) and 'new' or 'existing', line.id)"/></td>
                                                                                 <td>
-                                                                                    <select name="currency_id" class="selectpicker form-control mb16" style="display: none;">
-                                                                                        <option value="0" t-att-selected="'selected' if not line.currency_id else None">All</option>
-                                                                                        <t t-foreach="currencies or []" t-as="c">
-                                                                                            <option t-att-value="c.id" t-att-selected="'selected' if line.currency_id.id == c.id else None"><t t-esc="c.name"/></option>
+                                                                                    <select t-att-name="'currency_ids[%s][%s][currency_id]' % (getattr(line, 'is_new', False) and 'new' or 'existing', line.id)" class="selectpicker form-control mb16" style="display: none;">
+                                                                                        <t t-foreach="currency_dict.keys()" t-as="currency_id">
+                                                                                            <option t-att-value="currency_id" t-att-selected="'selected' if line.currency_id.id == currency_id else None"><t t-esc="currency_dict[currency_id]"/></option>
                                                                                         </t>
                                                                                     </select>
                                                     
                                                                                 </td>
-                                                                                <td><input type="text" class="form-control"/></td>
+                                                                                <td><input type="text" class="form-control" disabled="disabled" t-att-value="line.subtotal"/></td>
                                                                                 <td><button class="list-remove btn btn-danger"><i class="fa fa-minus"></i></button></td>
                                                                             </tr>
                                                                             </t>
@@ -413,7 +412,8 @@
                                                                 <div class="col-md-12">
                                                                     <label>Feedback</label>
                                                                     <textarea class="form-control" rows="3" name="vote_comment"><t t-esc="my_reply.vote_comment"/></textarea>
-                                                                    <a href="#" class="btn col-md-2 pull-right btn-success mt8 btn-simulateload">Add reply</a>
+                                                                    <input type="hidden" name="make_reply" value="1"/>
+                                                                    <a href="#" class="btn col-md-2 pull-right btn-success mt8" onclick="document.getElementById('my-reply-form').submit(); return false;">Add reply</a>
                                                                 </div>
                                                             </div>
                     

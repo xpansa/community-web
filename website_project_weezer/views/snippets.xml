@@ -90,20 +90,18 @@
                                                 </div>
                 
                                                 <!-- python code to get currencies -->
-                                                <t t-set="currencies_obj" t-value="request.registry['account.centralbank.config.currency']"/>
-                                                <t t-set="currency_info_ids" t-value="currencies_obj.search(request.cr, request.uid, [], context=request.context)"/>
-                                                <t t-set="currencies" t-value="currencies_obj.read(request.cr, request.uid, currency_info_ids, ['currency_id'], context=request.context)"/>
+                                                <t t-set="currencies" t-value="request.registry['res.currency'].name_search(request.cr, request.uid, '', [('centralbank_currency','=',True)], context=request.context)"/>
                                                 <div class="col-md-2">
                                                     <label class="control-label"> </label>
                                                     <select class="selectpicker form-control mb16" style="display: none;">
                                                         <t t-foreach="currencies or []" t-as="c">
-                                                            <option t-att-value="c['currency_id'][0]"><t t-esc="c['currency_id'][1]"/></option>
+                                                            <option t-att-value="c[0]"><t t-esc="c[1]"/></option>
                                                         </t>
                                                     </select>
                 
                                                     <select class="selectpicker form-control" style="display: none;">
                                                         <t t-foreach="currencies or []" t-as="c">
-                                                            <option t-att-value="c['currency_id'][0]"><t t-esc="c['currency_id'][1]"/></option>
+                                                            <option t-att-value="c[0]"><t t-esc="c[1]"/></option>
                                                         </t>
                                                     </select>
                                                 </div>
