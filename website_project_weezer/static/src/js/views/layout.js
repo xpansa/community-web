@@ -1,40 +1,25 @@
 openerp.website.theme.views['layout'] = openerp.Class.extend({
 
+    dynamic_elements: {},
+
     init: function() {
 
         var self = this;
 
-        function dynamic_element(selector, url) {
-            this.counter = 1;
-            this.cache = {};
-            this.selector = selector; //Should be .classname
-            this.autocomplete_url = url;
-            this.init = function() {
-                // set digital part of name to te uniq valus e.g. limit[new][12][currency]
-                $(this.selector + ' input').each(function(i, el){
-                    el_number = el.name.match(/\d+/);
-                    if (el_number) {
-                        el_number = parseInt(el_number[0]);
-                        this.counter = el_number > this.counter ? el_number : this.counter;
-                    }
-                });        
-            }
+        self.dynamic_elements = {
+            'skill_category': new self.dynamic_element('.skill_category_block', '/marketplace/profile/get_skills'),
+            'skill_tag': new self.dynamic_element('.skill_tag_block', '/marketplace/profile/get_interests'),
+            'limit': new self.dynamic_element('.limit_block'),
+            'balance': new self.dynamic_element('.balance_block'),
+            'proposition_price': new self.dynamic_element('.proposition_price_block'),
         }
 
-        dynamic_elements = {
-            'skill_category': new dynamic_element('.skill_category_block', '/marketplace/profile/get_skills'),
-            'skill_tag': new dynamic_element('.skill_tag_block', '/marketplace/profile/get_interests'),
-            'limit': new dynamic_element('.limit_block'),
-            'balance': new dynamic_element('.balance_block'),
-            'proposition_price': new dynamic_element('.proposition_price_block'),
+        for (prop in self.dynamic_elements) {
+            self.dynamic_elements[prop].init();
         }
 
-        for (prop in dynamic_elements) {
-            dynamic_elements[prop].init();
-        }
-
-        self.bind_autocomplete('.skill_category', '/marketplace/profile/get_skills', dynamic_elements.skill_category.cache);
-        self.bind_autocomplete('.skill_tag', '/marketplace/profile/get_interests', dynamic_elements.skill_tag.cache);
+        self.bind_autocomplete('.skill_category', '/marketplace/profile/get_skills', self.dynamic_elements.skill_category.cache);
+        self.bind_autocomplete('.skill_tag', '/marketplace/profile/get_interests', self.dynamic_elements.skill_tag.cache);
 
         $('.selectpicker').selectpicker();
 
@@ -45,24 +30,7 @@ openerp.website.theme.views['layout'] = openerp.Class.extend({
             dateFormat: JQueryDateFormat
         });
 
-        $('.dynamic-list').dynamiclist({'addCallbackFn': function(el) {
-            // User has clicked "Add new element"
-            // Apply uniq name (taken from counter property)
-            // Bind autocomplete if nedeed
-            el = el[0];
-            for (prop in dynamic_elements) {
-                if ($(el).hasClass(dynamic_elements[prop].selector.replace('.',''))) {
-                    $(el).find('input,select').each(function(i, input){
-                        var name = input.name.replace('existing', 'new');
-                        $(input).attr('name', name.replace(/\d+/, dynamic_elements[prop].counter));
-                    });        
-                    dynamic_elements[prop].counter++;
-                    if (dynamic_elements[prop].autocomplete_url) {
-                        self.bind_autocomplete($(el).find('input'), dynamic_elements[prop].autocomplete_url, dynamic_elements[prop].cache);        
-                    }
-                }
-            }
-        }});
+        self.bind_dynamiclist($('.dynamic-list'));
 
         // FILESELECT CUSTOM EVENT
         $(document).on('change', '.btn-file :file', function(e) {
@@ -105,6 +73,50 @@ openerp.website.theme.views['layout'] = openerp.Class.extend({
             e.preventDefault();
         });
 
+    },
+
+    dynamic_element: function(selector, url) {
+        this.counter = 1;
+        this.cache = {};
+        this.selector = selector; //Should be .classname
+        this.autocomplete_url = url;
+        this.init = function() {
+            // set digital part of name to te uniq valus e.g. limit[new][12][currency]
+            $(this.selector + ' input').each(function(i, el){
+                el_number = el.name.match(/\d+/);
+                if (el_number) {
+                    el_number = parseInt(el_number[0]);
+                    this.counter = el_number > this.counter ? el_number : this.counter;
+                }
+            });
+        }
+    },
+
+    bind_dynamiclist: function(selector) {
+        var self = this;
+
+        selector.dynamiclist({
+            'addCallbackFn': function(el) {
+                // User has clicked "Add new element"
+                // Apply uniq name (taken from counter property)
+                // Bind autocomplete if nedeed
+                el = el[0];
+                for (prop in self.dynamic_elements) {
+                    if ($(el).hasClass(self.dynamic_elements[prop].selector.replace('.', ''))) {
+                        $(el).find('input,select').each(function(i, input) {
+                            var name = input.name.replace('existing', 'new');
+                            $(input).attr('name', name.replace(/\d+/, self.dynamic_elements[prop].counter));
+                        });
+                        self.dynamic_elements[prop].counter++;
+                        if (self.dynamic_elements[prop].autocomplete_url) {
+                            self.bind_autocomplete($(el).find('input'), self.dynamic_elements[prop].autocomplete_url, self.dynamic_elements[prop].cache);
+                        }
+                    }
+                }
+                $(el).find('.bootstrap-select').remove();
+                $(el).find('.selectpicker').selectpicker();
+            }
+        });
     },
 
     bind_autocomplete: function(selector, url, cache) {
