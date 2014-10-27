@@ -12,6 +12,7 @@ openerp.website.theme.views['layout'] = openerp.Class.extend({
             'limit': new self.dynamic_element('.limit_block'),
             'balance': new self.dynamic_element('.balance_block'),
             'proposition_price': new self.dynamic_element('.proposition_price_block'),
+            'vote': new self.dynamic_element('.vote_block'),
         }
 
         for (prop in self.dynamic_elements) {

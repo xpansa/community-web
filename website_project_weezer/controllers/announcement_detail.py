@@ -495,25 +495,66 @@ class announcement_controller(http.Controller):
                 'quantity': 0.0,
                 'description': '',
                 'write_date': datetime.today().strftime(DEFAULT_SERVER_DATETIME_FORMAT),
-                'vote_comment': '',
                 'currency_ids': [AttrDict({
                     'id': 0,
                     'is_new': True,
                     'price_unit': 0.0,
                     'currency_id': AttrDict({'id': 0}),
                     'subtotal': '',
+                })],
+            })
+        return res
+
+    def _get_my_vote(self, cr, uid, registry, announcement, partner_id, context=None):
+        vote_pool = registry.get('vote.vote')
+        res = False
+        vote_ids = vote_pool.search(cr, uid, [
+            ('partner_id', '=', partner_id),
+            ('model', '=', 'marketplace.announcement'),
+            ('res_id', '=', announcement.id)
+        ], context=context)
+        if vote_ids:
+            res = vote_pool.browse(cr, uid, vote_ids[0], context=context)
+        else:
+            res = AttrDict({
+                'comment': '',
+                'vote_vote_line_ids': [AttrDict({
+                    'id': 0,
+                    'type_id': AttrDict({'id': 0}),
+                    'vote': '0',
                 })]
             })
         return res
 
+    def _parse_vote(self, data):
+        res = {
+            'comment': data.get('vote_comment'),
+            'vote_vote_line_ids': []
+        }
+        vote_lines = {}
+        for key, val in data.iteritems():
+            if key.startswith('vote_lines'):
+                for f in ['type_id', 'vote']:
+                    id = re.search('vote_lines\[(\d+)\]\[%s\]' % f, key)
+                    if id:
+                        id = int(id.group(1))
+                        if not id in vote_lines:
+                            vote_lines[id] = {
+                                'id': id,
+                                f: AttrDict({'id': val}) if f == 'type_id' else val,
+                            }
+                        else:
+                            vote_lines[id].update({f: AttrDict({'id': val}) if f == 'type_id' else val})
+        res['vote_vote_line_ids'] = vote_lines.values()
+        return AttrDict(res)
+
     def _validate_reply(self, data):
         res = {
-                'quantity': data.get('quantity'),
-                'description': data.get('description'),
-                'write_date': datetime.today().strftime(DEFAULT_SERVER_DATETIME_FORMAT),
-                'vote_comment': data.get('vote_comment'),
-                'currency_ids': [],
-            }
+            'quantity': data.get('quantity'),
+            'description': data.get('description'),
+            'write_date': datetime.today().strftime(DEFAULT_SERVER_DATETIME_FORMAT),
+            'currency_ids': [],
+        }
         currency_ids = {'existing': {}, 'new': {}}
         currencies_uniq = []
         errors = {}
@@ -521,7 +562,6 @@ class announcement_controller(http.Controller):
             if key.startswith('currency_ids'):
                 for f in ['currency_id', 'price_unit']:
                     for t in ['new', 'existing']:
-
                         curr_number = re.search('currency_ids\[%s\]\[(\d+)\]\[%s\]' % (t, f), key)
                         if curr_number:
                             curr_number = int(curr_number.group(1))
@@ -566,7 +606,6 @@ class announcement_controller(http.Controller):
             'quantity': reply.quantity,
             'write_date': reply.write_date,
             'description': reply.description,
-            'vote_comment': reply.vote_comment,
             'announcement_id': announcement.id,
         }
         if id:
@@ -589,7 +628,31 @@ class announcement_controller(http.Controller):
             else:
                 currency_line_pool.write(cr, uid, line.id, vals, context=context)
 
-    def _get_view_announcement_dict(self, cr, uid, registry, announcement, my_reply=None, context=None):
+    def _save_vote(self, cr, uid, registry, announcement, my_vote, partner_id, context=None):
+        vote_pool = registry.get('vote.vote')
+        ids = vote_pool.search(cr, uid, [
+            ('partner_id', '=', partner_id),
+            ('model', '=', 'marketplace.announcement'),
+            ('res_id', '=', announcement.id)
+        ], context=context)
+        vals = {
+            'model': 'marketplace.announcement',
+            'res_id': announcement.id,
+            'partner_id': partner_id,
+            'comment': my_vote.comment,
+            'vote_vote_line_ids': [(0,0,{
+                'type_id': int(line.type_id.id),
+                'vote': line.vote,
+            }) for line in my_vote.vote_vote_line_ids if line.type_id.id]
+        }
+        if ids:
+            vals['vote_vote_line_ids'].insert(0, (6, 0, []))
+            vote_pool.write(cr, uid, ids, vals, context=context)
+        else:
+            vote_pool.create(cr, uid, vals, context=context)
+        return True
+
+    def _get_view_announcement_dict(self, cr, uid, registry, announcement, my_reply=None, my_vote=None, context=None):
         """ Return dict of values needed to view announcement template
         """
         user = registry.get('res.users').browse(cr, uid, uid, context=context)
@@ -599,6 +662,8 @@ class announcement_controller(http.Controller):
             'author': announcement.partner_id,
             'replied_list': [p for p in announcement.proposition_ids if p.create_uid.id != user.id],
             'my_reply': my_reply or self._get_my_reply(cr, uid, request.registry, announcement, context=context),
+            'my_vote': my_vote or self._get_my_vote(cr, uid, request.registry, announcement, 
+                                                    user.partner_id.id, context=context),
             'state_status_dict': self.get_state_status_dict(cr, uid, request.registry, context=context),
             'type_dict': self.get_type_dict(cr, uid, request.registry, context=context),
             'attachment_dict': self.get_attachment_dict(cr, uid, request.registry, announcement, context=context),
@@ -608,6 +673,7 @@ class announcement_controller(http.Controller):
                 datetime.strptime(announcement.date_to, DEFAULT_SERVER_DATE_FORMAT).strftime(date_format),
             'getattr': getattr,
             'currency_dict': self.get_all_records(cr, uid, registry, 'res.currency', context=context),
+            'vote_type_dict': self.get_all_records(cr, uid, registry, 'vote.type', context=context),
             'format_date': format_date,
         }
 
@@ -619,16 +685,20 @@ class announcement_controller(http.Controller):
         user = registry.get('res.users').browse(cr, uid, uid, context=context)
 
         my_reply = None
+        my_vote = None
         if 'make_reply' in post:
             my_reply = self._validate_reply(post)
             if not my_reply.errors:
                 self._save_reply(cr, uid, registry, announcement, my_reply, context=context)
                 my_reply = None
+                my_vote = self._parse_vote(post)
+                self._save_vote(cr, uid, registry, announcement, my_vote, user.partner_id.id, context=context)
         if user and announcement.partner_id.id == user.partner_id.id or uid == SUPERUSER_ID:  
             web_page = request.redirect('%s/edit' % announcement.id)
         else:
             web_page = http.request.website.render('website_project_weezer.view_announcement', 
-                self._get_view_announcement_dict(cr, uid, registry, announcement, my_reply, context=context))
+                self._get_view_announcement_dict(cr, uid, registry, announcement, my_reply, 
+                                                 my_vote, context=context))
         return web_page
 
     def _get_edit_announcement_dict(self, cr, uid, registry, announcement, context=None):

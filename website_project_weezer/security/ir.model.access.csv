@@ -6,3 +6,5 @@ access_marketplace_proposition_public,marketplace.proposition.public,marketplace
 access_product_uom_public,product.uom.public,product.model_product_uom,,1,0,0,0
 access_account_centralbank_transaction_public,account.centralbank.transaction.public,account_centralbank.model_account_centralbank_transaction,,1,0,0,0
 access_res_partner_centralbank_balance_user,access_res_partner_centralbank_balance_user,account_centralbank.model_res_partner_centralbank_balance,account_centralbank.group_account_centralbank_user,1,0,0,0
+access_marketplace_tag_public,marketplace.tag.public,marketplace.model_marketplace_tag,,1,0,0,0
+access_vote_type_public,vote.type.public,vote.model_vote_type,,1,0,0,0
