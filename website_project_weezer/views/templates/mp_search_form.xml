@@ -83,8 +83,8 @@
                                         </div>
         
                                         <!-- python code to get currencies -->
-                                        <t t-set="currencies_obj" t-value="request.registry['account.centralbank.config.currency']"/>
-                                        <t t-set="currencies" t-value="request.registry['res.currency'].name_search(request.cr, request.uid, '', [('centralbank_currency','=',True)], context=request.context)"/>
+                                        <t t-set="currencies_obj" t-value="request.registry['account.wallet.config.currency']"/>
+                                        <t t-set="currencies" t-value="request.registry['res.currency'].name_search(request.cr, request.uid, '', [('wallet_currency','=',True)], context=request.context)"/>
                                         <div class="col-md-2">
                                             <label class="control-label"> </label>
                                             <select name="currency" class="selectpicker form-control mb16" style="display: none;">

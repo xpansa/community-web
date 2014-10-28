@@ -10,7 +10,7 @@
             <field name="password"></field>
             <field name="active" eval="False"/>
             <!-- Avoid auto-including this user in any default group, just like a typical portal member -->
-            <field name="groups_id" eval="[(6, 0, [ref('base.group_portal'), ref('account_centralbank.group_account_centralbank_user')])]"/>
+            <field name="groups_id" eval="[(6, 0, [ref('base.group_portal'), ref('account_wallet.group_account_wallet_user')])]"/>
             <!-- allow signuped users to have a alias -->
             <field name="alias_name">_marketplace_usertemplate</field>
         </record>

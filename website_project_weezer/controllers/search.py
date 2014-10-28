@@ -89,17 +89,17 @@ class search_controller(http.Controller):
             if int(data.get('currency','0')):
                 params.update({'currency': int(data.get('currency','0'))})
                 if not data.get('price_from') and not data.get('price_to'):
-                    sql += 'AND EXISTS(SELECT 1 FROM account_centralbank_currency_line cl '\
+                    sql += 'AND EXISTS(SELECT 1 FROM account_wallet_currency_line cl '\
                         'WHERE cl.announcement_id = a.id AND cl.currency_id = %(currency)s) '
             if data.get('price_from') and data.get('currency'):
                 sql += 'AND EXISTS('\
-                    'SELECT 1 FROM account_centralbank_currency_line cl '\
+                    'SELECT 1 FROM account_wallet_currency_line cl '\
                     'WHERE cl.announcement_id = a.id AND cl.currency_id = %(currency)s '\
                     'AND cl.price_unit >= %(price_from)s) '
                 params.update({'price_from': data.get('price_from')})
             if data.get('price_to') and data.get('currency'):
                 sql += 'AND EXISTS('\
-                    'SELECT 1 FROM account_centralbank_currency_line cl '\
+                    'SELECT 1 FROM account_wallet_currency_line cl '\
                     'WHERE cl.announcement_id = a.id AND cl.currency_id = %(currency)s '\
                     'AND cl.price_unit <= %(price_to)s) '
                 params.update({'price_to': data.get('price_to')})

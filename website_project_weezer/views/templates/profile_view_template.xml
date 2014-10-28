@@ -201,7 +201,7 @@
                                                             </tr>
                                                         </thead>
                                                         <tbody>
-                                                            <t t-foreach="partner.centralbank_currency_ids" t-as="limit">
+                                                            <t t-foreach="partner.wallet_currency_ids" t-as="limit">
                                                                 <tr>
                                                                     <td><t t-esc="limit.currency_id and limit.currency_id.name"/></td>
                                                                     <td><t t-esc="limit.limit_negative_value"/></td>
@@ -223,7 +223,7 @@
                                                             </tr>
                                                         </thead>
                                                         <tbody>
-                                                            <t t-foreach="partner.centralbank_balance_ids" t-as="balance">
+                                                            <t t-foreach="partner.wallet_balance_ids" t-as="balance">
                                                                 <tr>
                                                                     <td><t t-esc="balance.available"/></td>
                                                                     <td><t t-esc="balance.currency_id and balance.currency_id.name"/></td>

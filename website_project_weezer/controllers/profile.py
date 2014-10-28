@@ -73,7 +73,7 @@ class profile_controller(http.Controller):
                         'min': limit.limit_negative_value,
                         'max': limit.limit_positive_value,
                         'currency': limit.currency_id.id,
-                    } for limit in partner.centralbank_currency_ids
+                    } for limit in partner.wallet_currency_ids
                 ],
             },
             'balances': {
@@ -83,7 +83,7 @@ class profile_controller(http.Controller):
                         'id': balance.id,
                         'amount': balance.available,
                         'currency': balance.currency_id.id,
-                    } for balance in partner.centralbank_balance_ids
+                    } for balance in partner.wallet_balance_ids
                 ],
             },
             'skills': {
@@ -260,7 +260,7 @@ class profile_controller(http.Controller):
             'countries': country_pool.name_search(cr, uid, '', [], context=context),
             'states': state_pool.name_search(cr, uid, '', [], context=context),
             'is_administrator': uid == SUPERUSER_ID,
-            'currencies': currency_pool.name_search(cr, uid, '', [('centralbank_currency','=',True)], context=context),
+            'currencies': currency_pool.name_search(cr, uid, '', [('wallet_currency','=',True)], context=context),
             'date_placeholder': self.date_format.replace('%d','DD').replace('%m','MM').replace('%Y','YYYY'),
             'last_exchanges': self.profile_last_exchanges(partner.id),
             'wants': self.profile_announcements(partner.id, 'want'),
@@ -317,12 +317,12 @@ class profile_controller(http.Controller):
         partner_pool = registry.get('res.partner')
         skill_category_pool = registry.get('marketplace.announcement.category')
         tag_pool = registry.get('marketplace.tag')
-        limit_pool = registry.get('res.partner.centralbank.currency')
-        balance_pool = registry.get('res.partner.centralbank.balance')
+        limit_pool = registry.get('res.partner.wallet.currency')
+        balance_pool = registry.get('res.partner.wallet.balance')
         data_pool = registry.get('ir.model.data')
         product_pool = registry.get('product.product')
         invoice_pool = registry.get('account.invoice')
-        balance_pool = registry.get('res.partner.centralbank.balance')
+        balance_pool = registry.get('res.partner.wallet.balance')
 
         partner_data = data['partner'].copy()
         if partner_data['birthdate']:
@@ -357,7 +357,7 @@ class profile_controller(http.Controller):
         }, context=context)
 
         
-        limits_to_delete = list(set([item.id for item in partner.centralbank_currency_ids]) \
+        limits_to_delete = list(set([item.id for item in partner.wallet_currency_ids]) \
             - set([limit['id'] for limit in data['limits']['existing']]))
         # Update existing limits
         for limit in data['limits']['existing']:
@@ -382,7 +382,7 @@ class profile_controller(http.Controller):
                 }, context=context)
 
         
-        balances_to_delete = list(set([item.id for item in partner.centralbank_balance_ids]) \
+        balances_to_delete = list(set([item.id for item in partner.wallet_balance_ids]) \
             - set([balance['id'] for balance in data['balances']['existing']]))
         # Update existing balances
         for balance in data['balances']['existing']:
@@ -414,7 +414,7 @@ class profile_controller(http.Controller):
             if inv_ids:
                 invoice = invoice_pool.browse(cr, SUPERUSER_ID, inv_ids[0], context=context)
                 balance_found = False
-                for balance in partner.centralbank_balance_ids:
+                for balance in partner.wallet_balance_ids:
                     if balance.currency_id.id == invoice.currency_id.id:
                         balance.write({
                             'available': balance.available-membership_product.lst_price
@@ -553,7 +553,7 @@ class profile_controller(http.Controller):
                 ('membership_date_from', '<=', datetime.today()),
                 ('membership_date_to', '>=', datetime.today())], context=context),
             'states': state_pool.name_search(cr, uid, '', [], context=context),
-            'currencies': currency_pool.name_search(cr, uid, '', [('centralbank_currency','=',True)], context=context),
+            'currencies': currency_pool.name_search(cr, uid, '', [('wallet_currency','=',True)], context=context),
             'date_placeholder': self.date_format.replace('%d','DD').replace('%m','MM').replace('%Y','YYYY'),
         }
         if kw:

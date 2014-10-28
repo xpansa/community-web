@@ -353,7 +353,7 @@ class announcement_controller(http.Controller):
                         currency_amount = currency_dict[currency_id]
                         new_currency_line_value.append({'announcement_id': announcement.id, 'currency_id': currency_id, 'price_unit': currency_amount})
 
-                currency_line_pool = self.registry.get('account.centralbank.currency.line')
+                currency_line_pool = self.registry.get('account.wallet.currency.line')
                 for currency_line_id in currency_line_value.keys():
                     currency_line_pool.write(self.cr, self.uid, currency_line_id, currency_line_value[currency_line_id], context=self.context)
 
@@ -395,7 +395,7 @@ class announcement_controller(http.Controller):
         pool = registry.get(model_name)
         args = []
         if model_name == 'res.currency':
-            args = [('centralbank_currency','=',True)]
+            args = [('wallet_currency','=',True)]
         res = pool.name_search(cr, uid, '', args, context=context)
         return self.convert_tuple_to_dict(cr, uid, res, context=context)
 
@@ -599,7 +599,7 @@ class announcement_controller(http.Controller):
 
     def _save_reply(self, cr, uid, registry, announcement, reply, context=None):
         proposition_pool = registry.get('marketplace.proposition')
-        currency_line_pool = registry.get('account.centralbank.currency.line')
+        currency_line_pool = registry.get('account.wallet.currency.line')
         id = proposition_pool.search(cr, uid, [('create_uid','=',uid),
             ('announcement_id','=',announcement.id)], context=context)
         vals = {

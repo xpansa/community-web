@@ -1,10 +1,13 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_marketplace_announcement_public,marketplace.announcement.public,marketplace.model_marketplace_announcement,,1,0,0,0
 access_marketplace_announcement_category_public,marketplace.announcement.category.public,marketplace.model_marketplace_announcement_category,,1,0,0,0
-access_account_centralbank_currency_line_public,account.centralbank.currency.line.public,account_centralbank.model_account_centralbank_currency_line,,1,0,0,0
+access_res_partner_wallet_currency_public,res.partner.wallet.currency.public,account_wallet.model_res_partner_wallet_currency,,1,0,0,0
+access_account_wallet_currency_line_public,account.wallet.currency.line.public,account_wallet.model_account_wallet_currency_line,,1,0,0,0
 access_marketplace_proposition_public,marketplace.proposition.public,marketplace.model_marketplace_proposition,,1,0,0,0
 access_product_uom_public,product.uom.public,product.model_product_uom,,1,0,0,0
-access_account_centralbank_transaction_public,account.centralbank.transaction.public,account_centralbank.model_account_centralbank_transaction,,1,0,0,0
-access_res_partner_centralbank_balance_user,access_res_partner_centralbank_balance_user,account_centralbank.model_res_partner_centralbank_balance,account_centralbank.group_account_centralbank_user,1,0,0,0
+access_account_wallet_transaction_public,account.wallet.transaction.public,account_wallet.model_account_wallet_transaction,,1,0,0,0
+access_res_partner_wallet_balance_user,access_res_partner_wallet_balance_user,account_wallet.model_res_partner_wallet_balance,account_wallet.group_account_wallet_user,1,0,0,0
 access_marketplace_tag_public,marketplace.tag.public,marketplace.model_marketplace_tag,,1,0,0,0
 access_vote_type_public,vote.type.public,vote.model_vote_type,,1,0,0,0
+access_vote_vote_public,vote.vote.public,vote.model_vote_vote,,1,0,0,0
+access_product_product_public,product.product.public,product.model_product_product,,1,0,0,0

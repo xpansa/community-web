@@ -40,7 +40,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr t-foreach="member.centralbank_balance_ids" t-as="limit">
+                                    <tr t-foreach="member.wallet_balance_ids" t-as="limit">
                                         <td><span t-field="limit.available"/></td>
                                         <td><span t-field="limit.currency_id.name"/></td>
                                     </tr>

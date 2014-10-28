@@ -51,7 +51,7 @@
                                                 Currency
                                             </td>
                                         </tr>
-                                        <t t-foreach="member.centralbank_balance_ids" t-as="limit">
+                                        <t t-foreach="member.wallet_balance_ids" t-as="limit">
                                             <tr>
                                                 <td><t t-esc="limit.available"/></td>
                                                 <td><t t-esc="limit.currency_id.name"/></td>
@@ -784,7 +784,7 @@
                                                 <div class="form-group">
                                                     <label class="col-md-4 control-label">Credit limits</label>
                                                     <div class="col-md-8 dynamic-list">
-                                                        <t t-foreach="partner.centralbank_currency_ids or [False]" t-as="limit">
+                                                        <t t-foreach="partner.wallet_currency_ids or [False]" t-as="limit">
                                                             <div class="row">
                                                                 <div class="list-item col-md-12">
                                                                     <div class="row">

@@ -76,11 +76,13 @@ class member_list_controller(http.Controller):
         return http.request.website.render('website_project_weezer.member_list_view', {
                 'member_list': member_list,
                 'page': page,
-                'currency_dict': self.get_all_records(cr, uid, registry, 'res.currency', context=context),
+                'currency_dict': self.get_all_records(cr, uid, registry, 'res.currency', 
+                                                      [('wallet_currency','=',True)], context=context),
                 'membership_dict': self.get_all_membership(cr, uid, registry, context=context),
                 'page_count': count/self.PAGE_LIMIT + (1 if count%self.PAGE_LIMIT else 0),
                 'next_url': '/marketplace/member_list%s' % (('/' + str(page+1)) if page*self.PAGE_LIMIT < count else ''),
                 'prev_url': '/marketplace/member_list%s' % (('/' + str(page-1)) if page > 1 else ''),
+                'search_param': {},
             })
 
     def __build_search_query(self, cr, uid, registry, data, limit=None, offset=None, get_count=False,context=None):
@@ -167,7 +169,7 @@ class member_list_controller(http.Controller):
             params.update({'currency_id': currency_id})
 
             sql += ' AND EXISTS(' \
-                        'SELECT 1 FROM res_partner_centralbank_balance balance '\
+                        'SELECT 1 FROM res_partner_wallet_balance balance '\
                         'WHERE balance.partner_id = a.id AND (%s))' % amount_condition
 
         if not get_count:
@@ -203,7 +205,8 @@ class member_list_controller(http.Controller):
                 'member_list': res_data,
                 'page': page,
                 'search_param': data,
-                'currency_dict': self.get_all_records(cr, uid, registry, 'res.currency', context=context),
+                'currency_dict': self.get_all_records(cr, uid, registry, 'res.currency', 
+                                                      [('wallet_currency','=',True)], context=context),
                 'membership_dict': self.get_all_membership(cr, uid, registry, context=context),
                 'page_count': count/self.PAGE_LIMIT + (1 if count % self.PAGE_LIMIT else 0),
                 'next_url': '/marketplace/member_list/search%s?%s' % (('/' + str(page+1)) if page*self.PAGE_LIMIT < count else '', params),
