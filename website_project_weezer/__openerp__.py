@@ -67,7 +67,8 @@ Website Marketplace
         'views/templates/member_list_view.xml',
         'views/templates/single_member_view.xml',
         'views/templates/home.xml',
-        'security/ir.model.access.csv'
+        'security/ir.model.access.csv',
+        'security/website_project_weezer_security.xml',
     ],
     'installable': True
 }
