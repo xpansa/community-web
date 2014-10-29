@@ -18,7 +18,14 @@
                     <div class="col-md-6 col-sm-9 mt16 clearfix">
                         <div class="col-md-12">
                             <div class="row">
-                                <h3 class="mt0"><a t-attf-href="/marketplace/announcement_detail/#{item.id}"><span t-field="item.name"/></a></h3>
+                                <h3 class="mt0">
+                                    <a t-attf-href="/marketplace/announcement_detail/#{item.id}">
+                                        <span t-field="item.name"/>
+                                        <t t-if="item.state == 'draft'">
+                                             [Draft]
+                                        </t>
+                                    </a>
+                                </h3>
                             </div>
                             <div class="row">
                                 <p class="text-justify" t-field="item.description"/>

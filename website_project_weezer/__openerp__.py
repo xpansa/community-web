@@ -39,7 +39,9 @@ Website Marketplace
         'marketplace_groups',
         'membership',
         'website_blog',
-        ],
+        'website_event',
+        'website_mail_group',
+    ],
     'data': [
         'data/menu.xml',
         'data/marketplace_announcement_category.xml',

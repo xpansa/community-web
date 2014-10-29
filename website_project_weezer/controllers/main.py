@@ -22,6 +22,8 @@
 import openerp
 from openerp.addons.auth_signup.controllers.main import AuthSignupHome
 from openerp.addons.auth_signup.res_users import SignupError
+from openerp.addons.website.models.website import slug
+from openerp.addons.website_blog.controllers.main import QueryURL
 from openerp.addons.web import http
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT, DEFAULT_SERVER_DATE_FORMAT
 from openerp.tools.translate import _
@@ -136,6 +138,7 @@ class Website(http.Controller):
         """
         Homepage
         """
+        blog_url = QueryURL('', ['blog', 'tag'])
         values = {
             'wants': self.get_last_announcements('want'),
             'offers': self.get_last_announcements('offer'),
@@ -143,6 +146,7 @@ class Website(http.Controller):
             'event': self.get_last_event(),
             'strip_tags': strip_tags,
             'blog_post': self.get_last_blog_post(),
+            'blog_url': blog_url,
         }
         return request.render('website_project_weezer.homepage', values)
 

@@ -213,14 +213,20 @@ class profile_controller(http.Controller):
                                                   order='write_date desc', context=context)
         return proposition_pool.browse(cr, uid, proposition_ids, context=context)
 
-    def profile_announcements(self, partner_id, ttype):
+    def profile_announcements(self, partner_id, ttype, own_profile=False):
         """
         Last user wants and offers (depending on ttype)
         """
         cr, uid, context, registry = request.cr, request.uid, request.context, request.registry
         announcement_pool = registry.get('marketplace.announcement')
-        announcement_ids = announcement_pool.search(cr, uid, [('partner_id', '=', partner_id),
-            ('type', '=', ttype), ('state', '=', 'open')], limit=self.ANNOUNCEMENT_LIMIT, context=context)
+        args = [
+            ('partner_id', '=', partner_id),
+            ('type', '=', ttype)
+        ]
+        if not own_profile:
+            args.append(('state', '=', 'open'))
+        announcement_ids = announcement_pool.search(cr, uid, args, limit=self.ANNOUNCEMENT_LIMIT, 
+                                                    context=context)
         return announcement_pool.browse(cr, uid, announcement_ids, context=context)
 
     def profile_last_groups(self, partner_id):
@@ -239,7 +245,7 @@ class profile_controller(http.Controller):
         ]
         return group_pool.browse(cr, uid, group_ids, context=context)
 
-    def profile_values(self, partner, data=None):
+    def profile_values(self, partner, own_profile=False, data=None):
         """
         Collect data to render in profile view
 
@@ -263,8 +269,8 @@ class profile_controller(http.Controller):
             'currencies': currency_pool.name_search(cr, uid, '', [('wallet_currency','=',True)], context=context),
             'date_placeholder': self.date_format.replace('%d','DD').replace('%m','MM').replace('%Y','YYYY'),
             'last_exchanges': self.profile_last_exchanges(partner.id),
-            'wants': self.profile_announcements(partner.id, 'want'),
-            'offers': self.profile_announcements(partner.id, 'offer'),
+            'wants': self.profile_announcements(partner.id, 'want', own_profile),
+            'offers': self.profile_announcements(partner.id, 'offer', own_profile),
             'membership': self.get_partner_membership(partner),
             'groups': self.profile_last_groups(partner.id),
         }
@@ -444,14 +450,14 @@ class profile_controller(http.Controller):
             return request.redirect("/marketplace/profile/edit")
         # Save form and collect values and errors for template
         if 'save_form' in kw:
-            values = self.profile_values(partner, kw)
+            values = self.profile_values(partner, user.partner_id.id == partner.id, kw)
             values['errors'] = self.profile_form_validate(values['profile'])
             if not values['errors']:
                 self.profile_save(partner, values['profile'])
                 request.session['profile_saved'] = True
                 return request.redirect("/marketplace/profile/%s" % partner.id)
         else:
-            values = self.profile_values(partner)
+            values = self.profile_values(partner, user.partner_id.id == partner.id)
         values['images'] = self.profile_images(partner)
         values['format_text'] = format_text
         return request.website.render("website_project_weezer.profile_edit", values)
@@ -474,13 +480,15 @@ class profile_controller(http.Controller):
         Display profile view page
         """
         cr, uid, context, registry = request.cr, request.uid, request.context, request.registry
+        user_pool = registry.get('res.users')
+        user = user_pool.browse(cr, uid, uid, context=context)
         date_format = get_date_format(cr, uid, context=context)
         return request.website.render("website_project_weezer.profile_view", {
             'partner': partner,
             'is_administrator': uid == SUPERUSER_ID,
             'images': self.profile_images(partner),
-            'wants': self.profile_announcements(partner.id, 'want'),
-            'offers': self.profile_announcements(partner.id, 'offer'),
+            'wants': self.profile_announcements(partner.id, 'want', user.partner_id.id == partner.id),
+            'offers': self.profile_announcements(partner.id, 'offer', user.partner_id.id == partner.id),
             'format_text': format_text,
             'last_exchanges': self.profile_last_exchanges(partner.id),
             'birthdate': format_date(partner.birthdate, True) if partner.birthdate else '',
@@ -550,7 +558,6 @@ class profile_controller(http.Controller):
             'countries': country_pool.name_search(cr, uid, '', [], context=context),
             'memberships': product_pool.name_search(cr, uid, '',[
                 ('membership', '=', True),
-                ('membership_date_from', '<=', datetime.today()),
                 ('membership_date_to', '>=', datetime.today())], context=context),
             'states': state_pool.name_search(cr, uid, '', [], context=context),
             'currencies': currency_pool.name_search(cr, uid, '', [('wallet_currency','=',True)], context=context),

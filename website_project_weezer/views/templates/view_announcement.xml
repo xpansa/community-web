@@ -81,6 +81,14 @@
                                     </div>
                                 </form>
                           </div>
+                          <div class="col-md-4">
+                            <ul class="wizard pull-right mt0">
+                                <li t-att-class="announcement.state == 'draft' and 'text-primary' or 'text-muted'">Draft<span class="chevron"></span></li>
+                                <li t-att-class="announcement.state == 'open' and 'text-primary' or 'text-muted'">Published<span class="chevron"></span></li>
+                                <li t-att-class="announcement.state == 'done' and 'text-primary' or 'text-muted'">Close<span class="chevron"></span></li>
+                                <li t-att-class="announcement.state == 'cancel' and 'text-primary' or 'text-muted'">Abort<span class="chevron"></span></li>
+                            </ul>
+                        </div>
                         </div>
             
                         <div class="row">
@@ -406,7 +414,7 @@
                                                                             </tr>
                                                                         </thead>
                                                                         <tbody>
-                                                                            <t t-foreach="my_vote.vote_vote_line_ids" t-as="vote_line">
+                                                                            <t t-foreach="my_vote.line_ids" t-as="vote_line">
                                                                             <tr class="list-item vote_block">
                                                                                 <td>
                                                                                     <select class="selectpicker form-control" t-att-name="'vote_lines[%s][type_id]' % vote_line.id">

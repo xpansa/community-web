@@ -399,16 +399,6 @@ class announcement_controller(http.Controller):
         res = pool.name_search(cr, uid, '', args, context=context)
         return self.convert_tuple_to_dict(cr, uid, res, context=context)
 
-    def get_state_status_dict(self, cr, uid, registry, context=None):
-        """ Return all state statuses
-        """
-        return {
-            'draft': 'Draft',
-            'open': 'Published',
-            'done': 'Closed',
-            'cancel': 'Cancelled',
-        }
-
     def get_type_dict(self, cr, uid, registry, context=None):
         """ Return all state statuses
         """
@@ -518,7 +508,7 @@ class announcement_controller(http.Controller):
         else:
             res = AttrDict({
                 'comment': '',
-                'vote_vote_line_ids': [AttrDict({
+                'line_ids': [AttrDict({
                     'id': 0,
                     'type_id': AttrDict({'id': 0}),
                     'vote': '0',
@@ -529,7 +519,7 @@ class announcement_controller(http.Controller):
     def _parse_vote(self, data):
         res = {
             'comment': data.get('vote_comment'),
-            'vote_vote_line_ids': []
+            'line_ids': []
         }
         vote_lines = {}
         for key, val in data.iteritems():
@@ -545,7 +535,7 @@ class announcement_controller(http.Controller):
                             }
                         else:
                             vote_lines[id].update({f: AttrDict({'id': val}) if f == 'type_id' else val})
-        res['vote_vote_line_ids'] = vote_lines.values()
+        res['line_ids'] = vote_lines.values()
         return AttrDict(res)
 
     def _validate_reply(self, data):
@@ -618,7 +608,7 @@ class announcement_controller(http.Controller):
             id = [proposition_pool.create(cr, uid, vals, context=context)]
         for line in reply.currency_ids:
             vals = {
-                'proposition_id': id[0],
+                'res_id': id[0],
                 'model': 'marketplace.proposition',
                 'price_unit': line.price_unit,
                 'currency_id': line.currency_id.id,
@@ -640,13 +630,13 @@ class announcement_controller(http.Controller):
             'res_id': announcement.id,
             'partner_id': partner_id,
             'comment': my_vote.comment,
-            'vote_vote_line_ids': [(0,0,{
+            'line_ids': [(0,0,{
                 'type_id': int(line.type_id.id),
                 'vote': line.vote,
-            }) for line in my_vote.vote_vote_line_ids if line.type_id.id]
+            }) for line in my_vote.line_ids if line.type_id.id]
         }
         if ids:
-            vals['vote_vote_line_ids'].insert(0, (6, 0, []))
+            vals['line_ids'].insert(0, (6, 0, []))
             vote_pool.write(cr, uid, ids, vals, context=context)
         else:
             vote_pool.create(cr, uid, vals, context=context)
@@ -664,7 +654,6 @@ class announcement_controller(http.Controller):
             'my_reply': my_reply or self._get_my_reply(cr, uid, request.registry, announcement, context=context),
             'my_vote': my_vote or self._get_my_vote(cr, uid, request.registry, announcement, 
                                                     user.partner_id.id, context=context),
-            'state_status_dict': self.get_state_status_dict(cr, uid, request.registry, context=context),
             'type_dict': self.get_type_dict(cr, uid, request.registry, context=context),
             'attachment_dict': self.get_attachment_dict(cr, uid, request.registry, announcement, context=context),
             'date_from': '' if not announcement.date_from else \
@@ -713,7 +702,6 @@ class announcement_controller(http.Controller):
                 'author': announcement.partner_id,
                 'us_state_dict': self.get_default_country_state(cr, uid, request.registry, context=context),
                 'country_dict': self.get_all_records(cr, uid, request.registry, 'res.country', context=context),
-                'state_status_dict': self.get_state_status_dict(cr, uid, request.registry, context=context),
                 'type_dict': self.get_type_dict(cr, uid, request.registry, context=context),
                 'category_dict': self.get_all_records(cr, uid, request.registry, \
                                                             'marketplace.announcement.category', context=context),
@@ -868,7 +856,6 @@ class announcement_controller(http.Controller):
             'author': partner,
             'us_state_dict': self.get_default_country_state(cr, uid, registry, context=context),
             'country_dict': self.get_all_records(cr, uid, registry, 'res.country', context=context),
-            'state_status_dict': self.get_state_status_dict(cr, uid, registry, context=context),
             'type_dict': self.get_type_dict(cr, uid, request.registry, context=context),
             'category_dict': self.get_all_records(cr, uid, registry, \
                                                             'marketplace.announcement.category', context=context),
@@ -900,7 +887,11 @@ class announcement_controller(http.Controller):
         cr, uid, context, registry = request.cr, request.uid, request.context, request.registry
         user = registry.get('res.users').browse(cr, uid, uid, context=context)
         self._prepare_save_announcemet_param(cr, uid, request, post)
-        announcement = registry.get('marketplace.announcement').create(cr, uid, {'name': '', 'partner_id': user.partner_id.id}, context=context)
+        announcement = registry.get('marketplace.announcement').create(cr, uid, {
+            'name': '', 
+            'partner_id': user.partner_id.id,
+            'state': 'open',
+        }, context=context)
         announcement = registry.get('marketplace.announcement').browse(cr, uid, announcement, context=context)
         if not context:
             context = dict()
