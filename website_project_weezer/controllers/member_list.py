@@ -181,6 +181,7 @@ class member_list_controller(http.Controller):
         return sql, params
 
     def get_url_param(self, params):
+        params = dict([(k, v.encode('utf-8')) for k, v in params.iteritems()])
         return urllib.urlencode(params)
 
     @http.route(['/marketplace/member_list/search',
