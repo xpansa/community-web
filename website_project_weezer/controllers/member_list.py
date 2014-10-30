@@ -117,14 +117,14 @@ class member_list_controller(http.Controller):
         if data.get('tag'):
             sql += ' AND EXISTS(SELECT 1 FROM ' \
                     'res_partner_marketplace_tag_rel rel LEFT JOIN marketplace_tag tag on tag.id = rel.tag_id '\
-                    'WHERE rel.partner_id = a.id AND tag.name = %(tag)s)'
-            params.update({'tag': data.get('tag')})
+                    'WHERE rel.partner_id = a.id AND tag.name ILIKE %(tag)s)'
+            params.update({'tag': '%' + data.get('tag') + '%'})
 
         if data.get('group'):
             sql += ' AND EXISTS(SELECT 1 FROM ' \
                     'mail_group LEFT JOIN mail_followers followers on mail_group.id = followers.res_id '\
-                    'WHERE mail_group.name = %(group)s AND followers.res_model = \'mail.group\' AND followers.partner_id = a.id)'
-            params.update({'group': data.get('group')})            
+                    'WHERE mail_group.name ILIKE %(group)s AND followers.res_model = \'mail.group\' AND followers.partner_id = a.id)'
+            params.update({'group': '%' + data.get('group') + '%'})
 
         membership_condition = ''
         for membership_id in self.get_all_membership(cr, uid, registry, context=context).keys():
@@ -141,7 +141,7 @@ class member_list_controller(http.Controller):
                     'WHERE membership.partner = a.id AND %s)' % membership_condition
         
         currency_id = data.get('currency_id')
-        if currency_id and currency_id != 'None':
+        if currency_id and currency_id != '0':
             amount_condition = ''
             amount_from = data.get('amount_from')
             amount_to = data.get('amount_to')

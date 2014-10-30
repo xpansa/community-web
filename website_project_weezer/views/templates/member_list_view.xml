@@ -89,18 +89,9 @@
                                                 <input type="text" placeholder="From" class="form-control mb4" name='amount_from' t-att-value="search_param.get('amount_from')"/>
                                                 <input type="text" placeholder="To" class="form-control mb4" name='amount_to' t-att-value="search_param.get('amount_to')"/>
                                                 <select class="selectpicker form-control" data-placeholder="Currency" name="currency_id">
-                                                    <option value="None">All</option>
+                                                    <option value="0">All</option>
                                                     <t t-foreach="currency_dict.keys()" t-as='currency_id'>
-                                                        <t t-if="search_param.get('currency_id')">
-                                                            <option t-att-value='currency_id' selected='selected'>
-                                                                <t t-esc="currency_dict[currency_id]"/>
-                                                            </option>
-                                                        </t>
-                                                        <t t-if="not search_param.get('currency_id')">
-                                                            <option t-att-value='currency_id'>
-                                                                <t t-esc="currency_dict[currency_id]"/>
-                                                            </option>
-                                                        </t>
+                                                        <option t-att-value='currency_id' t-att-selected="'selected' if search_param.get('currency_id') and int(search_param.get('currency_id')) == currency_id else ''" t-esc="currency_dict[currency_id]"/>
                                                     </t>
                                                 </select>
                                             </div>
