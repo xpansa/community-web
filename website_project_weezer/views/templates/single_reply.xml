@@ -84,11 +84,14 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <tr class="list-item">
-                                                    <td><input type="text" class="form-control" readonly="readonly" t-att-value="reply.vote_average"/></td>
-                                                    <!-- TODO INDICAT. -->
-                                                    <td><input type="text" class="form-control" readonly="readonly"/></td>
-                                                </tr>
+                                                <t t-if="vote_list.get(reply.sender_id.id)">
+                                                    <t t-foreach="vote_list.get(reply.sender_id.id).line_ids" t-as="line">
+                                                        <tr class="list-item">
+                                                            <td><input type="text" class="form-control" readonly="readonly" t-att-value="line.type_id.name"/></td>
+                                                            <td><input type="text" class="form-control" readonly="readonly" t-att-value="line.vote"/></td>
+                                                        </tr>
+                                                    </t>
+                                                </t>
                                             </tbody>
                                         </table>
                                     </div>
@@ -97,7 +100,7 @@
                                 <div class="row mt32">
                                     <div class="col-md-12">
                                         <label>Feedback</label>
-                                        <textarea class="form-control" rows="3" readonly="readonly"><t t-esc="reply.message_summary"/></textarea>
+                                        <textarea class="form-control" rows="3" readonly="readonly" t-esc="vote_list.get(reply.sender_id.id) and vote_list.get(reply.sender_id.id).comment or ''"/>
                                     </div>
                                 </div>
                             </div>

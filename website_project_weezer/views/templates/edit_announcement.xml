@@ -32,9 +32,9 @@
                                     <div class="form-horizontal col-md-12">
                                         <div class="form-group">
                 
-                                            <label class="col-md-1 control-label" for="category">Category</label>
+                                            <label class="col-md-1 control-label" for="category_id">Category</label>
                                             <div class="col-md-2">
-                                                <select id="category" name="category_id" class="selectpicker form-control">
+                                                <select id="category_id" name="category_id" class="selectpicker form-control">
                                                     <t t-if="bool(announcement.category_id) == False">
                                                         <option value="None" selected="selected"></option>                      
                                                     </t>
@@ -53,10 +53,9 @@
                                                 </select>
                                             </div>
                                   
-                                            <label class="col-md-1 control-label" for="tags">Tags</label>
+                                            <label class="col-md-1 control-label" for="tag_ids">Tags</label>
                                             <div class="col-md-2">
-                                                <!-- TODO AUTOCOMPLETE WIDGET + CREATE NEW -->
-                                                <select id="tags" name="tag_ids" multiple="multiple" class="selectpicker form-control">
+                                                <select id="tag_ids" name="tag_ids" multiple="multiple" class="selectpicker form-control">
                                                     <t t-if="bool(announcement.tag_ids) == False">
                                                         <option value="None" selected="selected"></option>                      
                                                     </t>
@@ -331,7 +330,7 @@
                                                 <t t-set="index" t-value="index + 1"/>
                                             </div>
                                         </t>
-                                        <t t-foreach="range(len(announcement.currency_ids) + 1, 4)" t-as="i">
+                                        <t t-foreach="range(len(announcement.currency_ids), len(currency_dict))" t-as="i">
                                             <div class="list-item form-group">
                                                 <div class="col-xs-5 no-padding-right">
                                                     <input placeholder="Amount" class="form-control" t-att-name="'%s%s' % ('currency_amount', i)"/>

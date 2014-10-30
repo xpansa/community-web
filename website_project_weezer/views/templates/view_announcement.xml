@@ -189,7 +189,6 @@
                                 <h4 class="mb16">When?</h4>
                                 
                                 <div class="form-group">
-                                    <!-- TODO: WHERE THIS COMES FROM? -->
                                     <label class="col-md-3 control-label" for="date-picker-1">From</label>
                                     <div class="col-md-9">
                                         <input type="text" class="form-control" t-att-value="date_from" placeholder="DD/MM/YYYY" readonly="readonly"/>
@@ -266,15 +265,13 @@
 
                     <t t-if="len(replied_list) > 0">
 
-                        <!-- TODO: check if loggedin -->
                         <t t-ignore="true" t-if="website.user_id == user_id">
                             <div class="row mt16 text-center">
                                 <a class="btn btn-small btn-primary">Login</a> or <a class="btn btn-small btn-primary">Register</a> to submit a reply
                             </div>
                         </t>
 
-                        <!-- TODO: check if loggedin -->
-                        <t t-ignore="true" t-if="website.user_id != user_id">
+                        <t t-ignore="true" t-if="website.user_id != user_id and announcement.partner_id.id != user_id.partner_id.id">
                             <div class="row mt16">
                                 <div class="col-md-2 col-md-offset-5">
                                     <a class="btn btn-success btn-lg btn-block btn-announcement-reply mr25" href="#">Make a reply</a>
@@ -295,18 +292,15 @@
                         </section>
                     </t>
 
-                    <!-- TODO POST REPLY ROUTE -->
-                    <t t-if="website.user_id != user_id">
+                    <t t-if="website.user_id != user_id and announcement.partner_id.id != user_id.partner_id.id">
 
                         <!-- reply CTA banner -->
                         <section id="replysection" class="bg-success pt32 pb32">
                             <div class="container">
                                 
-                                <t t-if="website.user_id != user_id">
-                                    <div id="replycta" class="col-md-2 col-md-offset-5">      
-                                        <a class="btn btn-lg btn-block btn-success btn-announcement-reply" href="#">Make a reply</a>
-                                    </div>
-                                </t>
+                                <div id="replycta" class="col-md-2 col-md-offset-5">      
+                                    <a class="btn btn-lg btn-block btn-success btn-announcement-reply" href="#">Make a reply</a>
+                                </div>
                                 
                                 <div id="replyform" class="hidden">
                                     <!-- START : My reply Section -->
@@ -325,9 +319,7 @@
                                                         </div>
                                                         
                                                         <div class="col-md-8">
-                                                            <!-- TODO CURRENT USE STATUS -->
-                                                            <h5>Ninja Ninja Ninja</h5>
-                                                            <p class="text-muted" t-field="user_id.name"/>
+                                                            <h5 t-field="user_id.name"></h5>
                                                         </div>
                                                         
                                                         <div class="col-md-12">
@@ -380,6 +372,20 @@
                                                                             </tr>
                                                                         </thead>
                                                                         <tbody>
+                                                                            <t t-if="not my_reply.currency_ids">
+                                                                                <tr class="list-item proposition_price_block">
+                                                                                    <td><input type="text" class="form-control" value="" name="currency_ids[new][0][price_unit]"/></td>
+                                                                                    <td>
+                                                                                        <select name="currency_ids[new][0][currency_id]" class="selectpicker form-control mb16" style="display: none;">
+                                                                                            <t t-foreach="currency_dict.keys()" t-as="currency_id">
+                                                                                                <option t-att-value="currency_id"><t t-esc="currency_dict[currency_id]"/></option>
+                                                                                            </t>
+                                                                                        </select>
+                                                        
+                                                                                    </td>
+                                                                                    <td><input type="text" class="form-control" disabled="disabled" value=""/></td>
+                                                                                </tr>
+                                                                            </t>
                                                                             <t t-foreach="my_reply.currency_ids" t-as="line">
                                                                             <tr class="list-item proposition_price_block">
                                                                                 <td><input type="text" class="form-control" t-att-value="line.price_unit" t-att-name="'currency_ids[%s][%s][price_unit]' % (getattr(line, 'is_new', False) and 'new' or 'existing', line.id)"/></td>

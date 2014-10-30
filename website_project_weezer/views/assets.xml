@@ -32,6 +32,7 @@
                     openerp.website.theme.views = {};
                 </script>
                 <script src="/website_project_weezer/static/src/js/views/layout.js"></script>
+                <script src="/website_project_weezer/static/src/js/views/website_project_weezer.new_announcement.js"></script>
                 <script src="/website_project_weezer/static/src/js/views/website_project_weezer.edit_announcement.js"></script>
                 <script src="/website_project_weezer/static/src/js/views/website_project_weezer.view_announcement.js"></script>
                 <script src="/website_project_weezer/static/src/js/views/website_project_weezer.member_list_view.js"></script>
