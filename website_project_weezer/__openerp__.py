@@ -48,7 +48,6 @@ Website Marketplace
         'data/users.xml',
         'views/assets.xml',
         'views/snippets.xml',
-        'views/templates.xml',
         'views/templates/404.xml',
         'views/templates/layout.xml',
         'views/templates/login.xml',
