@@ -5,21 +5,10 @@ community-web
 
 Web part for Odoo community management modules https://github.com/YannickB/community-management/
 
-* Project briefing @ https://pro.yinius.com/projects/yannick-buron-openerp-shop-front-end
-
 ### Requirements ###
 
-* Odoo v8 (developing on saas-5)
+* Odoo v8
 
 ### How do I get set up? ###
 
 * Copy module to odoo addons directory & install
-
-### Contribution guidelines ###
-
-* Guidelines @ https://pro.yinius.com/projects/web-by-brains-internal-project/notebooks/51930
-
-### Who do I talk to? ###
-
-* Jos Koomen <jos@webbybrains.com>
-* Nedas Zilinskas <nedas@webbybrains.com>
