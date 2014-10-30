@@ -1,6 +1,9 @@
 # README #
 
 ### What is this repository for? ###
+community-web
+
+Web part for Odoo community management modules https://github.com/YannickB/community-management/
 
 * Project briefing @ https://pro.yinius.com/projects/yannick-buron-openerp-shop-front-end
 
