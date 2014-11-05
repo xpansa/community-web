@@ -13,5 +13,16 @@
             <field name="perm_unlink" eval="False"/>
         </record>
 
+        <record id="res_partner_wallet_balance_user_own_rule" model="ir.rule">
+            <field name="name">wallet balance user own</field>
+            <field name="model_id" ref="account_wallet.model_res_partner_wallet_balance"/>
+            <field name="domain_force">[('partner_id.user_ids','in',user.id)]</field>
+            <field name="groups"  eval="[(6,0,[ref('account_wallet.group_account_wallet_user')])]"/>
+            <field name="perm_read" eval="False"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+        </record>
+
 	</data>
 </openerp>

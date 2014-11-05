@@ -314,10 +314,10 @@
                                                     <td><t t-esc="exchange.announcement_id.name"/></td>
                                                     <td><t t-esc="exchange.quantity"/> <t t-esc="exchange.uom_id.name"/></td>
                                                     <td>
-                                                        <t t-if="exchange.announcement_id.partner_id == partner.id">
+                                                        <t t-if="exchange.announcement_id.partner_id.id == partner.id">
                                                             <t t-esc="exchange.receiver_id.name"/>
                                                         </t>
-                                                        <t t-if="not exchange.announcement_id.partner_id == partner.id">
+                                                        <t t-if="not exchange.announcement_id.partner_id.id == partner.id">
                                                             <t t-esc="exchange.sender_id.name"/>
                                                         </t>
                                                     </td>

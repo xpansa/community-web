@@ -325,6 +325,11 @@
                                                         <div class="col-md-12">
                                                             <h5>Description</h5>
                                                             <textarea name="description"><t t-esc="my_reply.description"/></textarea>
+                                                            <div>
+                                                                <t t-if="my_reply.state == 'invoiced'">
+                                                                        <a t-attf-href="/marketplace/reply/#{my_reply.id}/pay" class="btn btn-primary" role="button">Pay</a>
+                                                                </t>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                     <!-- END: Reply Left side -->

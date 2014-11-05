@@ -31,6 +31,7 @@ from openerp.addons.web.http import request
 from openerp.addons.website.controllers.main import Website as controllers
 from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
 from openerp.tools.translate import _
+from openerp import workflow
 from main import get_date_format, format_date
 
 from attrdict import AttrDict
@@ -501,6 +502,7 @@ class announcement_controller(http.Controller):
                     'currency_id': AttrDict({'id': 0}),
                     'subtotal': '',
                 })],
+                'state': 'draft',
             })
         return res
 
@@ -552,6 +554,7 @@ class announcement_controller(http.Controller):
 
     def _validate_reply(self, data):
         res = {
+            'state': 'draft',
             'quantity': data.get('quantity'),
             'description': data.get('description'),
             'write_date': datetime.today().strftime(DEFAULT_SERVER_DATETIME_FORMAT),
@@ -609,31 +612,32 @@ class announcement_controller(http.Controller):
             'write_date': reply.write_date,
             'description': reply.description,
             'announcement_id': announcement.id,
-            'state': 'open',
-            'already_published': True,
+            'currency_ids': [],
         }
-        if id:
-            proposition_pool.write(cr, uid, id[0], vals, context=context)
-            currency_ids = currency_line_pool.search(cr, uid, [
-                                                    ('res_id', '=', id[0]), 
-                                                    ('model', '=', 'marketplace.proposition')
-                                                    ], context=context)
-            currency_to_del_ids = list(set(currency_ids) - \
-                                set([c.id for c in reply.currency_ids if not getattr(c, 'is_new', False)]))
-            currency_line_pool.unlink(cr, uid, currency_to_del_ids, context=context)
-        else:
-            id = [proposition_pool.create(cr, uid, vals, context=context)]
+        currency_ids = []
+        # Collect vlues for o2m field currency_ids to create and write
         for line in reply.currency_ids:
-            vals = {
-                'res_id': id[0],
-                'model': 'marketplace.proposition',
-                'price_unit': line.price_unit,
-                'currency_id': line.currency_id.id,
-            }
-            if getattr(line, 'is_new', False):
-                currency_line_pool.create(cr, uid, vals, context=context)
-            else:
-                currency_line_pool.write(cr, uid, line.id, vals, context=context)
+            vals['currency_ids'].append((0 if getattr(line, 'is_new', False) else 1,
+                                         0 if getattr(line, 'is_new', False) else line.id,
+                                         {
+                                            'model': 'account.wallet.transaction',
+                                            'price_unit': line.price_unit,
+                                            'currency_id': line.currency_id.id,
+                                         })
+            )
+        if id:
+            # Collect vlues for o2m field currency_ids to delete
+            proposition = proposition_pool.read(cr, uid, id[0], ['currency_ids'], context=context)
+            currency_to_del_ids = list(set(proposition['currency_ids']) - \
+                                set([c.id for c in reply.currency_ids if not getattr(c, 'is_new', False)]))
+            for c_id in currency_to_del_ids:
+                vals['currency_ids'].insert(0, (2, c_id))
+            # Update proposition
+            proposition_pool.write(cr, uid, id, vals, context=context)
+        else:
+            # Create and publish proposition
+            id = proposition_pool.create(cr, uid, vals, context=context)
+            workflow.trg_validate(uid, 'marketplace.proposition', id, 'proposition_draft_open', cr)
 
     def _save_vote(self, cr, uid, registry, announcement, my_vote, partner_id, context=None):
         vote_pool = registry.get('vote.vote')
@@ -691,19 +695,19 @@ class announcement_controller(http.Controller):
         cr, uid, context, registry = request.cr, request.uid, request.context, request.registry
         user = registry.get('res.users').browse(cr, uid, uid, context=context)
 
-        my_reply = None
-        my_vote = None
-        if 'make_reply' in post:
-            my_reply = self._validate_reply(post)
-            my_vote = self._parse_vote(post)
-            if not my_reply.errors:
-                self._save_reply(cr, uid, registry, announcement, my_reply, context=context)
-                my_reply = None
-                self._save_vote(cr, uid, registry, announcement, my_vote, user.partner_id.id, context=context)
-                my_vote = None
         if user and announcement.partner_id.id == user.partner_id.id or uid == SUPERUSER_ID:  
             web_page = request.redirect('%s/edit' % announcement.id)
         else:
+            my_reply = None
+            my_vote = None
+            if 'make_reply' in post:
+                my_reply = self._validate_reply(post)
+                my_vote = self._parse_vote(post)
+                if not my_reply.errors:
+                    self._save_reply(cr, uid, registry, announcement, my_reply, context=context)
+                    my_reply = None
+                    self._save_vote(cr, uid, registry, announcement, my_vote, user.partner_id.id, context=context)
+                    my_vote = None
             web_page = http.request.website.render('website_project_weezer.view_announcement', 
                 self._get_view_announcement_dict(cr, uid, registry, announcement, my_reply, 
                                                  my_vote, context=context))
@@ -732,6 +736,8 @@ class announcement_controller(http.Controller):
             'date_placeholder': date_format.replace('%d','DD').replace('%m','MM').replace('%Y','YYYY'),
             'date_from': announcement.date_from,
             'date_to': announcement.date_to,
+            'format_date': format_date,
+            'vote_list': dict([(v.partner_id.id, v) for v in announcement.vote_vote_ids]),
         }
         if type(announcement) != AttrDict:
             res.update({
@@ -924,6 +930,32 @@ class announcement_controller(http.Controller):
         res = self._parse_and_save_announcement(cr, uid, registry, announcement, post, context=context)
         response = http.request.website.render(res['template_id'], res['response'])
         return response
+
+    @http.route('/marketplace/reply/<model("marketplace.proposition"):proposition>/<any("accept","reject","accepted_cancel","invoice","invoiced_cancel","pay","confirm"):state>', type='http', auth="user", website=True)
+    def proposition_change_state(self, proposition, state):
+        cr, uid, context, registry = request.cr, request.uid, request.context, request.registry
+        state_signal = {
+            'accept': 'proposition_open_accepted',
+            'reject': 'proposition_open_rejected',
+            'accepted_cancel': 'proposition_accepted_cancel',
+            'invoice': 'proposition_accepted_invoiced',
+            'invoiced_cancel': 'proposition_invoiced_cancel'
+        }
+        if state in state_signal.keys():
+            workflow.trg_validate(uid, 'marketplace.proposition', proposition.id, 
+                                  state_signal.get(state), cr)
+        if state == 'pay':
+            registry.get('marketplace.proposition').pay(cr, uid, [proposition.id])
+        if state == 'confirm':
+            registry.get('marketplace.proposition').confirm(cr, uid, [proposition.id])
+
+
+        user = registry.get('res.users').browse(cr, uid, uid, context=context)
+
+        if user and proposition.announcement_id.partner_id.id == user.partner_id.id or uid == SUPERUSER_ID:  
+            return self.edit_announcement(proposition.announcement_id)
+        else:
+            return self.view_announcement(proposition.announcement_id)
 
 announcement_controller()
 
