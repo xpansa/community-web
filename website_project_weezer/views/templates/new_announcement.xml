@@ -90,20 +90,11 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="text-right col-md-3 m16 mb16">
-                                        <div class="row">
-                                            <input placeholder="Website" type="text" name="link" class="form-control"/>
-                                        </div>  
-                                    </div>  
                                 </div>  
                             </div>
                 
                             <div class="row">
                                 <div class="col-md-3">
-                                    <div class="col-md-12 mb8">
-                                        <input name="emergency" type="checkbox"/>
-                                        <label for="emergency">Emergency</label>
-                                    </div>
                                     <div class="col-md-12">
                                         
                                         <span class="btn btn-primary btn-file mt16">
