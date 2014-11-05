@@ -153,7 +153,6 @@ class announcement_controller(http.Controller):
                 ('street2', 'street2'),
                 ('zip', 'zip'),
                 ('city', 'city'),
-                ('state', 'state'),
                 ('type', 'type'),
             ]
             date_param_list = [
@@ -914,7 +913,6 @@ class announcement_controller(http.Controller):
         announcement = registry.get('marketplace.announcement').create(cr, uid, {
             'name': '', 
             'partner_id': user.partner_id.id,
-            'state': 'open',
         }, context=context)
         announcement = registry.get('marketplace.announcement').browse(cr, uid, announcement, context=context)
         if not context:
