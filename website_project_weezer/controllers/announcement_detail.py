@@ -922,6 +922,22 @@ class announcement_controller(http.Controller):
         response = http.request.website.render(res['template_id'], res['response'])
         return response
 
+    @http.route('/marketplace/announcement/<model("marketplace.announcement"):announcement>/<any("draft_cancel","draft_open","open_cancel","open_done", "done_open","cancel_draft"):state>', type='http', auth="user", website=True)
+    def announcement_change_state(self, announcement, state):
+        cr, uid, context, registry = request.cr, request.uid, request.context, request.registry
+        state_signal = {
+            'draft_cancel': 'announcement_draft_cancel',
+            'draft_open': 'announcement_draft_open',
+            'open_cancel': 'announcement_open_cancel',
+            'open_done': 'announcement_open_done',
+        }
+        if state in state_signal.keys():
+            workflow.trg_validate(uid, 'marketplace.announcement', announcement.id,
+                                  state_signal.get(state), cr)
+        if state in ['cancel_draft', 'done_open']:
+            registry.get('marketplace.announcement').reset_workflow(cr, uid, [announcement.id])
+        return self.view_announcement(announcement)
+
     @http.route('/marketplace/reply/<model("marketplace.proposition"):proposition>/<any("draft_cancel","draft_open","open_cancel","accept","reject","reject_draft","accepted_cancel","invoice","invoiced_cancel","pay","confirm","refund","confirmrefund_paid","confirmrefund_cancel","cancel_draft"):state>', type='http', auth="user", website=True)
     def proposition_change_state(self, proposition, state):
         cr, uid, context, registry = request.cr, request.uid, request.context, request.registry
