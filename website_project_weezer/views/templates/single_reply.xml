@@ -82,10 +82,24 @@
                                     <h5>Description</h5>
                                     <span t-field="reply.description"/>
                                     <div>
+                                        <t t-if="reply.state == 'draft'">
+                                            <t t-if="reply.is_user">
+                                                <a t-attf-href="/marketplace/reply/#{reply.id}/draft_cancel" class="btn btn-primary" role="button">Cancel</a>
+                                                <a t-attf-href="/marketplace/reply/#{reply.id}/draft_open" class="btn btn-primary" role="button">Publish</a>
+                                            </t>
+                                        </t>
                                         <t t-if="reply.state == 'open'">
+                                            <t t-if="reply.is_user">
+                                                <a t-attf-href="/marketplace/reply/#{reply.id}/cancel" class="btn btn-primary" role="button">Cancel</a>
+                                            </t>
                                             <t t-if="reply.is_announcer">
                                                 <a t-attf-href="/marketplace/reply/#{reply.id}/accept" class="btn btn-primary" role="button">Accept</a>
                                                 <a t-attf-href="/marketplace/reply/#{reply.id}/reject" class="btn btn-primary" role="button">Reject</a>
+                                            </t>
+                                        </t>
+                                        <t t-if="reply.state == 'rejected'">
+                                            <t t-if="reply.is_announcer">
+                                                <a t-attf-href="/marketplace/reply/#{reply.id}/reject_draft" class="btn btn-primary" role="button">Set draft</a>
                                             </t>
                                         </t>
                                         <t t-if="reply.state == 'accepted'">
@@ -106,7 +120,25 @@
                                         </t>
                                         <t t-if="reply.state == 'confirm'">
                                             <t t-if="reply.is_receiver">
-                                                <a t-attf-href="/marketplace/reply/#{reply.id}/confirm" class="btn btn-primary" role="button">Confirm Payment</a>
+                                                <a t-attf-href="/marketplace/reply/#{reply.id}/confirm" class="btn btn-primary" role="button">Payment received</a>
+                                            </t>
+                                        </t>
+                                        <t t-if="reply.state == 'paid'">
+                                            <t t-if="reply.is_receiver">
+                                                <a t-attf-href="/marketplace/reply/#{reply.id}/refund" class="btn btn-primary" role="button">Refund</a>
+                                            </t>
+                                        </t>
+                                        <t t-if="reply.state == 'confirm_refund'">
+                                            <t t-if="reply.is_receiver">
+                                                <a t-attf-href="/marketplace/reply/#{reply.id}/confirmrefund_paid" class="btn btn-primary" role="button">Cancel</a>
+                                            </t>
+                                            <t t-if="reply.is_sender">
+                                                <a t-attf-href="/marketplace/reply/#{reply.id}/confirmrefund_cancel" class="btn btn-primary" role="button">Payment received</a>
+                                            </t>
+                                        </t>
+                                        <t t-if="reply.state == 'cancel'">
+                                            <t t-if="reply.is_user">
+                                                <a t-attf-href="/marketplace/reply/#{reply.id}/cancel_draft" class="btn btn-primary" role="button">Set draft</a>
                                             </t>
                                         </t>
                                     </div>
@@ -138,6 +170,30 @@
                                     </div>
                                 </div>
                             </div>
+                        </div>
+                        <div>
+                            <ul class="wizard mt0">
+                                <li t-att-class="reply.state == 'draft' and 'text-primary' or 'text-muted'">Draft<span class="chevron"></span></li>
+                                <li t-att-class="reply.state == 'open' and 'text-primary' or 'text-muted'">Published<span class="chevron"></span></li>
+                                <li t-att-class="reply.state == 'accepted' and 'text-primary' or 'text-muted'">Accepted<span class="chevron"></span></li>
+                                <t t-if="reply.state == 'rejected'">
+                                    <li t-att-class="reply.state == 'rejected' and 'text-primary' or 'text-muted'">Rejected<span class="chevron"></span></li>
+                                </t>
+                                <li t-att-class="reply.state == 'invoiced' and 'text-primary' or 'text-muted'">Invoiced<span class="chevron"></span></li>
+                                <t t-if="reply.state == 'confirm'">
+                                    <li t-att-class="reply.state == 'confirm' and 'text-primary' or 'text-muted'">Waiting confirm<span class="chevron"></span></li>
+                                </t>
+                                <t t-if="reply.state == 'vote'">
+                                    <li t-att-class="reply.state == 'vote' and 'text-primary' or 'text-muted'">Waiting votes<span class="chevron"></span></li>
+                                </t>
+                                <li t-att-class="reply.state == 'paid' and 'text-primary' or 'text-muted'">paid<span class="chevron"></span></li>
+                                <t t-if="reply.state == 'confirm_refund'">
+                                    <li t-att-class="reply.state == 'confirm_refund' and 'text-primary' or 'text-muted'">Waiting confirm<span class="chevron"></span></li>
+                                </t>
+                                <t t-if="reply.state == 'cancel'">
+                                    <li t-att-class="reply.state == 'cancel' and 'text-primary' or 'text-muted'">Cancelled<span class="chevron"></span></li>
+                                </t>
+                            </ul>
                         </div>
                     </div>
                 </div>

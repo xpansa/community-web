@@ -927,24 +927,31 @@ class announcement_controller(http.Controller):
         response = http.request.website.render(res['template_id'], res['response'])
         return response
 
-    @http.route('/marketplace/reply/<model("marketplace.proposition"):proposition>/<any("accept","reject","accepted_cancel","invoice","invoiced_cancel","pay","confirm"):state>', type='http', auth="user", website=True)
+    @http.route('/marketplace/reply/<model("marketplace.proposition"):proposition>/<any("draft_cancel","draft_open","open_cancel","accept","reject","reject_draft","accepted_cancel","invoice","invoiced_cancel","pay","confirm","refund","confirmrefund_paid","confirmrefund_cancel","cancel_draft"):state>', type='http', auth="user", website=True)
     def proposition_change_state(self, proposition, state):
         cr, uid, context, registry = request.cr, request.uid, request.context, request.registry
         state_signal = {
+            'draft_cancel': 'proposition_draft_cancel',
+            'draft_open': 'proposition_draft_open',
+            'open_cancel': 'proposition_open_cancel',
             'accept': 'proposition_open_accepted',
             'reject': 'proposition_open_rejected',
             'accepted_cancel': 'proposition_accepted_cancel',
             'invoice': 'proposition_accepted_invoiced',
-            'invoiced_cancel': 'proposition_invoiced_cancel'
+            'invoiced_cancel': 'proposition_invoiced_cancel',
+            'confirmrefund_paid': 'proposition_confirm_refund_paid',
+            'confirmrefund_cancel': 'proposition_confirm_refund_cancel',
         }
         if state in state_signal.keys():
             workflow.trg_validate(uid, 'marketplace.proposition', proposition.id, 
                                   state_signal.get(state), cr)
+
         if state == 'pay':
             registry.get('marketplace.proposition').pay(cr, uid, [proposition.id])
         if state == 'confirm':
             registry.get('marketplace.proposition').confirm(cr, uid, [proposition.id])
-
+        if state in ['cancel_draft', 'reject_draft', 'refund']:
+            registry.get('marketplace.proposition').reset_workflow(cr, uid, [proposition.id])
 
         user = registry.get('res.users').browse(cr, uid, uid, context=context)
 
