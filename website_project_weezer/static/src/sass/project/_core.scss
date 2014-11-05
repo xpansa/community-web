@@ -142,4 +142,12 @@
 		overflow: hidden;
 		height: 42px;
 	}
+
+	@media (min-width: 992px)
+	{
+		.feedback-width
+		{
+			width: 55.5%;
+		}
+	}
 }

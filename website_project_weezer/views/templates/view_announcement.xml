@@ -312,16 +312,6 @@
                                                         <div class="col-md-8">
                                                             <h5 t-field="user_id.name"></h5>
                                                         </div>
-                                                        
-                                                        <div class="col-md-12">
-                                                            <h5>Description</h5>
-                                                            <textarea name="description"><t t-esc="my_reply.description"/></textarea>
-                                                            <div>
-                                                                <t t-if="my_reply.state == 'invoiced'">
-                                                                        <a t-attf-href="/marketplace/reply/#{my_reply.id}/pay" class="btn btn-primary" role="button">Pay</a>
-                                                                </t>
-                                                            </div>
-                                                        </div>
                                                     </div>
                                                     <!-- END: Reply Left side -->
                                                     
@@ -406,53 +396,71 @@
                                                                         </p>
                                                                     </t>
                                                                 </div>
-                                                                <div class="dynamic-list">    
-                                                                    <table class="table">
-                                                                        <thead>
-                                                                            <tr>
-                                                                                <th>Rat.</th>
-                                                                                <th>Indicat.</th>
-                                                                                <th></th>
-                                                                            </tr>
-                                                                        </thead>
-                                                                        <tbody>
-                                                                            <t t-foreach="my_vote.line_ids" t-as="vote_line">
-                                                                            <tr class="list-item vote_block">
-                                                                                <td>
-                                                                                    <select class="selectpicker form-control" t-att-name="'vote_lines[%s][type_id]' % vote_line.id">
-                                                                                        <option value="0">Nothing</option>
-                                                                                        <t t-foreach="vote_type_dict.keys()" t-as="vote_type">
-                                                                                            <option t-att-value="vote_type" t-att-selected="'selected' if vote_type == vote_line.type_id.id else ''"><t t-esc="vote_type_dict[vote_type]"/></option>
-                                                                                        </t>
-                                                                                    </select>
-                                                                                </td>
-                                                                                <td>
-                                                                                    <select class="selectpicker form-control" t-att-name="'vote_lines[%s][vote]' % vote_line.id">
-                                                                                        <t t-foreach="range(-2,3)" t-as="vote">
-                                                                                            <option t-att-selected="'selected' if int(vote_line.vote) == vote else ''" t-att-value="vote"><t t-esc="vote"/></option>
-                                                                                        </t>
-                                                                                    </select>
-                                                                                </td>
-                                                                                <td><button class="list-remove btn btn-danger" style="display: none;"><i class="fa fa-minus"></i></button></td>
-                                                                            </tr>
-                                                                            </t>
-                                                                        </tbody>
-                                                                    </table>
-                                                                    <a class="list-add btn btn-small btn-primary mb16 margin-left-10"><i class="fa fa-plus"></i></a>
-                                                                </div>
-                                                            </div>
-                                                            <div class="row mt32">
-                                                                <div class="col-md-12">
-                                                                    <label>Feedback</label>
-                                                                    <textarea class="form-control" rows="3" name="vote_comment"><t t-esc="my_vote.comment"/></textarea>
-                                                                    <input type="hidden" name="make_reply" value="1"/>
-                                                                    <a href="#" class="btn col-md-2 pull-right btn-success mt8" onclick="document.getElementById('my-reply-form').submit(); return false;">Add reply</a>
-                                                                </div>
                                                             </div>
                     
                                                         </div>
                                                     </div>
                                                     <!-- END: Reply Right side -->
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-7 clearfix feedback-width">
+                                                        <div class="col-md-12">
+                                                            <h5>Description</h5>
+                                                            <textarea rows="3" style="width:100%;" class="form-control" name="description"><t t-esc="my_reply.description"/></textarea>
+                                                            <div>
+                                                                <t t-if="my_reply.state == 'invoiced'">
+                                                                        <a t-attf-href="/marketplace/reply/#{my_reply.id}/pay" class="btn btn-primary" role="button">Pay</a>
+                                                                </t>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-5">
+                                                        <div class="dynamic-list">    
+                                                            <table class="table">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th>Rat.</th>
+                                                                        <th>Indicat.</th>
+                                                                        <th></th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    <t t-foreach="my_vote.line_ids" t-as="vote_line">
+                                                                    <tr class="list-item vote_block">
+                                                                        <td>
+                                                                            <select class="selectpicker form-control" t-att-name="'vote_lines[%s][type_id]' % vote_line.id">
+                                                                                <option value="0">Nothing</option>
+                                                                                <t t-foreach="vote_type_dict.keys()" t-as="vote_type">
+                                                                                    <option t-att-value="vote_type" t-att-selected="'selected' if vote_type == vote_line.type_id.id else ''"><t t-esc="vote_type_dict[vote_type]"/></option>
+                                                                                </t>
+                                                                            </select>
+                                                                        </td>
+                                                                        <td>
+                                                                            <select class="selectpicker form-control" t-att-name="'vote_lines[%s][vote]' % vote_line.id">
+                                                                                <t t-foreach="range(-2,3)" t-as="vote">
+                                                                                    <option t-att-selected="'selected' if int(vote_line.vote) == vote else ''" t-att-value="vote"><t t-esc="vote"/></option>
+                                                                                </t>
+                                                                            </select>
+                                                                        </td>
+                                                                        <td><button class="list-remove btn btn-danger" style="display: none;"><i class="fa fa-minus"></i></button></td>
+                                                                    </tr>
+                                                                    </t>
+                                                                </tbody>
+                                                            </table>
+                                                            <a class="list-add btn btn-small btn-primary mb16 margin-left-10"><i class="fa fa-plus"></i></a>
+                                                        
+                                                            <div>
+                                                                <div class="row mt32">
+                                                                    <div class="col-md-12">
+                                                                        <label>Feedback</label>
+                                                                        <textarea class="form-control" rows="3" name="vote_comment"><t t-esc="my_vote.comment"/></textarea>
+                                                                        <input type="hidden" name="make_reply" value="1"/>
+                                                                        <a href="#" class="btn col-md-3 pull-right btn-success mt8" onclick="document.getElementById('my-reply-form').submit(); return false;">Add reply</a>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>

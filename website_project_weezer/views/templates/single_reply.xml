@@ -22,39 +22,6 @@
                                     </t>
                                 </div>
                             
-                                <div class="col-md-12">
-                                    <h5>Description</h5>
-                                    <span t-field="reply.description"/>
-                                    <div>
-                                        <t t-if="reply.state == 'open'">
-                                            <t t-if="reply.is_announcer">
-                                                <a t-attf-href="/marketplace/reply/#{reply.id}/accept" class="btn btn-primary" role="button">Accept</a>
-                                                <a t-attf-href="/marketplace/reply/#{reply.id}/reject" class="btn btn-primary" role="button">Reject</a>
-                                            </t>
-                                        </t>
-                                        <t t-if="reply.state == 'accepted'">
-                                            <t t-if="(reply.is_dispute and reply.want_cancel_user and reply.want_cancel_announcer) or reply.is_moderator">
-                                                <a t-attf-href="/marketplace/reply/#{reply.id}/accepted_cancel" class="btn btn-primary" role="button">Cancel</a>
-                                            </t>
-                                            <t t-if="reply.is_receiver">
-                                                <a t-attf-href="/marketplace/reply/#{reply.id}/invoice" class="btn btn-primary" role="button">Invoice</a>
-                                            </t>
-                                        </t>
-                                        <t t-if="reply.state == 'invoiced'">
-                                            <t t-if="(reply.is_dispute and reply.want_cancel_user and reply.want_cancel_announcer) or reply.is_moderator">
-                                                <a t-attf-href="/marketplace/reply/#{reply.id}/invoiced_cancel" class="btn btn-primary" role="button">Cancel</a>
-                                            </t>
-                                            <t t-if="reply.is_sender">
-                                                <a t-attf-href="/marketplace/reply/#{reply.id}/pay" class="btn btn-primary" role="button">Pay</a>
-                                            </t>
-                                        </t>
-                                        <t t-if="reply.state == 'confirm'">
-                                            <t t-if="reply.is_receiver">
-                                                <a t-attf-href="/marketplace/reply/#{reply.id}/confirm" class="btn btn-primary" role="button">Confirm Payment</a>
-                                            </t>
-                                        </t>
-                                    </div>
-                                 </div>
                             </div>
                             <!-- END: Reply Left side -->
                             
@@ -104,28 +71,66 @@
                                                 </t>
                                             </tbody>
                                         </table>
-                                        
-                                        <table class="table">
-                                            <thead>
-                                                <tr>
-                                                    <th>Rat.</th>
-                                                    <th>Indicat.</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <t t-if="vote_list.get(reply.sender_id.id)">
-                                                    <t t-foreach="vote_list.get(reply.sender_id.id).line_ids" t-as="line">
-                                                        <tr class="list-item">
-                                                            <td><input type="text" class="form-control" readonly="readonly" t-att-value="line.type_id.name"/></td>
-                                                            <td><input type="text" class="form-control" readonly="readonly" t-att-value="line.vote"/></td>
-                                                        </tr>
-                                                    </t>
-                                                </t>
-                                            </tbody>
-                                        </table>
                                     </div>
                                 </div>
-                            
+                            </div>
+                            <!-- END: Reply Right side -->
+                        </div>
+                        <div class="row">
+                            <div class="col-md-7 feedback-width">
+                                <div class="col-md-12">
+                                    <h5>Description</h5>
+                                    <span t-field="reply.description"/>
+                                    <div>
+                                        <t t-if="reply.state == 'open'">
+                                            <t t-if="reply.is_announcer">
+                                                <a t-attf-href="/marketplace/reply/#{reply.id}/accept" class="btn btn-primary" role="button">Accept</a>
+                                                <a t-attf-href="/marketplace/reply/#{reply.id}/reject" class="btn btn-primary" role="button">Reject</a>
+                                            </t>
+                                        </t>
+                                        <t t-if="reply.state == 'accepted'">
+                                            <t t-if="(reply.is_dispute and reply.want_cancel_user and reply.want_cancel_announcer) or reply.is_moderator">
+                                                <a t-attf-href="/marketplace/reply/#{reply.id}/accepted_cancel" class="btn btn-primary" role="button">Cancel</a>
+                                            </t>
+                                            <t t-if="reply.is_receiver">
+                                                <a t-attf-href="/marketplace/reply/#{reply.id}/invoice" class="btn btn-primary" role="button">Invoice</a>
+                                            </t>
+                                        </t>
+                                        <t t-if="reply.state == 'invoiced'">
+                                            <t t-if="(reply.is_dispute and reply.want_cancel_user and reply.want_cancel_announcer) or reply.is_moderator">
+                                                <a t-attf-href="/marketplace/reply/#{reply.id}/invoiced_cancel" class="btn btn-primary" role="button">Cancel</a>
+                                            </t>
+                                            <t t-if="reply.is_sender">
+                                                <a t-attf-href="/marketplace/reply/#{reply.id}/pay" class="btn btn-primary" role="button">Pay</a>
+                                            </t>
+                                        </t>
+                                        <t t-if="reply.state == 'confirm'">
+                                            <t t-if="reply.is_receiver">
+                                                <a t-attf-href="/marketplace/reply/#{reply.id}/confirm" class="btn btn-primary" role="button">Confirm Payment</a>
+                                            </t>
+                                        </t>
+                                    </div>
+                                 </div>
+                            </div>
+                            <div class="col-md-5">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>Rat.</th>
+                                            <th>Indicat.</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <t t-if="vote_list.get(reply.sender_id.id)">
+                                            <t t-foreach="vote_list.get(reply.sender_id.id).line_ids" t-as="line">
+                                                <tr class="list-item">
+                                                    <td><input type="text" class="form-control" readonly="readonly" t-att-value="line.type_id.name"/></td>
+                                                    <td><input type="text" class="form-control" readonly="readonly" t-att-value="line.vote"/></td>
+                                                </tr>
+                                            </t>
+                                        </t>
+                                    </tbody>
+                                </table>
                                 <div class="row mt32">
                                     <div class="col-md-12">
                                         <label>Feedback</label>
@@ -133,7 +138,6 @@
                                     </div>
                                 </div>
                             </div>
-                            <!-- END: Reply Right side -->
                         </div>
                     </div>
                 </div>

@@ -30,11 +30,11 @@
                                                     <t t-call="website.submenu"/>
                                                 </t>
                                                 <li><a href="/marketplace/announcement_detail/new"><span class="weezer-icon weezer-pencil"></span></a></li>
-                                                <li><a href="#" class="btn-nolink"><span class="weezer-icon weezer-dollar"></span></a></li>
+                                                <li class="hidden"><a href="#" class="btn-nolink"><span class="weezer-icon weezer-dollar"></span></a></li>
                                             </ul>
                                             <ul class="nav navbar-nav pull-right">
                                                 <li><a href="/marketplace/member_list"><span class="weezer-icon weezer-group"></span></a></li>
-                                                <li><a href="/page/website.contactus" class="btn-nolink"><span class="weezer-icon weezer-envelope"></span></a></li>
+                                                <li class="hidden"><a href="/page/website.contactus" class="btn-nolink"><span class="weezer-icon weezer-envelope"></span></a></li>
                                                 <li t-ignore="true" t-if="website.user_id == user_id">
                                                     <a href="/web/login">
                                                         <span class="weezer-icon weezer-profile"></span>
