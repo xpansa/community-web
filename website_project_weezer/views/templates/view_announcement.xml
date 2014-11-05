@@ -288,41 +288,21 @@
             
                     </section>
 
-                    <t t-if="len(replied_list) > 0">
 
-                        <t t-ignore="true" t-if="website.user_id == user_id">
-                            <div class="row mt16 text-center">
-                                <a class="btn btn-small btn-primary">Login</a> or <a class="btn btn-small btn-primary">Register</a> to submit a reply
-                            </div>
-                        </t>
 
-                        <t t-ignore="true" t-if="website.user_id != user_id and announcement.partner_id.id != user_id.partner_id.id">
-                            <div class="row mt16">
-                                <div class="col-md-2 col-md-offset-5">
-                                    <a class="btn btn-success btn-lg btn-block btn-announcement-reply mr25" href="#">Make a reply</a>
-                                </div>
-                            </div>
-                        </t>
-
-                        <!-- START: Replies section -->
-                        <section class="bg-info pt32 mt32"> 
-                            <div class="container">
-                                <h2 class="col-md-12 mt0">Who has replied?</h2>
-                            </div>
-
-                            <t t-foreach="replied_list" t-as="reply">
-                                <t t-call="website_project_weezer.single_reply"/>
-                            </t>
-                            
-                        </section>
+                    <t t-ignore="true" t-if="website.user_id == user_id">
+                        <div class="row mt16 text-center">
+                            <a class="btn btn-small btn-primary">Login</a> or <a class="btn btn-small btn-primary">Register</a> to submit a reply
+                        </div>
                     </t>
 
                     <t t-if="website.user_id != user_id and announcement.partner_id.id != user_id.partner_id.id">
 
                         <!-- reply CTA banner -->
                         <section id="replysection" class="bg-success pt32 pb32">
+
                             <div class="container">
-                                
+
                                 <div id="replycta" class="col-md-2 col-md-offset-5">      
                                     <a class="btn btn-lg btn-block btn-success btn-announcement-reply" href="#">Make a reply</a>
                                 </div>
@@ -505,6 +485,23 @@
                             </div>
                         </section>
                     </t>
+
+
+                    <t t-if="len(replied_list) > 0">
+
+                        <!-- START: Replies section -->
+                        <section class="bg-info pt32">
+                            <div class="container">
+                                <h2 class="col-md-12 mt0">Who has replied?</h2>
+                            </div>
+
+                            <t t-foreach="replied_list" t-as="reply">
+                                <t t-call="website_project_weezer.single_reply"/>
+                            </t>
+
+                        </section>
+                    </t>
+
                 </div>
                 <div class="oe_structure"/>
             </t>
