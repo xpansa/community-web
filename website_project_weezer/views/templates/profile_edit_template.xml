@@ -226,7 +226,7 @@
                         </div>
                         <t t-if="is_administrator">
                             <div class="row">
-                                <div class="col-md-12">
+<!--                                <div class="col-md-12">
                                     <div class="col-md-4">
                                         <div class="form-group">
                                             <label class="col-md-4 control-label">Credit limits</label>
@@ -265,41 +265,25 @@
                                                 </p>
                                             </t>
                                         </div>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <div class="form-group">
-                                            <label class="col-md-4 control-label">Balance</label>
-                                            <div class="col-md-8 dynamic-list">
-                                                <div class="row">
-                                                    <t t-foreach="['existing', 'new']" t-as="key">
-                                                        <t t-foreach="profile['balances'][key]" t-as="balance">
-                                                            <div class="list-item col-md-12 balance_block">
-                                                                <div class="row">
-                                                                    <div class="col-xs-7 no-padding-right">
-                                                                        <input t-att-name="'balances[%s][%s][amount]' % (key, balance['id'])" class="form-control mb16" type="text" placeholder="amount" t-att-value="balance['amount']"/>
-                                                                    </div>
-                                                                    <div class="col-xs-4 no-padding-right">
-                                                                        <select t-att-name="'balances[%s][%s][currency]' % (key, balance['id'])" class="selectpicker form-control">
-                                                                            <t t-foreach="currencies" t-as="currency">
-                                                                                <option t-att-value="currency[0]" t-att-selected="'selected' if balance['currency'] == currency[0] else ''"><t t-esc="currency[1]"/></option>
-                                                                            </t>
-                                                                        </select>
-                                                                    </div>
-                                                                    <div class="col-xs-1 no-padding-right">
-                                                                        <button class="list-remove btn btn-danger"><i class="fa fa-minus"></i></button>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </t>
+                                    </div>-->
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <div class="col-md-8">
+                                            <table class="table">
+                                                <thead>
+                                                    <tr>
+                                                        <th colspan="2">Balance</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <t t-foreach="partner.wallet_balance_ids" t-as="balance">
+                                                        <tr>
+                                                            <td><t t-esc="balance.available"/></td>
+                                                            <td><t t-esc="balance.currency_id and balance.currency_id.name"/></td>
+                                                        </tr>
                                                     </t>
-                                                </div>
-                                                <a href="#" class="list-add btn btn-small btn-primary mb16"><i class="fa fa-plus"></i></a>
-                                            </div>
-                                            <t t-if="'balances' in errors">
-                                                <p class="bg-danger">
-                                                    <t t-esc="errors['balances']"/>
-                                                </p>
-                                            </t>
+                                                </tbody>
+                                            </table>
                                         </div>
                                     </div>
                                 </div>
