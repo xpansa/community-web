@@ -67,7 +67,7 @@ class member_list_controller(http.Controller):
         cr, uid, context, registry = request.cr, request.uid, request.context, request.registry
         partner_pool = registry.get('res.partner')
         count = len(partner_pool.search(cr, uid, [], context=context))
-        member_list = partner_pool.search(cr, uid, [], limit=self.PAGE_LIMIT, 
+        member_list = partner_pool.search(cr, uid, [('user_ids','!=',False)], limit=self.PAGE_LIMIT,
             offset=(page-1)*self.PAGE_LIMIT, context=context)
         member_list = partner_pool.browse(cr, uid, member_list, context = context)
         member_list = [member_list] if isinstance(member_list, (int, long)) else member_list
