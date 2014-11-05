@@ -2566,6 +2566,11 @@ h3 a:hover {
   height: 42px;
 }
 
+@media (min-width: 992px) {
+  .feedback-width {
+    width: 55.5%;
+  }
+}
 .oe_website_login_container {
   display: table-cell;
   margin: 0 auto !important;
