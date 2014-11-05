@@ -30,8 +30,6 @@ class marketplace_announcement(osv.osv):
     _inherit = "marketplace.announcement"
 
     _columns = {
-        'emergency': fields.boolean('Emergency'),
-        'link': fields.char('Link', size=140),
         'date_from': fields.date('From'),
         'date_to': fields.date('To'),
     }

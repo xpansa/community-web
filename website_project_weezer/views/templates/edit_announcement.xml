@@ -120,15 +120,6 @@
                 
                             <div class="row">
                                 <div class="col-md-3">
-                                    <div class="col-md-12 mb8">
-                                        <t t-if="announcement.emergency == False">
-                                            <input name="emergency" type="checkbox"/> 
-                                        </t>
-                                        <t t-if="announcement.emergency">
-                                            <input name="emergency" type="checkbox" checked="checked"/>
-                                        </t>
-                                        <label for="emergency">Emergency</label>
-                                    </div>
                                     <div class="col-md-12">
                                         <span>
                                             <img class="img img-responsive" t-att-src="announcement_picture"/>

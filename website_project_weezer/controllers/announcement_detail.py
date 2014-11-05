@@ -144,11 +144,9 @@ class announcement_controller(http.Controller):
             """ Parse post params with simple values
             """
             bool_params = [
-                ('unlimited', 'infinite_qty'), 
-                ('emergency', 'emergency'),
+                ('unlimited', 'infinite_qty'),
             ]
             text_params = [
-                ('link', 'link'),
                 ('title', 'name'),
                 ('description', 'description'),
                 ('street', 'street'),
@@ -764,8 +762,6 @@ class announcement_controller(http.Controller):
     def _get_announcement_from_post(self, post, announcement):
         res = dict()
         simple = [
-            ('link', 'link'),
-            ('emergency', 'emergency'),
             ('name', 'title'),
             ('description', 'description'),
             ('street', 'street'),
