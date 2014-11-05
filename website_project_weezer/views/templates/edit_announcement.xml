@@ -350,6 +350,17 @@
                             <button type="submit" name="submit" class="btn btn-success pull-right mb64">Submit</button>
                         </form>
                     </section>
+                    <!-- START: Replies section -->
+                    <section class="bg-info pt32 mt32"> 
+                        <div class="container">
+                            <h2 class="col-md-12 mt0">Who has replied?</h2>
+                        </div>
+
+                        <t t-foreach="announcement.proposition_ids" t-as="reply">
+                            <t t-call="website_project_weezer.single_reply"/>
+                        </t>
+                        
+                    </section>
                 </div>
                 <div class="oe_structure"/>
             </t>
