@@ -94,7 +94,9 @@
                                 <li t-att-class="announcement.state == 'draft' and 'text-primary' or 'text-muted'">Draft<span class="chevron"></span></li>
                                 <li t-att-class="announcement.state == 'open' and 'text-primary' or 'text-muted'">Published<span class="chevron"></span></li>
                                 <li t-att-class="announcement.state == 'done' and 'text-primary' or 'text-muted'">Close<span class="chevron"></span></li>
-                                <li t-att-class="announcement.state == 'cancel' and 'text-primary' or 'text-muted'">Abort<span class="chevron"></span></li>
+                                <t t-if="announcement.state == 'cancel'">
+                                    <li t-att-class="announcement.state == 'cancel' and 'text-primary' or 'text-muted'">Abort<span class="chevron"></span></li>
+                                </t>
                             </ul>
                         </div>
                         </div>
@@ -115,6 +117,30 @@
                             <div class="col-md-3">
                                 <div class="col-md-12">
                                     <span t-field="announcement.picture" t-field-options='{"widget": "image"}'/>
+                                </div>
+                                <div>
+                                    <t t-if="announcement.state == 'draft'">
+                                        <t t-if="announcement.is_user">
+                                            <a t-attf-href="/marketplace/announcement/#{announcement.id}/draft_cancel" class="btn btn-primary" role="button">Cancel</a>
+                                            <a t-attf-href="/marketplace/announcement/#{announcement.id}/draft_open" class="btn btn-primary" role="button">Publish</a>
+                                        </t>
+                                    </t>
+                                    <t t-if="announcement.state == 'open'">
+                                        <t t-if="announcement.is_user">
+                                            <a t-attf-href="/marketplace/announcement/#{announcement.id}/open_cancel" class="btn btn-primary" role="button">Cancel</a>
+                                            <a t-attf-href="/marketplace/announcement/#{announcement.id}/open_done" class="btn btn-primary" role="button">Close</a>
+                                        </t>
+                                    </t>
+                                    <t t-if="announcement.state == 'done'">
+                                        <t t-if="announcement.is_user">
+                                            <a t-attf-href="/marketplace/announcement/#{announcement.id}/done_open" class="btn btn-primary" role="button">Re-open</a>
+                                        </t>
+                                    </t>
+                                    <t t-if="announcement.state == 'cancel'">
+                                        <t t-if="announcement.is_user">
+                                            <a t-attf-href="/marketplace/announcement/#{announcement.id}/cancel_draft" class="btn btn-primary" role="button">Set draft</a>
+                                        </t>
+                                    </t>
                                 </div>
                             </div>
             
