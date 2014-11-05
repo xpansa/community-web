@@ -30,6 +30,14 @@
                             </t>
                         </t>
                     </div>
+
+                    <div class="container">
+                        <div class="col-md-12">
+                            <t t-if="announcement.is_user">
+                                <a class="btn btn-primary mt32 mb16" t-att-href="'/marketplace/announcement_detail/%s/edit' % announcement.id">Edit</a>
+                            </t>
+                        </div>
+                    </div>
                     
                     <section class="container mt32">
         

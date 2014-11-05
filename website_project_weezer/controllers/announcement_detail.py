@@ -153,7 +153,6 @@ class announcement_controller(http.Controller):
                 ('street2', 'street2'),
                 ('zip', 'zip'),
                 ('city', 'city'),
-                ('state', 'state'),
                 ('type', 'type'),
             ]
             date_param_list = [
@@ -693,22 +692,19 @@ class announcement_controller(http.Controller):
         cr, uid, context, registry = request.cr, request.uid, request.context, request.registry
         user = registry.get('res.users').browse(cr, uid, uid, context=context)
 
-        if user and announcement.partner_id.id == user.partner_id.id or uid == SUPERUSER_ID:  
-            web_page = request.redirect('%s/edit' % announcement.id)
-        else:
-            my_reply = None
-            my_vote = None
-            if 'make_reply' in post:
-                my_reply = self._validate_reply(post)
-                my_vote = self._parse_vote(post)
-                if not my_reply.errors:
-                    self._save_reply(cr, uid, registry, announcement, my_reply, context=context)
-                    my_reply = None
-                    self._save_vote(cr, uid, registry, announcement, my_vote, user.partner_id.id, context=context)
-                    my_vote = None
-            web_page = http.request.website.render('website_project_weezer.view_announcement', 
-                self._get_view_announcement_dict(cr, uid, registry, announcement, my_reply, 
-                                                 my_vote, context=context))
+        my_reply = None
+        my_vote = None
+        if 'make_reply' in post:
+            my_reply = self._validate_reply(post)
+            my_vote = self._parse_vote(post)
+            if not my_reply.errors:
+                self._save_reply(cr, uid, registry, announcement, my_reply, context=context)
+                my_reply = None
+                self._save_vote(cr, uid, registry, announcement, my_vote, user.partner_id.id, context=context)
+                my_vote = None
+        web_page = http.request.website.render('website_project_weezer.view_announcement',
+            self._get_view_announcement_dict(cr, uid, registry, announcement, my_reply,
+                                             my_vote, context=context))
         return web_page
 
     def _get_edit_announcement_dict(self, cr, uid, registry, announcement, context=None):
@@ -917,7 +913,6 @@ class announcement_controller(http.Controller):
         announcement = registry.get('marketplace.announcement').create(cr, uid, {
             'name': '', 
             'partner_id': user.partner_id.id,
-            'state': 'open',
         }, context=context)
         announcement = registry.get('marketplace.announcement').browse(cr, uid, announcement, context=context)
         if not context:
@@ -955,10 +950,7 @@ class announcement_controller(http.Controller):
 
         user = registry.get('res.users').browse(cr, uid, uid, context=context)
 
-        if user and proposition.announcement_id.partner_id.id == user.partner_id.id or uid == SUPERUSER_ID:  
-            return self.edit_announcement(proposition.announcement_id)
-        else:
-            return self.view_announcement(proposition.announcement_id)
+        return self.view_announcement(proposition.announcement_id)
 
 announcement_controller()
 

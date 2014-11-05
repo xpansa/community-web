@@ -186,7 +186,7 @@
                                 <t t-if="reply.state == 'vote'">
                                     <li t-att-class="reply.state == 'vote' and 'text-primary' or 'text-muted'">Waiting votes<span class="chevron"></span></li>
                                 </t>
-                                <li t-att-class="reply.state == 'paid' and 'text-primary' or 'text-muted'">paid<span class="chevron"></span></li>
+                                <li t-att-class="reply.state == 'paid' and 'text-primary' or 'text-muted'">Paid<span class="chevron"></span></li>
                                 <t t-if="reply.state == 'confirm_refund'">
                                     <li t-att-class="reply.state == 'confirm_refund' and 'text-primary' or 'text-muted'">Waiting confirm<span class="chevron"></span></li>
                                 </t>
