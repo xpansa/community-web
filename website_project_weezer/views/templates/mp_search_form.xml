@@ -119,7 +119,7 @@
                     <div class="container">
                         <div class="row">
                             <div class="col-md-2 pt8">
-                                <img src="/website_project_weezer/static/src/assets/logo-l-exchange.png" class="img img-responsive"/>
+                                <img t-att-src="'data:image/png;base64,%s' % res_company.logo" class="img img-responsive"/>
                             </div>
                             <div class="col-md-2 pt32">
                                 <h4 class="pull-right">I'm searching</h4>
