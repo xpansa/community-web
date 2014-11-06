@@ -324,11 +324,12 @@ class profile_controller(http.Controller):
         skill_category_pool = registry.get('marketplace.announcement.category')
         tag_pool = registry.get('marketplace.tag')
         limit_pool = registry.get('res.partner.wallet.currency')
-        balance_pool = registry.get('res.partner.wallet.balance')
         data_pool = registry.get('ir.model.data')
         product_pool = registry.get('product.product')
         invoice_pool = registry.get('account.invoice')
         balance_pool = registry.get('res.partner.wallet.balance')
+        user_pool = registry.get('res.users')
+        is_moderator = user_pool.has_group(cr, request.uid, 'account_wallet.group_account_wallet_moderator')
 
         partner_data = data['partner'].copy()
         if partner_data['birthdate']:
@@ -340,7 +341,7 @@ class profile_controller(http.Controller):
             if not skill['name']:
                 continue
             skill_id = skill_category_pool.search(cr, uid, [('name','=',skill['name'])], context=context)
-            if not skill_id:
+            if not skill_id and is_moderator:
                 skill_id = skill_category_pool.create(cr, uid, {'name': skill['name']}, context=context)
                 data['skills']['existing'].append({'id': skill_id, 'name': skill['name']})
         # Find default user tags category
@@ -350,7 +351,7 @@ class profile_controller(http.Controller):
             if not tag['name']:
                 continue
             tag_id = tag_pool.search(cr, uid, [('name','=',tag['name'])], context=context)
-            if not tag_id:
+            if not tag_id and is_moderator:
                 tag_id = tag_pool.create(cr, uid, {
                     'name': tag['name'],
                     'category_id': tag_category_id,
