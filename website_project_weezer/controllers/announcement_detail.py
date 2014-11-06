@@ -696,24 +696,21 @@ class announcement_controller(http.Controller):
         cr, uid, context, registry = request.cr, request.uid, request.context, request.registry
         user = registry.get('res.users').browse(cr, uid, uid, context=context)
 
-        if user and announcement.partner_id.id == user.partner_id.id or uid == SUPERUSER_ID:  
-            web_page = request.redirect('%s/edit' % announcement.id)
-        else:
-            my_reply = self._get_my_reply(cr, uid, request.registry, announcement, context=context)
-            my_vote = None
-            if 'make_reply' in post:
-                if not getattr(my_reply, 'already_accepted', False):
-                    my_reply = self._validate_reply(post)
-                    if not my_reply.errors:
-                        self._save_reply(cr, uid, registry, announcement, my_reply, context=context)
-                        my_reply = None
-                else:
-                    my_vote = self._parse_vote(post)
-                    self._save_vote(cr, uid, registry, announcement, my_vote, user.partner_id.id, context=context)
-                    my_vote = None
-            web_page = http.request.website.render('website_project_weezer.view_announcement', 
-                self._get_view_announcement_dict(cr, uid, registry, announcement, my_reply, 
-                                                 my_vote, context=context))
+        my_reply = self._get_my_reply(cr, uid, request.registry, announcement, context=context)
+        my_vote = None
+        if 'make_reply' in post:
+            if not getattr(my_reply, 'already_accepted', False):
+                my_reply = self._validate_reply(post)
+                if not my_reply.errors:
+                    self._save_reply(cr, uid, registry, announcement, my_reply, context=context)
+                    my_reply = None
+            else:
+                my_vote = self._parse_vote(post)
+                self._save_vote(cr, uid, registry, announcement, my_vote, user.partner_id.id, context=context)
+                my_vote = None
+        web_page = http.request.website.render('website_project_weezer.view_announcement', 
+            self._get_view_announcement_dict(cr, uid, registry, announcement, my_reply, 
+                                             my_vote, context=context))
         return web_page
 
     def _get_edit_announcement_dict(self, cr, uid, registry, announcement, context=None):
