@@ -48,11 +48,11 @@
     
                                     <div class="col-md-2">
                                         <div class="col-md-12 text-center">
-                                            <label class="control-label">Who?</label>
+                                            <label class="control-label">Group</label>
                                         </div>
                                         <div class="col-md-12 form-group mt8">
                                             <div class="row">
-                                                <input id="filter-who1" type="text" class="form-typeahead form-control mb4" placeholder="Member" data-group="who" data-index="0" data-provide="typeahead" name="group" t-att-value="search_param.get('group')"/>
+                                                <input id="filter-who1" type="text" class="form-typeahead form-control mb4" placeholder="Group" data-group="who" data-index="0" data-provide="typeahead" name="group" t-att-value="search_param.get('group')"/>
                                             </div>
                                         </div>
                                                 

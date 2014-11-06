@@ -30,6 +30,14 @@
                             </t>
                         </t>
                     </div>
+
+                    <div class="container">
+                        <div class="col-md-12">
+                            <t t-if="announcement.is_user">
+                                <a class="btn btn-primary mt32 mb16" t-att-href="'/marketplace/announcement_detail/%s/edit' % announcement.id">Edit</a>
+                            </t>
+                        </div>
+                    </div>
                     
                     <section class="container mt32">
         
@@ -86,7 +94,9 @@
                                 <li t-att-class="announcement.state == 'draft' and 'text-primary' or 'text-muted'">Draft<span class="chevron"></span></li>
                                 <li t-att-class="announcement.state == 'open' and 'text-primary' or 'text-muted'">Published<span class="chevron"></span></li>
                                 <li t-att-class="announcement.state == 'done' and 'text-primary' or 'text-muted'">Close<span class="chevron"></span></li>
-                                <li t-att-class="announcement.state == 'cancel' and 'text-primary' or 'text-muted'">Abort<span class="chevron"></span></li>
+                                <t t-if="announcement.state == 'cancel'">
+                                    <li t-att-class="announcement.state == 'cancel' and 'text-primary' or 'text-muted'">Abort<span class="chevron"></span></li>
+                                </t>
                             </ul>
                         </div>
                         </div>
@@ -107,6 +117,30 @@
                             <div class="col-md-3">
                                 <div class="col-md-12">
                                     <span t-field="announcement.picture" t-field-options='{"widget": "image"}'/>
+                                </div>
+                                <div>
+                                    <t t-if="announcement.state == 'draft'">
+                                        <t t-if="announcement.is_user">
+                                            <a t-attf-href="/marketplace/announcement/#{announcement.id}/draft_cancel" class="btn btn-primary" role="button">Cancel</a>
+                                            <a t-attf-href="/marketplace/announcement/#{announcement.id}/draft_open" class="btn btn-primary" role="button">Publish</a>
+                                        </t>
+                                    </t>
+                                    <t t-if="announcement.state == 'open'">
+                                        <t t-if="announcement.is_user">
+                                            <a t-attf-href="/marketplace/announcement/#{announcement.id}/open_cancel" class="btn btn-primary" role="button">Cancel</a>
+                                            <a t-attf-href="/marketplace/announcement/#{announcement.id}/open_done" class="btn btn-primary" role="button">Close</a>
+                                        </t>
+                                    </t>
+                                    <t t-if="announcement.state == 'done'">
+                                        <t t-if="announcement.is_user">
+                                            <a t-attf-href="/marketplace/announcement/#{announcement.id}/done_open" class="btn btn-primary" role="button">Re-open</a>
+                                        </t>
+                                    </t>
+                                    <t t-if="announcement.state == 'cancel'">
+                                        <t t-if="announcement.is_user">
+                                            <a t-attf-href="/marketplace/announcement/#{announcement.id}/cancel_draft" class="btn btn-primary" role="button">Set draft</a>
+                                        </t>
+                                    </t>
                                 </div>
                             </div>
             
@@ -254,41 +288,21 @@
             
                     </section>
 
-                    <t t-if="len(replied_list) > 0">
 
-                        <t t-ignore="true" t-if="website.user_id == user_id">
-                            <div class="row mt16 text-center">
-                                <a class="btn btn-small btn-primary">Login</a> or <a class="btn btn-small btn-primary">Register</a> to submit a reply
-                            </div>
-                        </t>
 
-                        <t t-ignore="true" t-if="website.user_id != user_id and announcement.partner_id.id != user_id.partner_id.id">
-                            <div class="row mt16">
-                                <div class="col-md-2 col-md-offset-5">
-                                    <a class="btn btn-success btn-lg btn-block btn-announcement-reply mr25" href="#">Make a reply</a>
-                                </div>
-                            </div>
-                        </t>
-
-                        <!-- START: Replies section -->
-                        <section class="bg-info pt32 mt32"> 
-                            <div class="container">
-                                <h2 class="col-md-12 mt0">Who has replied?</h2>
-                            </div>
-
-                            <t t-foreach="replied_list" t-as="reply">
-                                <t t-call="website_project_weezer.single_reply"/>
-                            </t>
-                            
-                        </section>
+                    <t t-ignore="true" t-if="website.user_id == user_id">
+                        <div class="row mt16 text-center">
+                            <a class="btn btn-small btn-primary">Login</a> or <a class="btn btn-small btn-primary">Register</a> to submit a reply
+                        </div>
                     </t>
 
                     <t t-if="website.user_id != user_id and announcement.partner_id.id != user_id.partner_id.id">
 
                         <!-- reply CTA banner -->
                         <section id="replysection" class="bg-success pt32 pb32">
+
                             <div class="container">
-                                
+
                                 <div id="replycta" class="col-md-2 col-md-offset-5">      
                                     <a class="btn btn-lg btn-block btn-success btn-announcement-reply" href="#">Make a reply</a>
                                 </div>
@@ -465,6 +479,23 @@
                             </div>
                         </section>
                     </t>
+
+
+                    <t t-if="len(replied_list) > 0">
+
+                        <!-- START: Replies section -->
+                        <section class="bg-info pt32">
+                            <div class="container">
+                                <h2 class="col-md-12 mt0">Who has replied?</h2>
+                            </div>
+
+                            <t t-foreach="replied_list" t-as="reply">
+                                <t t-call="website_project_weezer.single_reply"/>
+                            </t>
+
+                        </section>
+                    </t>
+
                 </div>
                 <div class="oe_structure"/>
             </t>

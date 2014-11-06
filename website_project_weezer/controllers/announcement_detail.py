@@ -153,7 +153,6 @@ class announcement_controller(http.Controller):
                 ('street2', 'street2'),
                 ('zip', 'zip'),
                 ('city', 'city'),
-                ('state', 'state'),
                 ('type', 'type'),
             ]
             date_param_list = [
@@ -923,7 +922,6 @@ class announcement_controller(http.Controller):
         announcement = registry.get('marketplace.announcement').create(cr, uid, {
             'name': '', 
             'partner_id': user.partner_id.id,
-            'state': 'open',
         }, context=context)
         announcement = registry.get('marketplace.announcement').browse(cr, uid, announcement, context=context)
         if not context:
@@ -932,6 +930,22 @@ class announcement_controller(http.Controller):
         res = self._parse_and_save_announcement(cr, uid, registry, announcement, post, context=context)
         response = http.request.website.render(res['template_id'], res['response'])
         return response
+
+    @http.route('/marketplace/announcement/<model("marketplace.announcement"):announcement>/<any("draft_cancel","draft_open","open_cancel","open_done", "done_open","cancel_draft"):state>', type='http', auth="user", website=True)
+    def announcement_change_state(self, announcement, state):
+        cr, uid, context, registry = request.cr, request.uid, request.context, request.registry
+        state_signal = {
+            'draft_cancel': 'announcement_draft_cancel',
+            'draft_open': 'announcement_draft_open',
+            'open_cancel': 'announcement_open_cancel',
+            'open_done': 'announcement_open_done',
+        }
+        if state in state_signal.keys():
+            workflow.trg_validate(uid, 'marketplace.announcement', announcement.id,
+                                  state_signal.get(state), cr)
+        if state in ['cancel_draft', 'done_open']:
+            registry.get('marketplace.announcement').reset_workflow(cr, uid, [announcement.id])
+        return self.view_announcement(announcement)
 
     @http.route('/marketplace/reply/<model("marketplace.proposition"):proposition>/<any("draft_cancel","draft_open","open_cancel","accept","reject","reject_draft","accepted_cancel","invoice","invoiced_cancel","pay","confirm","refund","confirmrefund_paid","confirmrefund_cancel","cancel_draft"):state>', type='http', auth="user", website=True)
     def proposition_change_state(self, proposition, state):
@@ -961,10 +975,7 @@ class announcement_controller(http.Controller):
 
         user = registry.get('res.users').browse(cr, uid, uid, context=context)
 
-        if user and proposition.announcement_id.partner_id.id == user.partner_id.id or uid == SUPERUSER_ID:  
-            return self.edit_announcement(proposition.announcement_id)
-        else:
-            return self.view_announcement(proposition.announcement_id)
+        return self.view_announcement(proposition.announcement_id)
 
 announcement_controller()
 
