@@ -423,6 +423,18 @@ class announcement_controller(http.Controller):
             'want': 'Want',
         }
 
+    def get_vote_types(self, cr, uid, registry, context=None):
+        propoistion_obj = registry.get('marketplace.proposition')
+        vote_config_obj = registry.get('vote.config.line')
+        vote_config_ids = vote_config_obj.search(
+            cr, uid,
+            [
+                ('model', '=', 'community.config.settings'),
+                ('target_model.model', '=', propoistion_obj._vote_category_model or propoistion_obj._name)
+            ], context=context
+        )
+        return vote_config_obj.browse(cr, uid, vote_config_ids, context=context)
+
     def get_attachment_dict(self, cr, uid, registry, announcement, context=None):
         """ Return all attachment of specified announcement
         """
@@ -518,10 +530,9 @@ class announcement_controller(http.Controller):
             res = AttrDict({
                 'comment': '',
                 'line_ids': [AttrDict({
-                    'id': 0,
-                    'type_id': AttrDict({'id': 0}),
+                    'type_id': vote_type.name,
                     'vote': '0',
-                })]
+                }) for vote_type in self.get_vote_types(cr, uid, registry, context)]
             })
         return res
 
@@ -530,24 +541,17 @@ class announcement_controller(http.Controller):
             'comment': data.get('vote_comment'),
             'line_ids': []
         }
-        vote_lines = {}
+        vote_lines = []
         for key, val in data.iteritems():
             if key.startswith('vote_lines'):
-                for f in ['type_id', 'vote']:
-                    id = re.search('vote_lines\[(\d+)\]\[%s\]' % f, key)
-                    if id:
-                        id = int(id.group(1))
-                        if not id in vote_lines:
-                            vote_lines[id] = {
-                                'id': id,
-                                f: AttrDict({'id': int(val)}) if f == 'type_id' else val,
-                            }
-                        else:
-                            vote_lines[id].update({f: AttrDict({'id': int(val)}) if f == 'type_id' else val})
-        for key, line in vote_lines.iteritems():
-            # check vote type uniqness
-            if not line['type_id'].id in [x['type_id'].id for k, x in vote_lines.iteritems() if k > key]:
-                res['line_ids'].append(AttrDict(line))
+                    type_id = re.search('vote_lines\[(\d+)\]\[vote]', key)
+                    if type_id:
+                        type_id = int(type_id.group(1))
+                        vote_lines.append(AttrDict({
+                            'type_id': AttrDict({'id': type_id}),
+                            'vote': val
+                        }))
+        res['line_ids'] = vote_lines
         return AttrDict(res)
 
     def _validate_reply(self, data):
@@ -682,8 +686,8 @@ class announcement_controller(http.Controller):
                 datetime.strptime(announcement.date_to, DEFAULT_SERVER_DATE_FORMAT).strftime(date_format),
             'getattr': getattr,
             'currency_dict': self.get_all_records(cr, uid, registry, 'res.currency', context=context),
-            'vote_type_dict': self.get_all_records(cr, uid, registry, 'vote.type', context=context),
             'format_date': format_date,
+            'vote_types': self.get_vote_types(cr, uid, registry, context=context),
         }
 
     @http.route('/marketplace/announcement_detail/<model("marketplace.announcement"):announcement>', type='http', auth="public", website=True)
@@ -696,14 +700,16 @@ class announcement_controller(http.Controller):
         if user and announcement.partner_id.id == user.partner_id.id or uid == SUPERUSER_ID:  
             web_page = request.redirect('%s/edit' % announcement.id)
         else:
-            my_reply = None
+            my_reply = self._get_my_reply(cr, uid, request.registry, announcement, context=context)
             my_vote = None
             if 'make_reply' in post:
-                my_reply = self._validate_reply(post)
-                my_vote = self._parse_vote(post)
-                if not my_reply.errors:
-                    self._save_reply(cr, uid, registry, announcement, my_reply, context=context)
-                    my_reply = None
+                if not getattr(my_reply, 'already_accepted', False):
+                    my_reply = self._validate_reply(post)
+                    if not my_reply.errors:
+                        self._save_reply(cr, uid, registry, announcement, my_reply, context=context)
+                        my_reply = None
+                else:
+                    my_vote = self._parse_vote(post)
                     self._save_vote(cr, uid, registry, announcement, my_vote, user.partner_id.id, context=context)
                     my_vote = None
             web_page = http.request.website.render('website_project_weezer.view_announcement', 
