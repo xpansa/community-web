@@ -296,7 +296,7 @@
                         </div>
                     </t>
 
-                    <t t-if="website.user_id != user_id and announcement.partner_id.id != user_id.partner_id.id">
+                    <t t-if="allow_reply and website.user_id != user_id and announcement.partner_id.id != user_id.partner_id.id">
 
                         <!-- reply CTA banner -->
                         <section id="replysection" class="bg-success pt32 pb32">
@@ -429,7 +429,7 @@
                                                         </div>
                                                     </div>
                                                     <div class="col-md-5">
-                                                        <t t-if="getattr(my_reply, 'already_accepted', False)">
+                                                        <!--<t t-if="getattr(my_reply, 'already_accepted', False)">
                                                             <table class="table">
                                                                 <thead>
                                                                     <tr>
@@ -455,16 +455,16 @@
                                                                     </t>
                                                                 </tbody>
                                                             </table>
-                                                        </t>
+                                                        </t>-->
                                                         <div>
                                                             <div class="row mt32">
                                                                 <div class="col-md-12">
-                                                                    <t t-if="getattr(my_reply, 'already_accepted', False)">
+                                                                    <!--<t t-if="getattr(my_reply, 'already_accepted', False)">
                                                                         <label>Feedback</label>
                                                                         <textarea class="form-control" rows="3" name="vote_comment"><t t-esc="my_vote.comment"/></textarea>
-                                                                    </t>
+                                                                    </t>-->
                                                                     <input type="hidden" name="make_reply" value="1"/>
-                                                                    <a href="#" class="btn col-md-3 pull-right btn-success mt8" onclick="document.getElementById('my-reply-form').submit(); return false;"><t t-if="getattr(my_reply, 'already_accepted', False)">Add vote</t><t t-if="not getattr(my_reply, 'already_accepted', False)">Add reply</t></a>
+                                                                    <a href="#" class="btn col-md-3 pull-right btn-success mt8" onclick="document.getElementById('my-reply-form').submit(); return false;">Add reply</a>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -481,7 +481,7 @@
                     </t>
 
 
-                    <t t-if="len(replied_list) > 0">
+                    <t t-if="announcement.proposition_ids">
 
                         <!-- START: Replies section -->
                         <section class="bg-info pt32">
@@ -489,7 +489,7 @@
                                 <h2 class="col-md-12 mt0">Who has replied?</h2>
                             </div>
 
-                            <t t-foreach="replied_list" t-as="reply">
+                            <t t-foreach="announcement.proposition_ids" t-as="reply">
                                 <t t-call="website_project_weezer.single_reply"/>
                             </t>
 

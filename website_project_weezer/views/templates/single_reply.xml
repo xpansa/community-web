@@ -3,9 +3,26 @@
     <data>
         <template id="single_reply">
             <!-- START : Single reply -->
-            <form class="form-horizontal bg-info">
+            <form class="form-horizontal bg-info" method="post">
                 <div class="container">
+                    <t t-if="updated_reply_saved and updated_reply_saved == reply.id">
+                        <div class="col-md-12">
+                            <div class="alert alert-success mt32 mb0">Reply has been saved successfully</div>
+                        </div>
+
+                    </t>
+                    <t t-if="updated_reply and updated_reply.id == reply.id and getattr(updated_reply, 'errors', False)">
+                        <div class="col-md-12">
+                        <t t-if="'quantity' in updated_reply.errors">
+                            <div class="alert alert-danger mt32 mb0"><t t-esc="updated_reply.errors['quantity']"/></div>
+                        </t>
+                        <t t-if="'currency_ids' in updated_reply.errors">
+                            <div class="alert alert-danger mt32 mb0"><t t-esc="updated_reply.errors['currency_ids']"/></div>
+                        </t>
+                        </div>
+                    </t>
                     <div class="col-md-12 mt32 mb32">
+                        <input type="hidden" name="update_reply" t-att-value="reply.id"/>
                         <div class="row">
                             <!-- START: Reply Left side -->
                             <div class="col-md-4">
@@ -35,7 +52,7 @@
                                                 <label>Quantity</label>
                                             </div>
                                             <div class="col-md-8">
-                                            <input type="text" t-att-value="reply.quantity" class="form-control" readonly="readonly" />
+                                            <input type="text" t-att-value="reply.quantity" class="form-control" t-att-readonly="'' if reply.is_sender and reply.state in ('draft', 'open') else 'readonly'" name="quantity"/>
                                             </div>
                                         </div>
                                         <div class="form-group">
@@ -49,28 +66,61 @@
                                     </div>
                                     
                                     <div class="col-md-8">
-                                        <table class="table">
-                                            <thead>
-                                                <tr>
-                                                    <th>Unit price</th>
-                                                    <th>Currency</th>
-                                                    <th>Subtotal</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <t t-foreach="reply.currency_ids" t-as="line">
-                                                    <tr class="list-item">
-                                                        <td><input type="text" t-att-value="line.price_unit" class="form-control" readonly="readonly"/></td>
-                                                        <td>
-                                                            <select id="category" class="selectpicker form-control" disabled="disabled">
-                                                                <option><span t-esc="line.currency_id.name"/></option>
-                                                            </select>
-                                                        </td>
-                                                        <td><input type="text" t-att-value="line.subtotal" class="form-control" readonly="readonly"/></td>
+                                        <t t-if="reply.is_sender and reply.state in ('draft', 'open')">
+                                            <div class="dynamic-list">
+                                                <table class="table">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Unit price</th>
+                                                            <th>Currency</th>
+                                                            <th>Subtotal</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <t t-foreach="reply.currency_ids" t-as="line">
+                                                            <tr class="list-item proposition_price_block">
+                                                                <td><input type="text" class="form-control" t-att-value="line.price_unit" t-att-name="'currency_ids[%s][%s][price_unit]' % (getattr(line, 'is_new', False) and 'new' or 'existing', line.id)"/></td>
+                                                                <td>
+                                                                    <select t-att-name="'currency_ids[%s][%s][currency_id]' % (getattr(line, 'is_new', False) and 'new' or 'existing', line.id)" class="selectpicker form-control mb16" style="display: none;">
+                                                                        <t t-foreach="currency_dict.keys()" t-as="currency_id">
+                                                                            <option t-att-value="currency_id" t-att-selected="'selected' if line.currency_id.id == currency_id else None"><t t-esc="currency_dict[currency_id]"/></option>
+                                                                        </t>
+                                                                    </select>
+                                    
+                                                                </td>
+                                                                <td><input type="text" t-att-value="line.subtotal" class="form-control" readonly="readonly"/></td>
+                                                                <td><button class="list-remove btn btn-danger"><i class="fa fa-minus"></i></button></td>
+                                                            </tr>
+                                                        </t>
+                                                    </tbody>
+                                                </table>
+                                                <a class="list-add btn btn-small btn-primary mb16 margin-left-10"><i class="fa fa-plus"></i></a>
+                                            </div>
+                                        </t>
+                                        <t t-if="not (reply.is_sender and reply.state in ('draft', 'open'))">
+                                            <table class="table">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Unit price</th>
+                                                        <th>Currency</th>
+                                                        <th>Subtotal</th>
                                                     </tr>
-                                                </t>
-                                            </tbody>
-                                        </table>
+                                                </thead>
+                                                <tbody>
+                                                    <t t-foreach="reply.currency_ids" t-as="line">
+                                                        <tr class="list-item">
+                                                            <td><input type="text" t-att-value="line.price_unit" class="form-control" readonly="readonly"/></td>
+                                                            <td>
+                                                                <select id="category" class="selectpicker form-control" disabled="disabled">
+                                                                    <option><span t-esc="line.currency_id.name"/></option>
+                                                                </select>
+                                                            </td>
+                                                            <td><input type="text" t-att-value="line.subtotal" class="form-control" readonly="readonly"/></td>
+                                                        </tr>
+                                                    </t>
+                                                </tbody>
+                                            </table>
+                                        </t>
                                     </div>
                                 </div>
                             </div>
@@ -80,7 +130,12 @@
                             <div class="col-md-7 feedback-width">
                                 <div class="col-md-12">
                                     <h5>Description</h5>
-                                    <span t-field="reply.description"/>
+                                    <t t-if="reply.is_sender">
+                                        <textarea rows="3" style="width:100%;" class="form-control" name="description"><t t-esc="reply.description"/></textarea>
+                                    </t>
+                                    <t t-if="not reply.is_sender">
+                                        <span t-field="reply.description"/>
+                                    </t>
                                     <div>
                                         <t t-if="reply.state == 'draft'">
                                             <t t-if="reply.is_user">
@@ -145,7 +200,7 @@
                                  </div>
                             </div>
                             <div class="col-md-5">
-                                <table class="table">
+                                <!--<table class="table">
                                     <thead>
                                         <tr>
                                             <th>Rat.</th>
@@ -168,7 +223,10 @@
                                         <label>Feedback</label>
                                         <textarea class="form-control" rows="3" readonly="readonly" t-esc="vote_list.get(reply.sender_id.id) and vote_list.get(reply.sender_id.id).comment or ''"/>
                                     </div>
-                                </div>
+                                </div>-->
+                                <t t-if="reply.is_sender">
+                                    <a href="#" class="btn col-md-3 pull-right btn-success mt8" onclick="$(this).parents('form').submit(); return false;">Update reply</a>
+                                </t>
                             </div>
                         </div>
                         <div>

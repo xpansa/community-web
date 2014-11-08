@@ -493,27 +493,21 @@ class announcement_controller(http.Controller):
             response = {'status': 'error', 'error': 'This attachment is not belong to this announcement'}
         return response
 
-    def _get_my_reply(self, cr, uid, registry, announcement, context=None):
-        res = False
-        for prop in announcement.proposition_ids:
-            if prop.create_uid.id == uid:
-                res = prop
-        if not res:
-            res = AttrDict({
-                'errors': {},
-                'quantity': 0.0,
-                'description': '',
-                'write_date': datetime.today().strftime(DEFAULT_SERVER_DATETIME_FORMAT),
-                'currency_ids': [AttrDict({
-                    'id': 0,
-                    'is_new': True,
-                    'price_unit': 0.0,
-                    'currency_id': AttrDict({'id': 0}),
-                    'subtotal': '',
-                })],
-                'state': 'draft',
-            })
-        return res
+    def _get_my_reply(self):
+        return AttrDict({
+            'errors': {},
+            'quantity': 0.0,
+            'description': '',
+            'write_date': datetime.today().strftime(DEFAULT_SERVER_DATETIME_FORMAT),
+            'currency_ids': [AttrDict({
+                'id': 0,
+                'is_new': True,
+                'price_unit': 0.0,
+                'currency_id': AttrDict({'id': 0}),
+                'subtotal': '',
+            })],
+            'state': 'draft',
+        })
 
     def _get_my_vote(self, cr, uid, registry, announcement, partner_id, context=None):
         vote_pool = registry.get('vote.vote')
@@ -553,9 +547,9 @@ class announcement_controller(http.Controller):
         res['line_ids'] = vote_lines
         return AttrDict(res)
 
-    def _validate_reply(self, data):
+    def _validate_reply(self, data, id=None):
         res = {
-            'state': 'draft',
+            'id': id,
             'quantity': data.get('quantity'),
             'description': data.get('description'),
             'write_date': datetime.today().strftime(DEFAULT_SERVER_DATETIME_FORMAT),
@@ -603,11 +597,8 @@ class announcement_controller(http.Controller):
         res['errors'] = errors
         return AttrDict(res)
 
-    def _save_reply(self, cr, uid, registry, announcement, reply, context=None):
+    def _save_reply(self, cr, uid, registry, announcement, reply, id=None, context=None):
         proposition_pool = registry.get('marketplace.proposition')
-        currency_line_pool = registry.get('account.wallet.currency.line')
-        id = proposition_pool.search(cr, uid, [('create_uid','=',uid),
-            ('announcement_id','=',announcement.id)], context=context)
         vals = {
             'quantity': reply.quantity,
             'write_date': reply.write_date,
@@ -628,17 +619,19 @@ class announcement_controller(http.Controller):
             )
         if id:
             # Collect vlues for o2m field currency_ids to delete
-            proposition = proposition_pool.read(cr, uid, id[0], ['currency_ids'], context=context)
-            currency_to_del_ids = list(set(proposition['currency_ids']) - \
+            proposition = proposition_pool.browse(cr, uid, id, context=context)
+            if not proposition.is_sender:
+                return False
+            currency_to_del_ids = list(set([c.id for c in proposition.currency_ids]) - \
                                 set([c.id for c in reply.currency_ids if not getattr(c, 'is_new', False)]))
             for c_id in currency_to_del_ids:
                 vals['currency_ids'].insert(0, (2, c_id))
             # Update proposition
-            proposition_pool.write(cr, uid, id, vals, context=context)
+            proposition_pool.write(cr, uid, [id], vals, context=context)
         else:
             # Create and publish proposition
             id = proposition_pool.create(cr, uid, vals, context=context)
-            workflow.trg_validate(uid, 'marketplace.proposition', id, 'proposition_draft_open', cr)
+            # workflow.trg_validate(uid, 'marketplace.proposition', id, 'proposition_draft_open', cr)
 
     def _save_vote(self, cr, uid, registry, announcement, my_vote, partner_id, context=None):
         vote_pool = registry.get('vote.vote')
@@ -664,7 +657,8 @@ class announcement_controller(http.Controller):
             vote_pool.create(cr, uid, vals, context=context)
         return True
 
-    def _get_view_announcement_dict(self, cr, uid, registry, announcement, my_reply=None, my_vote=None, context=None):
+    def _get_view_announcement_dict(self, cr, uid, registry, announcement, my_reply=None, 
+                                    updated_reply=None, updated_reply_saved=False, my_vote=None, context=None):
         """ Return dict of values needed to view announcement template
         """
         user = registry.get('res.users').browse(cr, uid, uid, context=context)
@@ -672,9 +666,9 @@ class announcement_controller(http.Controller):
         return {
             'announcement':announcement,
             'author': announcement.partner_id,
-            'replied_list': [p for p in announcement.proposition_ids if p.sender_id.id != user.partner_id.id],
             'vote_list': dict([(v.partner_id.id, v) for v in announcement.vote_vote_ids]),
-            'my_reply': my_reply or self._get_my_reply(cr, uid, request.registry, announcement, context=context),
+            'my_reply': my_reply or self._get_my_reply(),
+            'updated_reply': updated_reply,
             'my_vote': my_vote or self._get_my_vote(cr, uid, request.registry, announcement, 
                                                     user.partner_id.id, context=context),
             'type_dict': self.get_type_dict(cr, uid, request.registry, context=context),
@@ -687,6 +681,9 @@ class announcement_controller(http.Controller):
             'currency_dict': self.get_all_records(cr, uid, registry, 'res.currency', context=context),
             'format_date': format_date,
             'vote_types': self.get_vote_types(cr, uid, registry, context=context),
+            'allow_reply': len([1 for p in announcement.proposition_ids 
+                if p.is_sender and p.state in ('draft', 'open')]) == 0,
+            'updated_reply_saved': updated_reply_saved
         }
 
     @http.route('/marketplace/announcement_detail/<model("marketplace.announcement"):announcement>', type='http', auth="public", website=True)
@@ -696,21 +693,28 @@ class announcement_controller(http.Controller):
         cr, uid, context, registry = request.cr, request.uid, request.context, request.registry
         user = registry.get('res.users').browse(cr, uid, uid, context=context)
 
-        my_reply = self._get_my_reply(cr, uid, request.registry, announcement, context=context)
+        my_reply = self._get_my_reply()
+        updated_reply = None
         my_vote = None
+        updated_reply_saved = False
         if 'make_reply' in post:
-            if not getattr(my_reply, 'already_accepted', False):
-                my_reply = self._validate_reply(post)
-                if not my_reply.errors:
-                    self._save_reply(cr, uid, registry, announcement, my_reply, context=context)
-                    my_reply = None
-            else:
-                my_vote = self._parse_vote(post)
-                self._save_vote(cr, uid, registry, announcement, my_vote, user.partner_id.id, context=context)
-                my_vote = None
+            my_reply = self._validate_reply(post)
+            if not my_reply.errors:
+                self._save_reply(cr, uid, registry, announcement, my_reply, id=None, context=context)
+                my_reply = None
+                # my_vote = self._parse_vote(post)
+                # self._save_vote(cr, uid, registry, announcement, my_vote, user.partner_id.id, context=context)
+                # my_vote = None
+        elif 'update_reply' in post:
+            updated_reply = self._validate_reply(post, id=int(post.get('update_reply')))
+            if not updated_reply.errors:
+                self._save_reply(cr, uid, registry, announcement, updated_reply, 
+                                 id=int(post.get('update_reply')), context=context)
+                updated_reply = None
+                updated_reply_saved = int(post.get('update_reply'))
         web_page = http.request.website.render('website_project_weezer.view_announcement', 
-            self._get_view_announcement_dict(cr, uid, registry, announcement, my_reply, 
-                                             my_vote, context=context))
+            self._get_view_announcement_dict(cr, uid, registry, announcement, my_reply,
+                                             updated_reply, updated_reply_saved, my_vote, context=context))
         return web_page
 
     def _get_edit_announcement_dict(self, cr, uid, registry, announcement, context=None):
@@ -825,6 +829,8 @@ class announcement_controller(http.Controller):
             'partner_id': announcement.partner_id,
             'picture': announcement.picture,
             'quantity_available': announcement.quantity_available,
+            'vote_vote_ids': announcement.vote_vote_ids,
+            'proposition_ids': announcement.proposition_ids,
         })
         return AttrDict(res)
 
